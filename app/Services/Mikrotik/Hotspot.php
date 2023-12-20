@@ -41,12 +41,13 @@ class Hotspot
     }
 
     /**
-     * @param  $username
-     * @param  $password
-     * @param  $comment
+     * @param  string $hs
+     * @param  string $username
+     * @param  string $password
+     * @param  string $comment
      * @return bool
      */
-    public function createUser($username, $password, $comment = null): bool
+    public function createUser($hs, $username, $password, $comment = null): bool
     {
         $response = Http::withBasicAuth(
             $this->username,
@@ -54,6 +55,7 @@ class Hotspot
         )->put(
             $this->baseUrl . '/ip/hotspot/user',
             [
+                'server' => $hs,
                 'name' => $username,
                 'password' => $password,
                 'comment' => $comment,

@@ -20,4 +20,10 @@ Route::get('/', function () {
 
 Route::get('/hotspot/ypareo/login', [YpareoController::class, 'showLogin'])->name('hotspot.ypareo.showLogin');
 Route::post('/hotspot/ypareo/login', [YpareoController::class, 'doLogin'])->name('hotspot.ypareo.doLogin');
-Route::view('/hotspot/ok', 'hotspot.connected');
+Route::view('/hotspot/ok', 'hotspot.connected', [
+    'captive' => request()->captive,
+    'dst' => request()->dst,
+    'hs' => request()->hs,
+    'mac' => request()->mac,
+    'uptime' => request()->uptime,
+]);

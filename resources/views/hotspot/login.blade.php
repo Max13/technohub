@@ -27,6 +27,7 @@
             <form action="{{ route('hotspot.ypareo.doLogin') }}" method="post">
                 <input type="hidden" name="captive" value="{{ $captive }}" />
                 <input type="hidden" name="dst" value="{{ $dst }}" />
+                <input type="hidden" name="hs" value="{{ $hs }}" />
                 <input type="hidden" name="mac" value="{{ $mac }}" />
                 <input type="hidden" name="popup" value="false" />
 
@@ -55,7 +56,9 @@
 
             <p class="info bt">{{ __('If you need help, come see us in room 14!') }}</p>
 
+            @unless (!app()->environment('production'))
             <pre>HS: {{ $hs }}<br>Captive: {{ $captive }}<br>Dst: {{ $dst }}<br>Mac: {{ $mac }}</pre>
+            @endunless
 
         </div>
     </div>

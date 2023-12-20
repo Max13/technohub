@@ -25,6 +25,9 @@
             <img class="logo" alt="logo" src="{{ asset('/img/hs-logo.svg') }}">
 
             <h1 class="info" style="margin-top: 3rem">{{ __('You are logged in!') }}</h1>
+
+            <img class="logo" alt="Louis le BG" src="{{ asset('/img/hs-connected.jpeg') }}">
+            {{-- <h3 class="info">{{ __('Uptime') }}: {{ $uptime }}</h3> --}}
         </div>
     </div>
 </div>

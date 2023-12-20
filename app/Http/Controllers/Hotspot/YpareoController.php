@@ -32,14 +32,15 @@ class YpareoController extends Controller
     {
         $data = $request->validate([
             'captive' => 'required|url',
-            'dst' => 'url',
+            'dst' => 'nullable|url',
+            'hs' => 'required|string',
             'mac' => 'required|mac_address',
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
 
         if ($ypareo->auth($data['username'], $data['password'], $request->userAgent())) {
-            if ($hotspot->createUser($data['mac'], $data['mac'], $data['username'])) {
+            if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['username'])) {
                 return redirect()->away($data['captive'] . '?' . http_build_query([
                    'dst' => $data['dst'],
                    'username' => $data['mac'],
