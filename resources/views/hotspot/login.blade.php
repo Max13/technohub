@@ -56,7 +56,7 @@
 
             <p class="info bt">{{ __('If you need help, come see us in room 14!') }}</p>
 
-            @unless (!app()->environment('production'))
+            @unless (app()->environment('production'))
             <pre>HS: {{ $hs }}<br>Captive: {{ $captive }}<br>Dst: {{ $dst }}<br>Mac: {{ $mac }}</pre>
             @endunless
 
