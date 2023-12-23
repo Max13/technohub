@@ -64,4 +64,36 @@ class Hotspot
 
         return $response->successful();
     }
+
+    /**
+     * Get a hotspot's users
+     *
+     * @param  string $hs
+     * @return \Illuminate\Support\Collection
+     */
+    public function getUsers($hs): \Illuminate\Support\Collection
+    {
+        $response = Http::withBasicAuth(
+            $this->username,
+            $this->password,
+        )->get($this->baseUrl . '/ip/hotspot/user?server=' . $hs);
+
+        return $response->collect();
+    }
+
+    /**
+     * Remove a hotspot's user
+     *
+     * @param  string $userId
+     * @return bool
+     */
+    public function removeUser($userId): bool
+    {
+        $response = Http::withBasicAuth(
+            $this->username,
+            $this->password,
+        )->delete($this->baseUrl . '/ip/hotspot/user/' . $userId);
+
+        return $response->successful();
+    }
 }
