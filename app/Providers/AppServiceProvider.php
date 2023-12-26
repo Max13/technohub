@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(Ypareo::class, function ($app) {
-            return new Ypareo(config('services.ypareo.baseUrl'));
+            return new Ypareo(config('services.ypareo.apiKey'), config('services.ypareo.baseUrl'));
         });
     }
 

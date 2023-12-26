@@ -14,15 +14,22 @@ class Ypareo
     /**
      * @var string
      */
+    protected $apiKey = null;
+
+    /**
+     * @var string
+     */
     protected $baseUrl = null;
 
     /**
      * Construct Ypareo service
      *
+     * @param string $apiKey
      * @param string $baseUrl
      */
-    public function __construct($baseUrl)
+    public function __construct($apiKey, $baseUrl)
     {
+        $this->apiKey = $apiKey;
         $this->baseUrl = $baseUrl;
     }
 

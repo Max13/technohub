@@ -37,6 +37,7 @@ return [
     ],
 
     'ypareo' => [
+        'apiKey' => env('YPAREO_APIKEY'),
         'baseUrl' => env('YPAREO_BASEURL'),
     ],
 
