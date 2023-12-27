@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Hotspot;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Services\Mikrotik\Hotspot;
 use App\Services\Ypareo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class YpareoController extends Controller
 {
@@ -41,6 +43,13 @@ class YpareoController extends Controller
 
         if ($ypareo->auth($data['username'], $data['password'], $request->userAgent())) {
             if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['username'])) {
+                DB::table('hotspot_history')->insert([
+                    'server' => $data['hs'],
+                    'user_id' => User::firstWhere('ypareo_login', $data['username']),
+                    'mac' => $data['mac'],
+                    'created_at' => now(),
+                ]);
+
                 return redirect()->away($data['captive'] . '?' . http_build_query([
                    'dst' => $data['dst'],
                    'username' => $data['mac'],
