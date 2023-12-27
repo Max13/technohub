@@ -19,6 +19,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('hotspot:clear hs-etudiants')
                  ->daily()
                  ->runInBackground();
+
+        $schedule->command('ypareo:sync-users')
+                 ->dailyAt('08:00')
+                 ->weekdays();
     }
 
     /**
