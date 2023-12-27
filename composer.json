@@ -51,7 +51,9 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php -r \"touch('database/database.sqlite');\"",
             "@composer install -o",
-            "@php artisan key:generate --ansi"
+            "@php artisan key:generate --ansi",
+            "npm install",
+            "npm run developpement"
         ]
     },
     "extra": {
