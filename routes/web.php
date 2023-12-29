@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Hotspot\StaffController;
 use App\Http\Controllers\Hotspot\YpareoController;
+use App\Http\Controllers\HotspotController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/hotspot/login', [HotspotController::class, 'showLogin'])->name('hotspot.showLogin');
 
 Route::get('/hotspot/ypareo/login', [YpareoController::class, 'showLogin'])->name('hotspot.ypareo.showLogin');
 Route::post('/hotspot/ypareo/login', [YpareoController::class, 'doLogin'])->name('hotspot.ypareo.doLogin');

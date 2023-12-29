@@ -17,7 +17,7 @@ class YpareoController extends Controller
      */
     public function showLogin(Request $request)
     {
-        return view('hotspot.login', [
+        return view('hotspot.students.login', [
             'captive' => $request->captive,
             'dst' => $request->dst,
             'hs' => $request->hs,
