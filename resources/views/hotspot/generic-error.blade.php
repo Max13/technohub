@@ -25,7 +25,6 @@
             <img class="logo" alt="logo" src="{{ asset('/img/hs-logo.svg') }}">
 
             <h2 class="info" style="margin-top: 3rem;">{{ __('An error occured while showing the captive portal, please contact the IT in room 14') }}</h2>
-
         </div>
     </div>
 </div>

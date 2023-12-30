@@ -14,7 +14,6 @@ class HotspotController extends Controller
                 Log::notice('Captive portal without required parameters:', $request->all());
             }
 
-            return view('hotspot.login-error');
         }
 
         if ($request->hs === 'hs-students') {
@@ -30,6 +29,6 @@ class HotspotController extends Controller
             Log::notice('Captive portal not for students:', $request->all());
         }
 
-        return view('hotspot.login-error');
+        return view('hotspot.generic-error');
     }
 }
