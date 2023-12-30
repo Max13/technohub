@@ -14,6 +14,11 @@ return [
     |
     */
 
+    '3cx' => [
+        'url' => env('THREECX_URL'),
+        'party' => env('THREECX_PARTY'),
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
