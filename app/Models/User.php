@@ -17,7 +17,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'is_staff',
         'is_student',
+        'is_trainer',
         'ypareo_id',
         'ypareo_login',
         'firstname',
@@ -42,7 +44,9 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'is_staff' => 'boolean',
         'is_student' => 'boolean',
+        'is_trainer' => 'boolean',
         'ypareo_id' => 'integer',
         'email_verified_at' => 'datetime',
     ];
