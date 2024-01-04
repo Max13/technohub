@@ -13,10 +13,8 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/hotspot.js', 'public/js')
+    .sass('resources/scss/app.scss', 'public/css')
     .postCss('resources/css/hotspot.css', 'public/css')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ])
     .copyDirectory('resources/img', 'public/img');
 
 if (mix.inProduction()) {
