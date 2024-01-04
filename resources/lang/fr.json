@@ -1,9 +1,17 @@
 {
-    "By using this service, you acknowledge having read, understood and accepted the <a href=\"#\" data-modal=\"termsModal\">general terms of use</a>.": "En utilisant ce service, vous reconnaissez avoir lu, compris et accepté les <a href=\"#\" data-modal=\"termsModal\">conditions générales d'utilisation</a>.",
+    "By using this service, you acknowledge having read, understood and accepted the <a href=\"#\" class=\"alert-link\" data-bs-toggle=\"modal\" data-bs-target=\"#:modalName\">general terms of use</a>.": "En utilisant ce service, vous reconnaissez avoir lu, compris et accepté les <a href=\"#\" class=\"alert-link\" data-bs-toggle=\"modal\" data-bs-target=\"#:modalName\">conditions générales d'utilisation</a>.",
+    "Close": "Fermer",
     "Connect": "Connexion",
-    "If you need help, come see us in room 14!": "Si t'as besoin d'aide, passe nous voir en salle 14 !",
+    "Continue with Google": "Continuer avec Google",
+    "Continue with Ypareo": "Continuer avec Ypareo",
+    "If you need help, come see us in room 14!": "Si vous avez besoin d'aide, passez nous voir en salle 14 !",
+    "If you need help, contact the IT!": "Si vous avez besoin d'aide, contactez l'informatique !",
     "Password": "Mot de passe",
+    "Staff": "Personnels",
+    "Students": "Étudiants",
+    "Trainers": "Formateurs",
     "Username": "Nom d'utilisateur",
-    "You are logged in!": "Tu es bien connecté !",
-    "You need to be logged-in to access this network. Use your <u>Ypareo</u> credentials to continue.": "Tu dois être identifié pour accéder à ce réseau. Utilise tes identifiants <u>Yparéo</u> pour continuer."
+    "You are logged in!": "Vous êtes bien connecté !",
+    "You need to be logged-in to access this network.": "Vous devez être identifié pour accéder à ce réseau.",
+    "You need to be logged-in to access this network. Use your <u>Ypareo</u> credentials to continue.": "Vous devez être identifié pour accéder à ce réseau. Utilisez vos identifiants <u>Yparéo</u> pour continuer."
 }

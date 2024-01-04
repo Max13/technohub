@@ -1,0 +1,133 @@
+@import "bootstrap/scss/bootstrap";
+
+@font-face {
+  font-display: swap;
+  font-family: 'Google Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/fonts/google-sans_latin_400.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Google Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url(/fonts/google-sans_latin_500.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+.callout {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  code {
+    border-radius: 3px;
+  }
+
+  +.callout {
+    margin-top: -5px;
+  }
+
+  a {
+    color: var(--callout-link-color);
+  }
+
+  &-link {
+    @extend .alert-link;
+  }
+}
+
+@each $state in map-keys($theme-colors) {
+  .callout-#{$state} {
+    --callout-link-color: var(--#{$prefix}#{$state}-text-emphasis);
+    color: var(--#{$prefix}#{$state}-text-emphasis);
+    background: var(--#{$prefix}#{$state}-bg-subtle);
+    border-color: var(--#{$prefix}#{$state}-bg-subtle);
+    border-left-color: var(--#{$prefix}#{$state}-border-subtle);
+  }
+}
+
+@include color-mode(light) {
+  .light\:d-none {
+    @extend .d-none;
+  }
+}
+
+@include color-mode(dark) {
+  .dark\:d-none {
+    @extend .d-none;
+  }
+}
+
+.container-hs {
+  --#{$prefix}body-font-size: .8rem;
+
+  @extend .container;
+  font-size: var(--#{$prefix}body-font-size);
+  max-width: 410px;
+
+  .btn {
+    --#{$prefix}btn-font-size: var(--#{$prefix}body-font-size);
+  }
+}
+
+.btn.login-with {
+  padding: 0.556em 1.167em;
+
+  &::before {
+    display: inline-block;
+    height: 1.286em;
+    width: 1.286em;
+    vertical-align: text-top;
+  }
+
+  &.google {
+    --#{$prefix}btn-bg: #fff;
+    --#{$prefix}btn-border-color: #dadce0;
+    --#{$prefix}btn-color: #3c4043;
+    --#{$prefix}btn-active-bg: var(--#{$prefix}btn-bg);
+    --#{$prefix}btn-active-border-color: #d2e3fc;
+    --#{$prefix}btn-active-color: var(--#{$prefix}btn-color);
+    --#{$prefix}btn-hover-bg: var(--#{$prefix}btn-bg);
+    --#{$prefix}btn-hover-border-color: var(--#{$prefix}btn-active-border-color);
+    --#{$prefix}btn-hover-color: var(--#{$prefix}btn-color);
+    // Todo: --#{$prefix}btn-disabled-bg;
+    // Todo: --#{$prefix}btn-disabled-border-color;
+    // Todo: --#{$prefix}btn-disabled-color;
+
+    font-family: "Google Sans", arial, sans-serif;
+    font-weight: 500;
+
+    &::before {
+      content: url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDQ4IDQ4Ij48Zz48cGF0aCBmaWxsPSIjRUE0MzM1IiBkPSJNMjQgOS41YzMuNTQgMCA2LjcxIDEuMjIgOS4yMSAzLjZsNi44NS02Ljg1QzM1LjkgMi4zOCAzMC40NyAwIDI0IDAgMTQuNjIgMCA2LjUxIDUuMzggMi41NiAxMy4yMmw3Ljk4IDYuMTlDMTIuNDMgMTMuNzIgMTcuNzQgOS41IDI0IDkuNXoiPjwvcGF0aD48cGF0aCBmaWxsPSIjNDI4NUY0IiBkPSJNNDYuOTggMjQuNTVjMC0xLjU3LS4xNS0zLjA5LS4zOC00LjU1SDI0djkuMDJoMTIuOTRjLS41OCAyLjk2LTIuMjYgNS40OC00Ljc4IDcuMThsNy43MyA2YzQuNTEtNC4xOCA3LjA5LTEwLjM2IDcuMDktMTcuNjV6Ij48L3BhdGg+PHBhdGggZmlsbD0iI0ZCQkMwNSIgZD0iTTEwLjUzIDI4LjU5Yy0uNDgtMS40NS0uNzYtMi45OS0uNzYtNC41OXMuMjctMy4xNC43Ni00LjU5bC03Ljk4LTYuMTlDLjkyIDE2LjQ2IDAgMjAuMTIgMCAyNGMwIDMuODguOTIgNy41NCAyLjU2IDEwLjc4bDcuOTctNi4xOXoiPjwvcGF0aD48cGF0aCBmaWxsPSIjMzRBODUzIiBkPSJNMjQgNDhjNi40OCAwIDExLjkzLTIuMTMgMTUuODktNS44MWwtNy43My02Yy0yLjE1IDEuNDUtNC45MiAyLjMtOC4xNiAyLjMtNi4yNiAwLTExLjU3LTQuMjItMTMuNDctOS45MWwtNy45OCA2LjE5QzYuNTEgNDIuNjIgMTQuNjIgNDggMjQgNDh6Ij48L3BhdGg+PHBhdGggZmlsbD0ibm9uZSIgZD0iTTAgMGg0OHY0OEgweiI+PC9wYXRoPjwvZz48L3N2Zz4=);
+      margin-right: .5em;
+    }
+  }
+}
+
+.modal-hs {
+  h1, h2, h3, h4, h5, h6 {
+    font-size: revert;
+  }
+
+  .modal-header {
+    :last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .modal-hs {
+    --bs-modal-width: 600px;
+  }
+}

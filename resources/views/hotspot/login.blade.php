@@ -41,20 +41,11 @@
                 @endif
 
                 <label>
-                    <img class="ico" src="{{ asset('/img/icon-user.svg') }}" alt="#" />
-                    <input name="username" type="text" value="{{ old('username') }}" placeholder="{{ __('Username') }}" />
-                </label>
-
-                <label>
-                    <img class="ico" src="{{ asset('/img/icon-password.svg') }}" alt="#" />
-                    <input name="password" type="password" placeholder="{{ __('Password') }}" />
-                </label>
-
-                <label>
                     <p class="info bt">{!! __('By using this service, you acknowledge having read, understood and accepted the <a href="#" data-modal="termsModal">general terms of use</a>.') !!}</p>
                 </label>
 
-                <input type="submit" value="{{ __('Connect') }}" />
+                <a href="#" class="login-with ypareo" >{{ __('Students') }} / {{ __('Trainers') }}</a>
+                <a href="#" class="login-with google" >{{ __('Staff') }}</a>
 
             </form>
 

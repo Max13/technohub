@@ -2,33 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\Hotspot\BadRequestException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class HotspotController extends Controller
 {
-    public function showLogin(Request $request)
+    public function redirectToLogin(Request $request)
     {
-        if (!$request->has(['captive', 'hs','mac'])) {
-            if (app()->environment('production')) {
-                Log::notice('Captive portal without required parameters:', $request->all());
-            }
-
+        if ($request->hs === 'hs-staff') {
+            return redirect()->route('auth.google.showLogin', [
+                'callback' => route('hotspot.staff.callback', $request->query(), false),
+                'domains' => config('services.google.allowed_domains'),
+            ]);
+        } elseif ($request->hs === 'hs-students') {
+            $route = redirect()->route('hotspot.ypareo.showLogin', $request->query());
+        } else {
+            $route = null;
         }
 
-        if ($request->hs === 'hs-students') {
-            return redirect()->route('hotspot.ypareo.showLogin', $request->only([
-                'captive',
-                'dst',
-                'hs',
-                'mac',
-            ]));
+        if ($route) {
+            session()->flash('intent', 'hotspot/ok');
         }
 
-        if (app()->environment('production')) {
-            Log::notice('Captive portal not for students:', $request->all());
-        }
-
-        return view('hotspot.generic-error');
+        throw new BadRequestException("Invalid \"hs\" query parameter");
     }
 }
