@@ -100,9 +100,9 @@
     --#{$prefix}btn-hover-bg: var(--#{$prefix}btn-bg);
     --#{$prefix}btn-hover-border-color: var(--#{$prefix}btn-active-border-color);
     --#{$prefix}btn-hover-color: var(--#{$prefix}btn-color);
-    // Todo: --#{$prefix}btn-disabled-bg;
-    // Todo: --#{$prefix}btn-disabled-border-color;
-    // Todo: --#{$prefix}btn-disabled-color;
+    --#{$prefix}btn-disabled-bg: var(--#{$prefix}btn-bg);
+    --#{$prefix}btn-disabled-border-color: var(--#{$prefix}btn-active-border-color);
+    --#{$prefix}btn-disabled-color: var(--#{$prefix}btn-color);
 
     font-family: "Google Sans", arial, sans-serif;
     font-weight: 500;
@@ -123,9 +123,9 @@
     --#{$prefix}btn-hover-bg: var(--#{$prefix}btn-bg);
     --#{$prefix}btn-hover-border-color: var(--#{$prefix}btn-active-border-color);
     --#{$prefix}btn-hover-color: var(--#{$prefix}btn-color);
-    // Todo: --#{$prefix}btn-disabled-bg;
-    // Todo: --#{$prefix}btn-disabled-border-color;
-    // Todo: --#{$prefix}btn-disabled-color;
+    --#{$prefix}btn-disabled-bg: var(--#{$prefix}btn-bg);
+    --#{$prefix}btn-disabled-border-color: var(--#{$prefix}btn-active-border-color);
+    --#{$prefix}btn-disabled-color: var(--#{$prefix}btn-color);
 
     font-weight: 500;
 
