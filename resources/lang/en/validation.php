@@ -142,8 +142,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'callback' => [
+            'required' => 'The "callback" parameter is missing from the request.',
         ],
     ],
 
@@ -158,6 +158,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'domains' => 'allowed domains',
+    ],
 
 ];

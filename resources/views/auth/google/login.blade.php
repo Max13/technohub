@@ -44,11 +44,19 @@
 
         @if ($errors->any())
         <div class="alert alert-danger mt-4 p-2" role="alert">
-            <span class="visually-hidden">Error: </span>{{ $errors->first() }}
+            @if ($errors->count() === 1)
+                <span class="visually-hidden">{{ __('Error') }}: </span>{{ $errors->first() }}
+            @else
+                <ul>
+                    @foreach($errors->all() as $message)
+                        <li class="text-start"><span class="visually-hidden">{{ __('Error') }}: </span>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
         @endif
 
-        <a class="btn login-with google w-100 my-2" role="button" href="{{ route('auth.google.redirect', ['callback' => $callback, 'domains' => $domains], false) }}">{{ __('Continue with Google') }}</a>
+        <a class="btn login-with google w-100 my-2 @error('callback')) disabled @enderror" role="button" href="{{ route('auth.google.redirect', ['callback' => $callback, 'domains' => $domains], false) }}">{{ __('Continue with Google') }}</a>
 
         <p class="text-muted mt-1">{{ __('If you need help, contact the IT!') }}</p>
     </main>

@@ -18,25 +18,42 @@ class GoogleController extends Controller
         $this->middleware('cache.headers:no_store');
     }
 
+    /**
+     * Show Google OAuth login page (Continue with Google button)
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function showLogin(Request $request)
     {
-        $data = $request->validate([
+        $view = view('auth.google.login');
+
+        // Validate request: Shows view with errors
+        $validator = validator($request->all(), [
             'callback' => 'required|string',
-            'domains' => 'required|array|min:0',
+            'domains'  => 'sometimes|required|array|min:0',
         ]);
 
-        return view('auth.google.login', [
-            'domains' => $data['domains'] ?? [],
+        if ($validator->stopOnFirstFailure()->fails()) {
+            return $view->with([
+                'callback' => null,
+                'domains' => [],
+            ])->withErrors($validator);
+        }
+        // Validate request
+
+        $data = $validator->validated();
+
+        return $view->with([
             'callback' => $data['callback'],
+            'domains'  => $data['domains'] ?? [],
         ]);
     }
 
     public function redirect(Request $request)
     {
-        $data = $request->validate([
-            'callback' => 'required|string',
-            'domains' => 'sometimes|required|array|min:0',
-        ]);
+        $this->validatedRedirect($request);
+
 
         $request->session()->flash('callback', $data['callback']);
 
