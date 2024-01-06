@@ -50,15 +50,30 @@ class GoogleController extends Controller
         ]);
     }
 
+    /**
+     * Redirects user to Google OAuth flow
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function redirect(Request $request)
     {
-        $this->validatedRedirect($request);
-
+        $data = $request->validate([
+            'callback' => 'required|string',
+            'domains'  => 'required|array|min:0',
+        ]);
 
         $request->session()->flash('callback', $data['callback']);
+        $request->session()->flash('domains', $data['domains']);
+
+        if (count($data['domains']) === 1) {
+            $with = ['hd' => $data['domains'][0]];
+        } else {
+            $with = [];
+        }
 
         return Socialite::driver('google')
-                        ->with(['hd' => $data['domains'] ?? []])
+                        ->with($with)
                         ->redirect();
     }
 
