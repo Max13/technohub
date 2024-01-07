@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -77,8 +78,55 @@ class GoogleController extends Controller
                         ->redirect();
     }
 
+    /**
+     * Google OAuth callback.
+     * Redirects to callback route with entryPoint
+     * and user info in case of errors
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function callback(Request $request)
     {
-        dd($request->all(), $request->session()->all(), $request->session()->get('callback'));
+        $entryPointRoute = route(
+            'auth.google.showLogin',
+            $request->session()->only(['callback', 'domains']),
+            false
+        );
+
+        // Validate the session data.
+        $validator = validator($request->session()->only(['callback', 'domains']), [
+            'callback' => 'required|string',
+            'domains'  => 'required|array|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect($entryPointRoute)->withErrors($validator);
+        }
+
+        $sessionData = $validator->validated();
+        // End session data validation
+
+        try {
+            $user = Socialite::driver('google')->user();
+        } catch (Exception $e) {
+            return redirect($entryPointRoute)->withErrors([
+                __('Google authentication failed. Please try again.'),
+            ]);
+        }
+
+        // Validate the user's domain
+        $domains = $sessionData['domains'];
+        if (count($domains) && !in_array($request->hd, $domains)) {
+            return redirect($entryPointRoute)->withErrors([
+                __('validation.custom.hd.in', ['domains' => join(', ', $domains)]),
+            ]);
+        }
+        // End user's domain validation
+
+        $request->session()->flash('auth.entryPoint', $entryPointRoute);
+        $request->session()->flash('auth.user', $user);
+
+        return redirect($sessionData['callback']);
     }
 }

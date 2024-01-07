@@ -145,6 +145,9 @@ return [
         'callback' => [
             'required' => 'The "callback" parameter is missing from the request.',
         ],
+        'hd' => [
+            'in' => 'The account must be one of the allowed domains (:domains).',
+        ],
     ],
 
     /*
