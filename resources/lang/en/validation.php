@@ -142,6 +142,9 @@ return [
     */
 
     'custom' => [
+        'auth.user.email' => [
+            'exists' => 'This account is not authorized to sign-in.',
+        ],
         'callback' => [
             'required' => 'The "callback" parameter is missing from the request.',
         ],
