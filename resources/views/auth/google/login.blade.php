@@ -1,39 +1,9 @@
-<!doctype html>
-<html lang="{{ app()->currentLocale() }}" data-bs-theme="auto">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.118.2">
-    <title>{{ config('app.name') }}</title>
-    <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
+@extends('layouts.app')
 
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('/img/favicons/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/svg+xml" href="{{ mix('/img/favicons/favicon.svg') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ mix('/img/favicons/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ mix('/img/favicons/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ mix('/img/favicons/site.webmanifest') }}">
-    <link rel="mask-icon" href="{{ mix('/img/favicons/safari-pinned-tab.svg') }}" color="#000000">
-    <link rel="shortcut icon" href="{{ mix('img/favicons/favicon.ico') }}">
-    <meta name="msapplication-TileColor" content="#2d89ef">
-    <meta name="msapplication-config" content="{{ mix('img/favicons/browserconfig.xml') }}">
-    <meta name="theme-color" content="#ffffff">
+@section('bodyClass', 'd-flex align-items-center py-4 bg-body-tertiary')
 
-    <script>
-        (() => {
-            if (document.documentElement.getAttribute('data-bs-theme') === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.setAttribute('data-bs-theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-bs-theme', 'light');
-            }
-        })();
-    </script>
-</head>
-<body class="d-flex align-items-center py-4 bg-body-tertiary">
+@section('content')
     <main class="container-hs text-center">
-
         <img class="d-block dark:d-none mx-auto mt-4 w-75" src="{{ mix('/img/logo-h_black.svg') }}" alt="ITIC Logo">
         <img class="d-block light:d-none mx-auto mt-4 w-75" src="{{ mix('/img/logo-h_white.svg') }}" alt="ITIC Logo">
 
@@ -62,7 +32,8 @@
     </main>
 
     <x-hs-terms-modal id="termsModal" />
+@endsection
 
+@push('scripts')
     <script src="{{ mix('/js/app.js') }}"></script>
-</body>
-</html>
+@endpush
