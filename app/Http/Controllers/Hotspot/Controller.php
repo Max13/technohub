@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Hotspot;
 
 use App\Http\Controllers\Controller as BaseController;
+use App\Services\Mikrotik\Hotspot;
 use Illuminate\Http\Request;
 
 /**
@@ -19,7 +20,7 @@ abstract class Controller extends BaseController
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function validateCallback(Request $request, array $additionnalRules)
+    public function validateCallback(Request $request, array $additionnalRules = [])
     {
         // Validates hotspot + auth data
         $rules = array_merge([
@@ -46,4 +47,13 @@ abstract class Controller extends BaseController
 
         return $validator->validated();
     }
+
+    /**
+     * Hotspot authentication callback
+     *
+     * @param  \Illuminate\Http\Request       $request
+     * @param  \App\Services\Mikrotik\Hotspot $hotspot
+     * @return \Illuminate\Http\Response
+     */
+    abstract public function callback(Request $request, Hotspot $hotspot);
 }

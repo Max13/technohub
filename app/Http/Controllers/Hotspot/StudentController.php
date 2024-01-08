@@ -9,7 +9,7 @@ use App\Services\Ypareo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class YpareoController extends Controller
+class StudentController extends Controller
 {
     /**
      * @param  \Illuminate\Http\Request  $request
