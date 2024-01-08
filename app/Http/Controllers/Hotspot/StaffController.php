@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
+/**
+ * Hotspot authentication controller for Staff
+ */
 class StaffController extends Controller
 {
     /**
