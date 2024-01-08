@@ -24,4 +24,14 @@ class HotspotController extends Controller
 
         throw new BadRequestException("Invalid \"hs\" query parameter");
     }
+
+    public function showConnected(Request $request)
+    {
+        return view('hotspot.connected', $request->only([
+            'captive',
+            'dst',
+            'hs',
+            'mac',
+        ]));
+    }
 }

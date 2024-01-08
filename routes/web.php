@@ -33,12 +33,4 @@ Route::get('/auth/ypareo', [YpareoController::class, 'showLogin'])->name('auth.y
 Route::post('/auth/ypareo', [YpareoController::class, 'doLogin'])->name('auth.ypareo.doLogin');
 
 Route::get('/hotspot/students/callback', [StudentController::class, 'callback'])->name('hotspot.students.callback');
-
-Route::view('/hotspot/ok', 'hotspot.connected', [
-    'captive' => request()->captive,
-    'dst' => request()->dst,
-    'hs' => request()->hs,
-    'mac' => request()->mac,
-    'uptime' => request()->uptime,
-]);
-// /Hotspot
+Route::get('/hotspot/connected', [HotspotController::class, 'showConnected'])->name('hotspot.showConnected');
