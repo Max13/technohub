@@ -1,36 +1,31 @@
-<!doctype html>
-<html lang="{{ app()->currentLocale() }}">
+@extends('layouts.app')
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="pragma" content="no-cache" />
-    <meta http-equiv="expires" content="-1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ config('app.name') }}</title>
-    <link rel="stylesheet" href="{{ mix('/css/hotspot.css') }}">
-</head>
+@push('styles')
+    <style>
+        main {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 400px;
+            font-size: .8rem;
+        }
 
-<body>
+        img {
+            max-width: 300px;
+        }
+    </style>
+@endpush
 
-<!-- two other colors
+@section('content')
+    <main class="text-center">
+        <img class="d-block dark:d-none mx-auto" src="{{ mix('/img/logo-h_black.svg') }}" alt="ITIC Logo">
+        <img class="d-block light:d-none mx-auto" src="{{ mix('/img/logo-h_white.svg') }}" alt="ITIC Logo">
 
-<body class="lite">
-<body class="dark">
-
--->
-
-<div class="ie-fixMinHeight">
-    <div class="main">
-        <div class="wrap">
-            <img class="logo" alt="logo" src="{{ asset('/img/hs-logo.svg') }}">
-
-            <h1 class="info" style="margin-top: 3rem; margin-bottom: 2rem">{{ __('You are logged in!') }}</h1>
-
-            <img class="logo" alt="Louis le BG" src="{{ asset('/img/hs-connected.jpeg') }}">
-            {{-- <h3 class="info">{{ __('Uptime') }}: {{ $uptime }}</h3> --}}
+        <div class="alert alert-info my-5 p-2" role="alert">
+            {{ __('You are connected!') }}
         </div>
-    </div>
-</div>
-</body>
 
-</html>
+        <img class="d-block mx-auto w-75" alt="Louis le BG" src="{{ asset('/img/hs-connected.jpeg') }}">
+    </main>
+@endsection

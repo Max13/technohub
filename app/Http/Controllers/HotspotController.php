@@ -38,16 +38,10 @@ class HotspotController extends Controller
     /**
      * Show "connected" view, at the end of the authentication process.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function showConnected(Request $request)
+    public function showConnected()
     {
-        return view('hotspot.connected', $request->only([
-            'captive',
-            'dst',
-            'hs',
-            'mac',
-        ]));
+        return view('hotspot.connected');
     }
 }
