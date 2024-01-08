@@ -5,8 +5,18 @@ namespace App\Http\Controllers;
 use App\Exceptions\Hotspot\BadRequestException;
 use Illuminate\Http\Request;
 
+/**
+ * Hotspot controller, handles where to redirect the user to authenticate.
+ */
 class HotspotController extends Controller
 {
+    /**
+     * Redirects the user to the appropriate authentication page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     * @throws \App\Exceptions\Hotspot\BadRequestException
+     */
     public function redirectToLogin(Request $request)
     {
         if ($request->hs === 'hs-staff') {
@@ -25,6 +35,12 @@ class HotspotController extends Controller
         throw new BadRequestException("Invalid \"hs\" query parameter");
     }
 
+    /**
+     * Show "connected" view, at the end of the authentication process.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function showConnected(Request $request)
     {
         return view('hotspot.connected', $request->only([
