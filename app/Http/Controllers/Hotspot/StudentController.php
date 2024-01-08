@@ -2,68 +2,46 @@
 
 namespace App\Http\Controllers\Hotspot;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\Mikrotik\Hotspot;
-use App\Services\Ypareo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
 {
     /**
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @inheritDoc
      */
-    public function showLogin(Request $request)
+    public function callback(Request $request, Hotspot $hotspot)
     {
-        return view('hotspot.students.login', [
-            'captive' => $request->captive,
-            'dst' => $request->dst,
-            'hs' => $request->hs,
-            'mac' => $request->mac,
-        ]);
-    }
-
-    /**
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Services\Ypareo      $ypareo
-     * @return \Illuminate\Http\Response
-     */
-    public function doLogin(Request $request, Hotspot $hotspot, Ypareo $ypareo)
-    {
-        $data = $request->validate([
-            'captive' => 'required|url',
-            'dst' => 'nullable|url',
-            'hs' => 'required|string',
-            'mac' => 'required|mac_address',
-            'username' => 'required|string',
-            'password' => 'required|string',
+        $data = $this->validateCallback($request, [
+            'auth.user.ypareo_login' => [
+                'required',
+                Rule::exists('users')->where(function ($query) {
+                    return $query->where('is_trainer', true)
+                                 ->orWhere('is_student', true);
+                }),
+            ]
         ]);
 
-        if ($ypareo->auth($data['username'], $data['password'], $request->userAgent())) {
-            if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['username'])) {
-                DB::table('hotspot_history')->insert([
-                    'server' => $data['hs'],
-                    'user_id' => User::firstWhere('ypareo_login', $data['username']),
-                    'mac' => $data['mac'],
-                    'created_at' => now(),
-                ]);
+        if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['username'])) {
+            DB::table('hotspot_history')->insert([
+                'server' => $data['hs'],
+                'user_id' => User::firstWhere('ypareo_login', $data['username']),
+                'mac' => $data['mac'],
+                'created_at' => now(),
+            ]);
 
-                return redirect()->away($data['captive'] . '?' . http_build_query([
-                   'dst' => $data['dst'],
-                   'username' => $data['mac'],
-                   'password' => $data['mac'],
-                ]));
-            }
-
-            return back()->withErrors([
-                'Erreur à l\'autorisation sur MT',
-            ])->withInput();
+            return redirect()->away($data['captive'] . '?' . http_build_query([
+               'dst' => $data['dst'],
+               'username' => $data['mac'],
+               'password' => $data['mac'],
+            ]));
         }
 
-        return back()->withErrors([
-            'Identifiants incorrects',
+        return redirect($data['auth.entryPoint'])->withErrors([
+            __('Hotspot authentication failed. Please try again.'),
         ])->withInput();
     }
 }

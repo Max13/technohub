@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\YpareoController;
 use App\Http\Controllers\Hotspot\StaffController;
-use App\Http\Controllers\Hotspot\YpareoController;
+use App\Http\Controllers\Hotspot\StudentController;
 use App\Http\Controllers\HotspotController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,8 +31,11 @@ Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name
 
 Route::get('/hotspot/staff/callback', [StaffController::class, 'callback'])->name('hotspot.staff.callback');
 
-Route::get('/hotspot/ypareo/login', [YpareoController::class, 'showLogin'])->name('hotspot.ypareo.showLogin');
-Route::post('/hotspot/ypareo/login', [YpareoController::class, 'doLogin'])->name('hotspot.ypareo.doLogin');
+Route::get('/auth/ypareo', [YpareoController::class, 'showLogin'])->name('auth.ypareo.showLogin');
+Route::post('/auth/ypareo', [YpareoController::class, 'doLogin'])->name('auth.ypareo.doLogin');
+
+Route::get('/hotspot/students/callback', [StudentController::class, 'callback'])->name('hotspot.students.callback');
+
 Route::view('/hotspot/ok', 'hotspot.connected', [
     'captive' => request()->captive,
     'dst' => request()->dst,

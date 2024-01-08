@@ -145,6 +145,9 @@ return [
         'auth.user.email' => [
             'exists' => 'This account is not authorized to sign-in.',
         ],
+        'auth.user.ypareo_login' => [
+            'exists' => 'This account is not authorized to sign-in.',
+        ],
         'callback' => [
             'required' => 'The "callback" parameter is missing from the request.',
         ],
