@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 
 /**
  * Ypareo service
@@ -34,27 +32,20 @@ class Ypareo
     }
 
     /**
-     * Retrieve CSRF token from login page
-     *
-     * @param  string $userAgent
-     * @return string
-     */
-    protected function getLoginCsrf($userAgent, CookieJar $cookieJar): string
-    {
-        return '**CSRF**';
-    }
-
-    /**
-     * Authenticate a user against Ypareo
+     * Check a user credentials against Ypareo
      *
      * @param  string $username
      * @param  string $password
      * @param  string $userAgent
      * @return bool
      */
-    public function auth($username, $password, $userAgent): bool
+    public function auth($username, $password, $userAgent, $returnInDev = true): bool
     {
-        return true;
+        if (!app()->environment('production') && !class_exists(\Mx\Ypareo\Auth::class)) {
+            return $returnInDev;
+        }
+
+        return \Mx\Ypareo\Auth::check($this->baseUrl, $username, $password, $userAgent);
     }
 
     /**

@@ -14,3 +14,9 @@ Pensez ensuite à remplir correctement le fichier `.env`, et vous pouvez utilise
 
 ## Bonus
 Voir `composer.json` pour les compatibilités. Le projet tourne sur `SQLite` et les textes sont écrits en Anglais puis traduits.
+
+## Prod (Private repository)
+```bash
+$ composer config repositories.ypareo-auth vcs https://github.com/Max13/php-ypareauth.git
+$ composer require max13/php-ypareauth:^1.0
+```
