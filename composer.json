@@ -54,7 +54,7 @@
             "@composer install -o",
             "@php artisan key:generate --ansi",
             "npm install",
-            "npm run developpement"
+            "npm run dev"
         ]
     },
     "extra": {
