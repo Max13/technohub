@@ -12,9 +12,7 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .js('resources/js/hotspot.js', 'public/js')
     .sass('resources/scss/app.scss', 'public/css')
-    .postCss('resources/css/hotspot.css', 'public/css')
     .copyDirectory('resources/fonts', 'public/fonts')
     .copyDirectory('resources/img', 'public/img');
 
