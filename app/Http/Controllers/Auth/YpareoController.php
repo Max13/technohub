@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Services\Ypareo;
+use Faker\Generator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -67,7 +68,7 @@ class YpareoController extends Controller
             ]
         );
 
-        if ($ypareo->auth($data['username'], $data['password'], $request->userAgent())) {
+        if ($ypareo->auth($data['username'], $data['password'], app(Generator::class)->userAgent())) {
             $user = DB::table('users')->where('ypareo_login', $data['username'])->first();
 
             $request->session()->flash('auth.user', $user);
