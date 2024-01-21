@@ -53,6 +53,13 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
 
+        'mt190' => [
+            'driver' => 'ftp',
+            'host' => env('MIKROTIK_HOST'),
+            'username' => env('MIKROTIK_USERNAME'),
+            'password' => env('MIKROTIK_PASSWORD'),
+        ],
+
     ],
 
     /*

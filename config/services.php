@@ -33,6 +33,7 @@ return [
     ],
 
     'mikrotik' => [
+        'host' => env('MIKROTIK_HOST'),
         'baseUrl' => env('MIKROTIK_BASEURL'),
         'username' => env('MIKROTIK_USERNAME'),
         'password' => env('MIKROTIK_PASSWORD'),
