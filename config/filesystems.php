@@ -35,6 +35,11 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'stubs' => [
+            'driver' => 'local',
+            'root' => storage_path('stubs'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -53,11 +58,12 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
 
-        'mt190' => [
+        'hotspot' => [
             'driver' => 'ftp',
-            'host' => env('MIKROTIK_HOST'),
-            'username' => env('MIKROTIK_USERNAME'),
-            'password' => env('MIKROTIK_PASSWORD'),
+            'host' => env('HOTSPOT_HOST'),
+            'username' => env('HOTSPOT_USERNAME'),
+            'password' => env('HOTSPOT_PASSWORD'),
+            'root' => '/',
         ],
 
     ],

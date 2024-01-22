@@ -1,0 +1,29 @@
+$(if http-status == 302)Redirection$(endif)
+$(if logged-in == yes)
+    $(if http-header == "Location"){{ loggedInUrl }}$(endif)
+$(else)
+    $(if http-header == "Location"){{ loginUrl }}$(endif)
+$(endif)
+<!DOCTYPE html>
+    <head>
+        <meta charset="UTF-8" />
+        $(if logged-in == yes)
+        <meta http-equiv="refresh" content="0; url={{ loggedInUrl }}" />
+        $(else)
+        <meta http-equiv="refresh" content="0; url={{ loginUrl }}" />
+        $(endif)
+
+        $(if logged-in == yes)
+        <title>Redirecting to {{ loggedInUrl }}</title>
+        $(else)
+        <title>Redirecting to {{ loginUrl }}</title>
+        $(endif)
+    </head>
+    <body>
+        $(if logged-in == yes)
+        Redirecting to <a href="{{ loggedInUrl }}">{{ loggedInUrl }}</a>.
+        $(else)
+        Redirecting to <a href="{{ loginUrl }}">{{ loginUrl }}</a>.
+        $(endif)
+    </body>
+</html>
