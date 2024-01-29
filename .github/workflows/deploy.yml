@@ -1,0 +1,32 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy-via-scp:
+    uses: max13/zero-downtime/.github/workflows/deploy-via-scp.yml@v1
+    secrets:
+      #ACCOUNT_TOKEN: ${{ secrets.ACCOUNT_TOKEN }}
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      SSH_BASE_PATH: ${{ secrets.SSH_BASE_PATH }}
+      SSH_SYMLINK_PATH: 'staging'
+      SSH_CHOWN_USER: ${{ secrets.SSH_CHOWN_USER }}
+      SSH_CHOWN_GROUP: ${{ secrets.SSH_CHOWN_GROUP }}
+    with:
+#      SCRIPT_AFTER_CHECKOUT:
+#      SCRIPT_AFTER_DST_SETUP:
+#      SCRIPT_BEFORE_UPLOAD:
+      SCRIPT_ON_DST_BEFORE_DEPLOY: |
+        export SSH_KEYFILE="$(mktemp)" && echo "$SSH_KEY" > "$SSH_KEYFILE"
+        ssh -i "$SSH_KEYFILE" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "rm -rf \"$SSH_RELEASE_PATH\"/.env && ln -sfnr \"$SSH_BASE_PATH\"/data/.env \"$SSH_RELEASE_PATH\"/"
+        ssh -i "$SSH_KEYFILE" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "rm -rf \"$SSH_RELEASE_PATH\"/database/database.sqlite && ln -sfnr \"$SSH_BASE_PATH\"/data/database/database.sqlite \"$SSH_RELEASE_PATH\"/database/"
+        ssh -i "$SSH_KEYFILE" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "rm -rf \"$SSH_RELEASE_PATH\"/storage/app && ln -sfnr \"$SSH_BASE_PATH\"/data/storage/app \"$SSH_RELEASE_PATH\"/storage/"
+        rm "$SSH_KEYFILE"
+#      SCRIPT_ON_DST_AFTER_DEPLOY:
