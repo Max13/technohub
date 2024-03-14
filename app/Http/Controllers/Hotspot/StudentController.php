@@ -21,17 +21,17 @@ class StudentController extends Controller
         $data = $this->validateCallback($request, [
             'auth.user.ypareo_login' => [
                 'required',
-                Rule::exists('users')->where(function ($query) {
+                Rule::exists('users', 'ypareo_login')->where(function ($query) {
                     return $query->where('is_trainer', true)
                                  ->orWhere('is_student', true);
                 }),
             ]
         ]);
 
-        if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['username'])) {
+        if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['auth']['user']['ypareo_login'])) {
             DB::table('hotspot_history')->insert([
                 'server' => $data['hs'],
-                'user_id' => User::firstWhere('ypareo_login', $data['username']),
+                'user_id' => User::firstWhere('ypareo_login', $data['auth']['user']['ypareo_login']),
                 'mac' => $data['mac'],
                 'created_at' => now(),
             ]);
@@ -43,7 +43,7 @@ class StudentController extends Controller
             ]));
         }
 
-        return redirect($data['auth.entryPoint'])->withErrors([
+        return redirect($data['auth']['entryPoint'])->withErrors([
             __('Hotspot authentication failed. Please try again.'),
         ])->withInput();
     }

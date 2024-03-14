@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Hotspot;
 use App\Http\Controllers\Controller as BaseController;
 use App\Services\Mikrotik\Hotspot;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Base controller for Hotspot
@@ -40,9 +41,12 @@ abstract class Controller extends BaseController
         ]);
         $validator = validator($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return redirect($request->input('auth.entryPoint'))->withErrors($validator);
-        }
+        throw_if(
+            $validator->fails(),
+            ValidationException::class,
+            $validator,
+            redirect($request->input('auth.entryPoint'))->withErrors($validator)
+        );
         // End hotspot + auth data validation
 
         return $validator->validated();
