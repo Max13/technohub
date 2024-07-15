@@ -37,7 +37,7 @@ class StudentController extends Controller
             ]);
 
             return redirect()->away($data['captive'] . '?' . http_build_query([
-               'dst' => $data['dst'],
+               'dst' => $data['dst'] ?? route('hotspot.showConnected'),
                'username' => $data['mac'],
                'password' => $data['mac'],
             ]));
