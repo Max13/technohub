@@ -47,8 +47,19 @@ class Hotspot
      * @param  string $comment
      * @return bool
      */
-    public function createUser($hs, $username, $password, $comment = null): bool
+    public function createUser($hs, $username, $password, $comment = null, $force = false): bool
     {
+        if ($force) {
+            $response = Http::withBasicAuth(
+                $this->username,
+                $this->password,
+            )->get($this->baseUrl . '/ip/hotspot/user?server=' . $hs . '&name=' . $username);
+
+            if ($response->successful() && count($response->json()) === 1) {
+                $this->removeUser($response->json(0)['.id']);
+            }
+        }
+
         $response = Http::withBasicAuth(
             $this->username,
             $this->password,
