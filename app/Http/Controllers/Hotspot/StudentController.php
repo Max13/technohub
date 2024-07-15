@@ -31,7 +31,7 @@ class StudentController extends Controller
         if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['auth']['user']['ypareo_login'], true)) {
             DB::table('hotspot_history')->insert([
                 'server' => $data['hs'],
-                'user_id' => User::firstWhere('ypareo_login', $data['auth']['user']['ypareo_login']),
+                'user_id' => User::firstWhere('ypareo_login', $data['auth']['user']['ypareo_login'])->id,
                 'mac' => $data['mac'],
                 'created_at' => now(),
             ]);
