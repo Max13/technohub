@@ -45,7 +45,7 @@ abstract class Controller extends BaseController
             $validator->fails(),
             ValidationException::class,
             $validator,
-            redirect($request->input('auth.entryPoint'))->withErrors($validator)
+            redirect()->to($request->input('auth.entryPoint'))->withErrors($validator)
         );
         // End hotspot + auth data validation
 
