@@ -49,15 +49,8 @@ class Hotspot
      */
     public function createUser($hs, $username, $password, $comment = null, $force = false): bool
     {
-        if ($force) {
-            $response = Http::withBasicAuth(
-                $this->username,
-                $this->password,
-            )->get($this->baseUrl . '/ip/hotspot/user?server=' . $hs . '&name=' . $username);
-
-            if ($response->successful() && count($response->json()) === 1) {
-                $this->removeUser($response->json(0)['.id']);
-            }
+        if ($force && ($hsUser = $this->findUser($hs, $username))) {
+            $this->removeUser($hsUser['.id']);
         }
 
         $response = Http::withBasicAuth(
@@ -74,6 +67,27 @@ class Hotspot
         );
 
         return $response->successful();
+    }
+
+    /**
+     * Find a hotspot's user
+     *
+     * @param  string $hs
+     * @param  string $username
+     * @return mixed
+     */
+    public function findUser($hs, $username)
+    {
+        $response = Http::withBasicAuth(
+            $this->username,
+            $this->password,
+        )->get($this->baseUrl . '/ip/hotspot/user?server=' . $hs . '&name=' . $username);
+
+        if ($response->successful() && count($response->json()) === 1) {
+            return $response->json()[0];
+        }
+
+        return false;
     }
 
     /**
