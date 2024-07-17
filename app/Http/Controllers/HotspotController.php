@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\Hotspot\BadRequestException;
+use App\Services\Mikrotik\Hotspot;
 use Illuminate\Http\Request;
 
 /**
@@ -13,12 +14,17 @@ class HotspotController extends Controller
     /**
      * Redirects the user to the appropriate authentication page.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request       $request
+     * @param  \App\Services\Mikrotik\Hotspot $hotspot
      * @return \Illuminate\Http\Response
      * @throws \App\Exceptions\Hotspot\BadRequestException
      */
-    public function redirectToLogin(Request $request)
+    public function redirectToLogin(Request $request, Hotspot $hotspot)
     {
+        if ($hotspot->findUser($request->hs, $request->mac)) {
+            return redirect()->route('hotspot.showConnected');
+        }
+
         if ($request->hs === 'hs-staff') {
             return redirect()->route('auth.google.showLogin', [
                 'callback' => route('hotspot.staff.callback', $request->query(), false),
