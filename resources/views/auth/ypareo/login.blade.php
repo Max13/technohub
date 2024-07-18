@@ -26,7 +26,7 @@
             </div>
         @endif
 
-        <form class="mt-4 text-start" method="POST" action="{{ route('auth.ypareo.doLogin', ['callback' => $callback], false) }}">
+        <form class="mt-4 text-start" method="POST" action="{{ route('auth.ypareo.doLogin', $request, false) }}">
             @csrf
 
             <div class="row mb-3">

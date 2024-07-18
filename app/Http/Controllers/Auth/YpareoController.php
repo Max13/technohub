@@ -47,7 +47,6 @@ class YpareoController extends Controller
         }
         // Validate request
 
-        $data = $validator->validated();
         $request->session()->flash('auth.entryPoint', $_SERVER['REQUEST_URI']);
 
         Log::debug("Hotspot from $request->mac : Entry point added to the session.", [
@@ -56,7 +55,7 @@ class YpareoController extends Controller
         ]);
 
         return $view->with([
-            'callback' => $data['callback'],
+            'request' => $request->all(),
         ]);
     }
 
