@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\Hotspot\BadRequestException;
 use App\Services\Mikrotik\Hotspot;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Hotspot controller, handles where to redirect the user to authenticate.
@@ -21,7 +22,14 @@ class HotspotController extends Controller
      */
     public function redirectToLogin(Request $request, Hotspot $hotspot)
     {
+        Log::debug("Hotspot from $request->mac : Connection.", $request->all());
+
         if ($hotspot->findUser($request->hs, $request->mac)) {
+            Log::debug("Hotspot from $request->mac : Already logged-in, redirecting.", $request->all());
+
+            if ($request->dst) {
+                return redirect()->away($request->dst);
+            }
             return redirect()->route('hotspot.showConnected');
         }
 
@@ -37,6 +45,8 @@ class HotspotController extends Controller
                 'callback' => route('hotspot.students.callback', $request->query(), false),
             ]);
         }
+
+        Log::debug("Hotspot from $request->mac : Bad \"hs\" query parameter.", $request->all());
 
         throw new BadRequestException("Invalid \"hs\" query parameter");
     }

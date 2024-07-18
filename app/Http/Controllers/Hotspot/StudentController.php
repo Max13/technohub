@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Services\Mikrotik\Hotspot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 /**
@@ -18,6 +19,11 @@ class StudentController extends Controller
      */
     public function callback(Request $request, Hotspot $hotspot)
     {
+        Log::debug("Hotspot from $request->mac : Calling ".self::class.'::'.__FUNCTION__.'.', [
+            'request' => $request->all(),
+            'session' => $request->session()->all(),
+        ]);
+
         $data = $this->validateCallback($request, [
             'auth.user.ypareo_login' => [
                 'required',
@@ -29,6 +35,11 @@ class StudentController extends Controller
         ]);
 
         if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['auth']['user']['ypareo_login'], true)) {
+            Log::debug("Hotspot from $request->mac : User authenticated on Hotspot.", [
+                'request' => $request->all(),
+                'session' => $request->session()->all(),
+            ]);
+
             DB::table('hotspot_history')->insert([
                 'server' => $data['hs'],
                 'user_id' => User::firstWhere('ypareo_login', $data['auth']['user']['ypareo_login'])->id,
@@ -36,12 +47,24 @@ class StudentController extends Controller
                 'created_at' => now(),
             ]);
 
-            return redirect()->away($data['captive'] . '?' . http_build_query([
-               'dst' => $data['dst'] ?? route('hotspot.showConnected'),
-               'username' => $data['mac'],
-               'password' => $data['mac'],
-            ]));
+            $redirectTo = $data['captive'] . '?' . http_build_query([
+                'dst' => $data['dst'] ?? route('hotspot.showConnected'),
+                'username' => $data['mac'],
+                'password' => $data['mac'],
+            ]);
+
+            Log::debug("Hotspot from $request->mac : Redirecting user to $redirectTo.", [
+                'request' => $request->all(),
+                'session' => $request->session()->all(),
+            ]);
+
+            return redirect()->away($redirectTo);
         }
+
+        Log::debug("Hotspot from $request->mac : User could not be authenticated on Hotspot.", [
+            'request' => $request->all(),
+            'session' => $request->session()->all(),
+        ]);
 
         return redirect($data['auth']['entryPoint'])->withErrors([
             __('Hotspot authentication failed. Please try again.'),

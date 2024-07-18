@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\Ypareo;
 use Faker\Generator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class YpareoController extends Controller
 {
@@ -28,6 +29,8 @@ class YpareoController extends Controller
      */
     public function showLogin(Request $request)
     {
+        Log::debug("Hotspot from $request->mac : Showing login form.", $request->all());
+
         $view = view('auth.ypareo.login');
 
         // Validate request: Shows view with errors
@@ -36,6 +39,8 @@ class YpareoController extends Controller
         ]);
 
         if ($validator->fails()) {
+            Log::debug("Hotspot from $request->mac : Validator fails.", $request->all());
+
             return $view->with([
                 'callback' => null,
             ])->withErrors($validator);
@@ -44,6 +49,11 @@ class YpareoController extends Controller
 
         $data = $validator->validated();
         $request->session()->flash('auth.entryPoint', $_SERVER['REQUEST_URI']);
+
+        Log::debug("Hotspot from $request->mac : Entry point added to the session.", [
+            'request' => $request->all(),
+            'session' => $request->session()->all(),
+        ]);
 
         return $view->with([
             'callback' => $data['callback'],
@@ -58,6 +68,8 @@ class YpareoController extends Controller
      */
     public function doLogin(Request $request, Ypareo $ypareo)
     {
+        Log::debug("Hotspot from $request->mac : Logging in to Ypareo.", $request->all());
+
         $data = $request->validate(
             [
                 'callback' => 'required|string',
@@ -74,8 +86,18 @@ class YpareoController extends Controller
             $request->session()->keep(['auth.entryPoint']);
             $request->session()->flash('auth.user', $user->toArray());
 
+            Log::debug("Hotspot from $request->mac : Credentials accepted. Injecting user to session", [
+                'request' => $request->all(),
+                'session' => $request->session()->all(),
+            ]);
+
             return redirect($data['callback']);
         }
+
+        Log::debug("Hotspot from $request->mac : Credentials refused.", [
+            'request' => $request->all(),
+            'session' => $request->session()->all(),
+        ]);
 
         return back()->withErrors([
             __('The username or password is incorrect.'),
