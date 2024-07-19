@@ -30,20 +30,20 @@
             @csrf
 
             <div class="row mb-3">
-                <label for="username" class="col-4 col-form-label col-form-label-sm">{{ __('Username') }}</label>
+                <label for="username" class="col-5 col-form-label col-form-label-sm">{{ __('Username') }}</label>
                 <div class="col">
                     <input type="text" class="form-control form-control-sm" id="username" name="username" value="{{ old('username') }}" required>
                 </div>
             </div>
 
             <div class="row mb-3">
-                <label for="password" class="col-4 col-form-label col-form-label-sm">{{ __('Password') }}</label>
+                <label for="password" class="col-5 col-form-label col-form-label-sm">{{ __('Password') }}</label>
                 <div class="col">
                     <input type="password" class="form-control form-control-sm" id="password" name="password" required>
                 </div>
             </div>
 
-            <button class="btn login-with ypareo w-100 @error('callback')) disabled @enderror" type="submit">{{ __('Login with Ypareo') }}</button>
+            <button class="btn login-with ypareo w-100 @error('callback') disabled @enderror" type="submit">{{ __('Login with Ypareo') }}</button>
         </form>
 
         <p class="text-muted mt-3">{{ __('If you need help, come see us in room 14!') }}</p>
