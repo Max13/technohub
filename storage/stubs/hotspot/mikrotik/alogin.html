@@ -1,6 +1,7 @@
 $(if http-status == 302)Redirection$(endif)
 $(if http-header == "Location"){{ loginUrl }}$(endif)
 <!DOCTYPE html>
+<html>
     <head>
         <meta charset="UTF-8" />
         <meta http-equiv="refresh" content="0; url={{ loginUrl }}" />
