@@ -26,6 +26,26 @@
             {{ __('You are connected!') }}
         </div>
 
-        <img class="d-block mx-auto w-75" alt="Louis le BG" src="{{ asset('/img/hs-connected.jpeg') }}">
+        <img class="d-block mx-auto w-75 mt-5" alt="Louis le BG" src="{{ asset('/img/hs-connected.jpeg') }}">
+
+        <div class="alert alert-dark mt-4 p-2" role="alert">
+            @if (isset($dst))
+                <i class="loading-spinner"></i>{!! __('Redirecting to :url', ['url' => $dst]) !!}
+            @else
+                {{ __('You can close this page') }}
+            @endif
+        </div>
     </main>
 @endsection
+
+@push('scripts')
+    @if (isset($dst))
+        <script>
+            (() => {
+                setTimeout(() => {
+                    window.location.href = '{{ $dst }}';
+                }, 2000);
+            })();
+        </script>
+    @endif
+@endpush

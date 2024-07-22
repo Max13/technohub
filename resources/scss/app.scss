@@ -143,6 +143,13 @@
   }
 }
 
+.loading-spinner::before {
+  content: url('/img/spinner_animated.svg');
+  margin-left: .5em;
+  margin-right: .5em;
+  height: 1em;
+}
+
 .modal-hs {
   h1, h2, h3, h4, h5, h6 {
     font-size: revert;
