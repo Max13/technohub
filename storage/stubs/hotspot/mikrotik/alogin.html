@@ -1,14 +1,14 @@
 $(if http-status == 302)Redirection$(endif)
-$(if http-header == "Location"){{ loginUrl }}$(endif)
+$(if http-header == "Location"){{ loggedInUrl }}$(endif)
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="refresh" content="0; url={{ loginUrl }}" />
+        <meta http-equiv="refresh" content="0; url={{ loggedInUrl }}" />
 
-        <title>Redirecting to {{ loginUrl }}</title>
+        <title>Redirecting to {{ loggedInUrl }}</title>
     </head>
     <body>
-        Redirecting to <a href="{{ loginUrl }}">{{ loginUrl }}</a>.
+        Redirecting to <a href="{{ loggedInUrl }}">{{ loggedInUrl }}</a>.
     </body>
 </html>
