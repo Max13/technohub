@@ -63,4 +63,31 @@ class HotspotController extends Controller
             'dst' => $request->dst,
         ]);
     }
+
+    /**
+     * Show "status" view.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function showStatus(Request $request)
+    {
+        // captive=$(link-login-only-esc)
+        // hs=$(server-name-esc)
+        // ip=$(ip-esc)
+        // mac=$(mac-esc)
+        // uptime=$(uptime) in seconds
+        // bytes_in=$(bytes-in-nice-esc)
+        // bytes_out=$(bytes-out-nice-esc)
+
+        return view('hotspot.status', [
+            'captive' => $request->captive,
+            'hs' => $request->hs,
+            'ip' => $request->ip,
+            'mac' => $request->mac,
+            'uptime' => $request->uptime,
+            'bytes_in' => $request->bytes_in,
+            'bytes_out' => $request->bytes_out,
+        ]);
+    }
 }

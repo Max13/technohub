@@ -32,3 +32,4 @@ Route::get('/hotspot/login', [HotspotController::class, 'redirectToLogin'])->nam
 Route::get('/hotspot/staff/callback', [StaffController::class, 'callback'])->name('hotspot.staff.callback');
 Route::get('/hotspot/students/callback', [StudentController::class, 'callback'])->name('hotspot.students.callback');
 Route::get('/hotspot/connected', [HotspotController::class, 'showConnected'])->name('hotspot.showConnected');
+Route::get('/hotspot/status', [HotspotController::class, 'showStatus'])->name('hotspot.showStatus');
