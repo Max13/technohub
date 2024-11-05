@@ -27,7 +27,6 @@ class UserFormRequest extends FormRequest
             'firstname' => 'required|string',
             'lastname' => 'required|string',
             'email' => 'required|email|',
-            'service
         ];
     }
 }
