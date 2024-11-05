@@ -1,4 +1,4 @@
-@php($title = "New collaborateur")
+@php($title = "")
 
 @extends('layouts.app')
 

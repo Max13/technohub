@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\YpareoController;
 use App\Http\Controllers\HotspotController;
 use App\Http\Controllers\Hotspot\StaffController;
 use App\Http\Controllers\Hotspot\StudentController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,4 +35,4 @@ Route::get('/hotspot/students/callback', [StudentController::class, 'callback'])
 Route::get('/hotspot/connected', [HotspotController::class, 'showConnected'])->name('hotspot.showConnected');
 
 // Intranet
-// Route::resource('users', UserController::class); // resource + notify()
+Route::resource('users', UserController::class); // resource + notify()
