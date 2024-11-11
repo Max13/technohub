@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Marking\Criterion;
+use App\Models\Marking\Point;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -61,5 +62,15 @@ class User extends Authenticatable
     public function markingCriteria() : HasMany
     {
         return $this->hasMany(Criterion::class);
+    }
+
+    /**
+     * Query user's points
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function points() : HasMany
+    {
+        return $this->hasMany(Point::class, 'student_id');
     }
 }

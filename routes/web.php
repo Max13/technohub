@@ -6,6 +6,7 @@ use App\Http\Controllers\HotspotController;
 use App\Http\Controllers\Hotspot\StaffController;
 use App\Http\Controllers\Hotspot\StudentController;
 use App\Http\Controllers\Marking\CriterionController;
+use App\Http\Controllers\Marking\PointController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,3 +37,4 @@ Route::get('/hotspot/connected', [HotspotController::class, 'showConnected'])->n
 
 // Marking
 Route::resource('marking.criteria', CriterionController::class);
+Route::resource('students.points', PointController::class)->shallow()->except(['show']);
