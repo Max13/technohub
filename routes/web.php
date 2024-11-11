@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\YpareoController;
 use App\Http\Controllers\HotspotController;
 use App\Http\Controllers\Hotspot\StaffController;
 use App\Http\Controllers\Hotspot\StudentController;
+use App\Http\Controllers\Marking\CriterionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,3 +33,6 @@ Route::get('/hotspot/login', [HotspotController::class, 'redirectToLogin'])->nam
 Route::get('/hotspot/staff/callback', [StaffController::class, 'callback'])->name('hotspot.staff.callback');
 Route::get('/hotspot/students/callback', [StudentController::class, 'callback'])->name('hotspot.students.callback');
 Route::get('/hotspot/connected', [HotspotController::class, 'showConnected'])->name('hotspot.showConnected');
+
+// Marking
+Route::resource('marking.criteria', CriterionController::class);
