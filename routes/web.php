@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\IticController;
 use App\Http\Controllers\Auth\YpareoController;
 use App\Http\Controllers\HotspotController;
 use App\Http\Controllers\Hotspot\StaffController;
@@ -28,6 +29,8 @@ Route::get('/auth/google/redirect', [GoogleController::class, 'redirect'])->name
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 Route::get('/auth/ypareo', [YpareoController::class, 'showLogin'])->name('auth.ypareo.showLogin');
 Route::post('/auth/ypareo', [YpareoController::class, 'doLogin'])->name('auth.ypareo.doLogin');
+Route::get('/auth/itic', [IticController::class, 'showLogin'])->name('auth.itic.showLogin');
+Route::post('/auth/itic', [IticController::class, 'doLogin'])->name('auth.itic.doLogin');
 
 // Hotspot
 Route::get('/hotspot/login', [HotspotController::class, 'redirectToLogin'])->name('hotspot.redirectToLogin');
