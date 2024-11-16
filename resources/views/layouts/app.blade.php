@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ app()->currentLocale() }}" data-bs-theme="auto">
+<html lang="{{ app()->currentLocale() }}" data-bs-theme="@yield('bsTheme', 'auto')">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,10 +23,12 @@
 
     <script>
         (() => {
-            if (document.documentElement.getAttribute('data-bs-theme') === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.setAttribute('data-bs-theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-bs-theme', 'light');
+            if (document.documentElement.getAttribute('data-bs-theme') === 'auto') {
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-bs-theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-bs-theme', 'light');
+                }
             }
         })();
     </script>
