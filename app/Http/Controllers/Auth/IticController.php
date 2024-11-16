@@ -25,7 +25,9 @@ class IticController extends Controller
      */
     public function showLogin()
     {
-        return view('auth.itic.login');
+        return view('auth.itic.login', [
+            'remoteAddr' => request()->server('REMOTE_ADDR'),
+        ]);
     }
 
     /**

@@ -1,16 +1,62 @@
+{{--
+##      ##    ###    ##    ## ########    ##     ## ########          ##    ## ########  #######
+##  ##  ##   ## ##   ##   ##  ##          ##     ## ##     ##         ###   ## ##       ##     ##
+##  ##  ##  ##   ##  ##  ##   ##          ##     ## ##     ##         ####  ## ##       ##     ##
+##  ##  ## ##     ## #####    ######      ##     ## ########          ## ## ## ######   ##     ##
+##  ##  ## ######### ##  ##   ##          ##     ## ##                ##  #### ##       ##     ##
+##  ##  ## ##     ## ##   ##  ##          ##     ## ##         ##     ##   ### ##       ##     ## ###
+ ###  ###  ##     ## ##    ## ########     #######  ##        ##      ##    ## ########  #######  ###
+--}}
+
+<!-- Wake Up, Neo. ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠉⠉⠉⠀⠀⠉⠙⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠛⠉⠉⠉⠉⠙⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠉⠀⠰⣏⣤⣤⣆⣠⣀⣀⣀⣀⡉⠛⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⠋⠀⢲⢢⢤⣀⡀⠀⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠘⣿⣾⡝⠻⢷⠿⠟⡿⠋⠀⠘⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⠟⠋⠀⠠⣔⣮⣭⠉⠙⠉⢁⡥⠞⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⡇⠂⠀⠀⠒⢄⠈⠉⠿⣧⡄⠲⠟⣿⣶⣤⡄⠈⠻⣿⣿⣿⣿
+⣿⣿⣋⣥⣤⣲⣼⣽⣿⣿⠗⣦⣄⡴⠋⠔⠁⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⡤⠀⠀⠀⠀⠉⠈⢀⠹⠿⡟⠒⠛⢿⣿⣾⣤⠄⠙⢿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠉⠀⠀⠀⡰⠀⢩⠂⠀⣆⠀⠀⣸⣿⣿⣿⣿⣿⣷⡤⠀⠒⠢⡄⢄⠀⠡⣄⠑⣤⡄⠀⠙⢻⣿⣿⣿⣾⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣃⡀⠈⣷⡆⢠⣅⣶⠀⢤⣿⠁⠀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣷⡀⠀⠹⣀⠈⠻⣿⣽⡛⢿⣧⠀⠀⠻⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⣽⡟⢠⣿⡿⠀⠀⡼⠤⢄⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡄⠀⠙⣆⠁⠨⠿⣋⠀⠙⢦⠀⠀⢹⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⠠⡀⠀⣿⠃⠾⡿⠃⠀⢠⠃⠀⢨⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣆⢀⣹⡄⠀⠀⠹⡄⠀⠈⢆⠀⢨⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣧⣄⣤⠃⠀⢸⠁⠀⠀⣾⣀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣤⣴⣧⣤⣤⣾⣷⣾⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣦⣼⣷⣦⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+-->
+
 @extends('layouts.app')
 
 @section('bodyClass', 'd-flex align-items-center')
 @section('bsTheme', 'dark')
 
+@push('styles')
+    <style>
+        main {
+            max-width: 700px;
+        }
+
+        #form-matrix [type=submit] {
+            --bs-btn-bg: transparent;
+            --bs-btn-hover-bg: transparent;
+            --bs-btn-hover-border-color: var(--matrix-green);
+            --bs-btn-border-color: var(--matrix-green);
+        }
+        #form-matrix [type=submit]:hover {
+            box-shadow: 0 0 20px 10px var(--matrix-green);
+            /*box-shadow: 0 1rem 3rem rgba(0, 255, 64, .175);*/
+            /*transform: scale(1.04);*/
+        }
+    </style>
+@endpush
+
 @section('content')
-    <x-matrix-rain/>
-    <main class="m-auto w-100" style="max-width:700px">
-        <img class="d-block light:d-none mt-4 mb-5 w-50 mx-auto" src="{{ mix('/img/logo-h_white.svg') }}" alt="ITIC Logo">
+    <x-matrix-rain :message="$remoteAddr" />
+    <main class="m-auto w-100">
+        <img class="d-block mt-4 mb-5 w-50 mx-auto" src="{{ mix('/img/logo-h_white.svg') }}" alt="ITIC Logo">
         <p class="text-center text-muted matrix-font fs-5">{{ __('Follow the white rabbit') }}</p>
 
         <div class="col-md-4 offset-md-4">
-
             @if ($errors->any())
                 <div class="alert alert-danger mt-4 p-2" role="alert">
                     @if ($errors->count() === 1)
@@ -25,7 +71,7 @@
                 </div>
             @endif
 
-            <form class="row g-3" action="{{ route('auth.itic.doLogin') }}" method="post">
+            <form id="form-matrix" class="row g-3" action="{{ route('auth.itic.doLogin') }}" method="post">
                 @csrf
 
                 <div class="col-12">
@@ -46,14 +92,10 @@
                 </div>
 
                 <style>
-                    .btn:hover {
-                        /*box-shadow: 0 1rem 3rem rgba(0, 255, 64, .175);*/
-                        box-shadow: 0 0 20px 10px #00ff40;
-                        /*transform: scale(1.04);*/
-                    }
+
                 </style>
                 <div class="col-12">
-                    <button type="submit" class="btn w-100" style="--bs-btn-bg: transparent;--bs-btn-hover-bg: transparent;--bs-btn-hover-border-color: #00ff40;--bs-btn-border-color: #00ff40;">{{ __('Login') }}</button>
+                    <button type="submit" class="btn w-100">{{ __('Login') }}</button>
                 </div>
             </form>
 
