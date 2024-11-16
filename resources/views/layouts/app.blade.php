@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{!! isset($title) ? $title.' &ndash; ' : null !!}{{ config('app.name') }}</title>
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
+    @stack('styles')
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ mix('/img/favicons/apple-touch-icon.png') }}">
