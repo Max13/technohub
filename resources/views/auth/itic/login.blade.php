@@ -76,7 +76,7 @@
 
                 <div class="col-12">
                     <label class="visually-hidden" for="username">{{ __('Username') }}</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="{{ __('Username') }}">
+                    <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" placeholder="{{ __('Username') }}">
                 </div>
 
                 <div class="col-12">
@@ -86,7 +86,7 @@
 
                 <div class="col-12">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                        <input class="form-check-input" type="checkbox" id="remember" name="remember" value="1">
                         <label class="form-check-label" for="remember">{{ __('Remember me') }}</label>
                     </div>
                 </div>
