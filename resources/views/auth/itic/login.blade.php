@@ -54,7 +54,7 @@
     <x-matrix-rain :message="$remoteAddr" />
     <main class="m-auto w-100">
         <img class="d-block mt-4 mb-5 w-50 mx-auto" src="{{ mix('/img/logo-h_white.svg') }}" alt="ITIC Logo">
-        <p class="text-center text-muted matrix-font fs-5">{{ __('Follow the white rabbit') }}</p>
+        <p class="text-center text-muted matrix-font fs-4">Follow the white rabbit.</p>
 
         <div class="col-md-4 offset-md-4">
             @if ($errors->any())
