@@ -16,7 +16,7 @@ class CreateMarkingCriteriaTable extends Migration
         Schema::create('marking_criteria', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->integer('min_points');
             $table->integer('max_points');
             $table->timestamps();

@@ -17,6 +17,7 @@ class Point extends Model
     /** @inheritdoc */
     protected $fillable = [
         'points',
+        'notes',
     ];
 
     /**
