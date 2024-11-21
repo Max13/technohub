@@ -41,9 +41,7 @@ class HotspotController extends Controller
         }
 
         if ($request->hs === 'hs-students') {
-            return redirect()->route('auth.ypareo.showLogin', array_merge($request->query(), [
-                'callback' => route('hotspot.students.callback', $request->query(), false),
-            ]));
+            return redirect()->route('auth.1button.showLogin', $request->query());
         }
 
         Log::debug("Hotspot from $request->mac : Bad \"hs\" query parameter.", $request->all());
