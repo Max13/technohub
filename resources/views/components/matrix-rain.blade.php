@@ -86,6 +86,7 @@
                 // remoteAddrPos.x = Math.round((columns / 2) - (remoteAddr.length / 2));
                 // remoteAddrPos.y = Math.round(canvas.height / fontSize) - 3;
                 // console.log('remoteAddrPos', remoteAddrPos, drops.length);
+                messagePos.splice(0, Infinity);
                 message.split('').forEach((c, i) => {
                     messagePos.push({
                         x: (canvas.width / 2) - (message.length * fontSize / 2) + fontSize * i,
