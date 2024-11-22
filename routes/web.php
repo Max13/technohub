@@ -2,12 +2,15 @@
 
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\IticController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\YpareoController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HotspotController;
 use App\Http\Controllers\Hotspot\StaffController;
 use App\Http\Controllers\Hotspot\StudentController;
 use App\Http\Controllers\Marking\CriterionController;
 use App\Http\Controllers\Marking\PointController;
+use App\Http\Controllers\TrainingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,6 +46,12 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     // Auth
     Route::get('/auth/logout', LogoutController::class)->name('auth.logout');
+
+    // Common
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    // Trainings
+    Route::resource('trainings', TrainingController::class)->only(['index', 'show']);
 
     // Marking
     Route::resource('marking.criteria', CriterionController::class);
