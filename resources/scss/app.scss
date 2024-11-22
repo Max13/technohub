@@ -1,3 +1,5 @@
+$enable-shadows: true;
+
 @import "bootstrap/scss/bootstrap";
 
 :root {
@@ -174,6 +176,22 @@
       margin-bottom: 0;
     }
   }
+}
+
+.navbar .avatar {
+  height: 1.5em;
+}
+
+.hover\:shadow-sm:hover {
+  @extend .shadow-sm;
+}
+
+.hover\:shadow:hover {
+  @extend .shadow;
+}
+
+.hover\:shadow-lg:hover {
+  @extend .shadow-lg;
 }
 
 @include media-breakpoint-up(md) {
