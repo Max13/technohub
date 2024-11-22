@@ -25,21 +25,21 @@ class StaffController extends Controller
                 Rule::exists('users', 'email')->where(function ($query) {
                     return $query->where('is_staff', true);
                 }),
-            ]
+            ],
         ]);
 
-        if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['username'])) {
+        if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $request->auth['user']->user['given_name'])) {
             DB::table('hotspot_history')->insert([
                 'server' => $data['hs'],
-                'user_id' => User::firstWhere('ypareo_login', $data['username']),
+                'user_id' => User::firstWhere('email', $data['auth']['user']['email'])->id,
                 'mac' => $data['mac'],
                 'created_at' => now(),
             ]);
 
             return redirect()->away($data['captive'] . '?' . http_build_query([
-               'dst' => $data['dst'],
-               'username' => $data['mac'],
-               'password' => $data['mac'],
+                'dst' => route('hotspot.showConnected'),
+                'username' => $data['mac'],
+                'password' => $data['mac'],
             ]));
         }
 
