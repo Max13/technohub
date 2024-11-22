@@ -93,10 +93,10 @@ class OneButtonController extends Controller
         ]);
 
         $redirectTo = $data['captive'] . '?' . http_build_query([
-                'dst' => $data['dst'] ?? null,
-                'username' => $data['mac'],
-                'password' => $data['mac'],
-            ]);
+            'dst' => route('hotspot.showConnected'),
+            'username' => $data['mac'],
+            'password' => $data['mac'],
+        ]);
 
         Log::debug("Hotspot from $request->mac : Redirecting user to $redirectTo.", [
             'request' => $request->all(),
