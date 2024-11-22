@@ -41,6 +41,9 @@ Route::middleware(['guest'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    // Auth
+    Route::get('/auth/logout', LogoutController::class)->name('auth.logout');
+
     // Marking
     Route::resource('marking.criteria', CriterionController::class);
     Route::resource('students.points', PointController::class)->shallow()->except(['show']);
