@@ -30,7 +30,10 @@ class PointController extends Controller
      */
     public function create(User $student)
     {
-        //
+        return view('students.points.create', [
+            'criteria' => Criterion::orderBy('name')->get(),
+            'student' => $student->load('currentTraining'),
+        ]);
     }
 
     /**
@@ -45,9 +48,10 @@ class PointController extends Controller
         $data = $request->validate([
             'criterion_id' => [
                 'required',
-                Rule::exists((new Criterion)->getTable()),
+                Rule::exists((new Criterion)->getTable(), 'id'),
             ],
-            'points' => 'required|between:'.($criterion = Criterion::find($request->criterion_id))->min_points.','.$criterion->max_points,
+            'points' => 'required|integer|between:'.($criterion = Criterion::find($request->criterion_id))->min_points.','.$criterion->max_points,
+            'notes' => 'string|max:255',
         ]);
 
         $point = new Point($data);
@@ -56,7 +60,7 @@ class PointController extends Controller
         $point->student()->associate($student);
         $point->save();
 
-        return $point;
+        return redirect()->route('trainings.index', $student->currentTraining);
     }
 
     /**

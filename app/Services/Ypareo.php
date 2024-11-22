@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -123,5 +124,108 @@ class Ypareo
         });
 
         return collect($users);
+    }
+
+    /**
+     * Get school periods
+     *
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    protected function getPeriods()
+    {
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'X-Auth-Token' => $this->apiKey,
+        ])->get($this->baseUrl . '/r/v1/periodes');
+
+        $response->throw();
+
+        return $response->collect();
+    }
+
+    /**
+     * Get current school period
+     *
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function getCurrentPeriod()
+    {
+        $today = today();
+
+        $currentPeriod = $this->getPeriods()->firstOrFail(function ($p) use ($today) {
+            return $today->betweenIncluded(
+                Carbon::createFromFormat('d/m/Y', $p['dateDeb']),
+                Carbon::createFromFormat('d/m/Y', $p['dateFin'])
+            );
+        });
+
+        return $currentPeriod;
+    }
+
+    /**
+     * Get all classrooms for the current period
+     *
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function getAllClassrooms()
+    {
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'X-Auth-Token' => $this->apiKey,
+        ])->get($this->baseUrl . '/r/v1/formation-longue/groupes', [
+            'codesPeriode' => $this->getCurrentPeriod()['codePeriode'],
+        ]);
+
+        $response->throw();
+
+        return $response->collect();
+    }
+
+    /**
+     * Get students in a given classroom
+     *
+     * @param  $classroomId
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function getClassroomsStudents($classroomId)
+    {
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'X-Auth-Token' => $this->apiKey,
+        ])->get($this->baseUrl . "/r/v1/groupes/$classroomId/apprenants");
+
+        $response->throw();
+
+        return $response->collect();
+    }
+
+    /**
+     * Get classrooms for a given employee
+     *
+     * @param  $employeeYpareoId
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function getClassrooms($employeeYpareoId)
+    {
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'X-Auth-Token' => $this->apiKey,
+        ])->get($this->baseUrl . '/r/v1/groupes-personnels/from-planning', [
+            'codesPeriode' => $this->getCurrentPeriod()['codePeriode'],
+            'codesPersonnel' => $employeeYpareoId,
+        ]);
+
+        $response->throw();
+
+        return $this->getAllClassrooms()->whereIn('codeGroupe', $response->collect()->pluck('codeGroupe'))->values();
     }
 }

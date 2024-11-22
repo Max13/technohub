@@ -21,6 +21,7 @@ class CreateMarkingPointsTable extends Migration
             $table->foreignId('staff_id')->constrained('users');
             $table->foreignId('student_id')->constrained('users');
             $table->integer('points');
+            $table->string('notes')->nullable();
             $table->timestamps();
         });
     }

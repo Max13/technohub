@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\Training;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMarkingCriteriaTable extends Migration
+class CreateTrainingUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +15,10 @@ class CreateMarkingCriteriaTable extends Migration
      */
     public function up()
     {
-        Schema::create('marking_criteria', function (Blueprint $table) {
+        Schema::create('training_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->string('name')->unique();
-            $table->integer('min_points');
-            $table->integer('max_points');
-            $table->timestamps();
+            $table->foreignIdFor(Training::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
         });
     }
 
@@ -30,6 +29,6 @@ class CreateMarkingCriteriaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('marking_criteria');
+        Schema::dropIfExists('training_user');
     }
 }

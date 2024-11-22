@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Marking\Criterion;
 use App\Models\Marking\Point;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,6 +31,16 @@ class User extends Authenticatable
         'lastname',
         'email',
         'password',
+        'training_id',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'fullname',
     ];
 
     /**
@@ -52,7 +64,28 @@ class User extends Authenticatable
         'is_trainer' => 'boolean',
         'ypareo_id' => 'integer',
         'email_verified_at' => 'datetime',
+        'training_id' => 'integer',
     ];
+
+    /**
+     * Retrieve user's classroom
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function currentTraining() : BelongsTo
+    {
+        return $this->belongsTo(Training::class, 'training_id');
+    }
+
+    /**
+     * Retrieve user's trainings
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function trainings() : BelongsToMany
+    {
+        return $this->belongsToMany(Training::class);
+    }
 
     /**
      * Query user's criteria
@@ -72,5 +105,15 @@ class User extends Authenticatable
     public function points() : HasMany
     {
         return $this->hasMany(Point::class, 'student_id');
+    }
+
+    /**
+     * Get full name
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function getFullnameAttribute()
+    {
+        return "$this->firstname $this->lastname";
     }
 }
