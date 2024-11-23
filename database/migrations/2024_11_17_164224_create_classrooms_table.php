@@ -14,7 +14,7 @@ class CreateClassroomsTable extends Migration
      */
     public function up()
     {
-        Schema::create('trainings', function (Blueprint $table) {
+        Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Training::class)->constrained()->cascadeOnDelete();
             $table->string('ypareo_id')->unsigned()->unique();
@@ -33,6 +33,6 @@ class CreateClassroomsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trainings');
+        Schema::dropIfExists('classrooms');
     }
 }
