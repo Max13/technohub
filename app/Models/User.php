@@ -78,6 +78,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Retrieve user's roles
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles() : BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    /**
      * Retrieve user's trainings
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

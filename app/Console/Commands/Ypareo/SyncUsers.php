@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Ypareo;
 
 use App\Models\Classroom;
+use App\Models\Role;
 use App\Models\Subject;
 use App\Models\Training;
 use App\Models\User;
@@ -40,16 +41,20 @@ class SyncUsers extends Command
         // Users
         $this->info('- Users:');
         DB::transaction(function () use ($ypareo) {
+            $roles = Role::all()->keyBy('name');
+            $rolesToDetach = $roles->where('is_from_ypareo', true)->pluck('id');
             $yUsers = $ypareo->getUsers();
             $now = now();
             User::whereNotNull('ypareo_id')->delete();
 
-            $this->withProgressBar($yUsers, function ($u) use ($now) {
+            $this->withProgressBar($yUsers, function ($u) use ($roles, $rolesToDetach, $now) {
                 $dbUser = User::withTrashed()
                               ->where('ypareo_id', $u['ypareo_id'])
                               ->first();
 
                 if ($dbUser) {
+                    $dbUser->roles()->detach($rolesToDetach);
+
                     $dbUser->fill($u);
                     $dbUser->training_id = null;
                     $dbUser->deleted_at = null;
@@ -60,8 +65,22 @@ class SyncUsers extends Command
 
                 $dbUser->email_verified_at = $now;
 
+                $rolesToApply = [];
+                if ($u->is_staff) {
+                    $rolesToApply[] = $roles['Staff']->id;
+                }
+
+                if ($u->is_student) {
+                    $rolesToApply[] = $roles['Student']->id;
+                }
+
+                if ($u->is_trainer) {
+                    $rolesToApply[] = $roles['Trainer']->id;
+                }
+
                 try {
                     $dbUser->save();
+                    $u->roles()->attach($rolesToApply);
                 } catch (QueryException $e) {
                     //
                 }

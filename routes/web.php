@@ -59,4 +59,5 @@ Route::middleware(['auth'])->group(function () {
     // Marking
     Route::resource('marking.criteria', CriterionController::class);
     Route::resource('students.points', PointController::class)->shallow()->except(['show']);
+
 });
