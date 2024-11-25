@@ -12,6 +12,17 @@
             {{-- Left side --}}
             <div class="navbar-nav me-auto mb-2 mb-lg-0">
                 <a class="nav-link @if(Route::currentRouteName() == 'dashboard') active @endif" @if(Route::currentRouteName() == 'dashboard') aria-current="page" @endif href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
+                @can('viewAny', App\Models\Marking\Criterion::class)
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Marking') }}</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ route('marking/criteria.index') }}">{{ __('Criteria') }}</a>
+                        </div>
+                    </div>
+                @endcan
+                @can('viewAny', App\Models\User::class)
+                    <a class="nav-link @if(Route::currentRouteName() == 'users.index') active @endif" @if(Route::currentRouteName() == 'users.index') aria-current="page" @endif href="{{ route('users.index') }}">{{ __('Users') }}</a>
+                @endcan
             </div>
 
             @auth

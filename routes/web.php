@@ -12,6 +12,7 @@ use App\Http\Controllers\Hotspot\StudentController;
 use App\Http\Controllers\Marking\CriterionController;
 use App\Http\Controllers\Marking\PointController;
 use App\Http\Controllers\TrainingController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -60,4 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('marking.criteria', CriterionController::class);
     Route::resource('students.points', PointController::class)->shallow()->except(['show']);
 
+    // Users
+    Route::patch('/users/{user}/roles', [UserController::class, 'updateRoles'])->name('users.roles.update');
+    Route::resource('users', UserController::class);
 });
