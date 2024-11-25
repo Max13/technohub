@@ -10,23 +10,25 @@ use Illuminate\Validation\Rule;
 class CriterionController extends Controller
 {
     /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Criterion::class, 'criterion');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return Criterion::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('marking.criteria.index', [
+            'criteria' => Criterion::orderBy('name')->get(),
+        ]);
     }
 
     /**
