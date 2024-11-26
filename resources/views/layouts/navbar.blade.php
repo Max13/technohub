@@ -23,6 +23,9 @@
                 @can('viewAny', App\Models\User::class)
                     <a class="nav-link @if(Route::currentRouteName() == 'users.index') active @endif" @if(Route::currentRouteName() == 'users.index') aria-current="page" @endif href="{{ route('users.index') }}">{{ __('Users') }}</a>
                 @endcan
+                @can('viewAny', App\Models\Training::class)
+                    <a class="nav-link @if(Route::currentRouteName() == 'trainings.index') active @endif" @if(Route::currentRouteName() == 'trainings.index') aria-current="page" @endif href="{{ route('trainings.index') }}">{{ __('My trainings') }}</a>
+                @endcan
             </div>
 
             @auth
