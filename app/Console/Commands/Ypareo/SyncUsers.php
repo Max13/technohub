@@ -8,6 +8,7 @@ use App\Models\Subject;
 use App\Models\Training;
 use App\Models\User;
 use App\Services\Ypareo;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -66,21 +67,21 @@ class SyncUsers extends Command
                 $dbUser->email_verified_at = $now;
 
                 $rolesToApply = [];
-                if ($u->is_staff) {
+                if ($u['is_staff']) {
                     $rolesToApply[] = $roles['Staff']->id;
                 }
 
-                if ($u->is_student) {
+                if ($u['is_student']) {
                     $rolesToApply[] = $roles['Student']->id;
                 }
 
-                if ($u->is_trainer) {
+                if ($u['is_trainer']) {
                     $rolesToApply[] = $roles['Trainer']->id;
                 }
 
                 try {
                     $dbUser->save();
-                    $u->roles()->attach($rolesToApply);
+                    $dbUser->roles()->attach($rolesToApply);
                 } catch (QueryException $e) {
                     //
                 }
@@ -149,10 +150,14 @@ class SyncUsers extends Command
                     }
                 }
 
-                Classroom::firstWhere('ypareo_id', $c['codeGroupe'])
-                         ->training
-                         ->subjects()
-                         ->sync(Subject::whereIn('ypareo_id', array_column($c['matieres'], 'codeMatiere'))->pluck('id'));
+                try {
+                    Classroom::firstWhere('ypareo_id', $c['codeGroupe'])
+                             ->training
+                             ->subjects()
+                             ->sync(Subject::whereIn('ypareo_id', array_column($c['matieres'], 'codeMatiere'))->pluck('id'));
+                } catch (Exception $e) {
+                    //
+                }
             });
         });
         // /Subjects
