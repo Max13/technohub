@@ -57,4 +57,24 @@ class TrainingController extends Controller
             'training' => $training->load('students'),
         ]);
     }
+
+    /**
+     * Show training's ranking
+     *
+     * @param  \App\Models\Training     $training
+     * @param  \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function ranking(Training $training, Request $request)
+    {
+        $training->load([
+            'students' => function ($query) {
+                $query->withSum('points as total_points', 'points');
+            },
+        ]);
+
+        return view('trainings.ranking', [
+            'ranking' => $training->students,
+        ]);
+    }
 }

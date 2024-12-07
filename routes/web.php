@@ -70,3 +70,5 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/users/{user}/roles', [UserController::class, 'updateRoles'])->name('users.roles.update');
     Route::resource('users', UserController::class);
 });
+
+Route::get('/trainings/{training}/ranking', [TrainingController::class, 'ranking'])->name('trainings.ranking');
