@@ -51,7 +51,7 @@ class PointController extends Controller
                 Rule::exists((new Criterion)->getTable(), 'id'),
             ],
             'points' => 'required|integer|between:'.($criterion = Criterion::find($request->criterion_id))->min_points.','.$criterion->max_points,
-            'notes' => 'string|max:255',
+            'notes' => 'nullable|string|max:255',
         ]);
 
         $point = new Point($data);
@@ -85,6 +85,7 @@ class PointController extends Controller
     {
         $data = $request->validate([
             'points' => 'required|between:'.$point->criterion->min_points.','.$point->criterion->max_points,
+            'notes' => 'nullable|string|max:255',
         ]);
 
         $point->points = $data['points'];
