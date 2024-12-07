@@ -60,7 +60,7 @@ class PointController extends Controller
         $point->student()->associate($student);
         $point->save();
 
-        return redirect()->route('trainings.index', $student->currentTraining);
+        return redirect()->route('trainings.show', $student->currentTraining);
     }
 
     /**
