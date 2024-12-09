@@ -26,9 +26,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'welcome');
-
 Route::middleware(['guest'])->group(function () {
+    Route::view('/', 'welcome');
+
     // Auth
     Route::get('/auth/1button', [OneButtonController::class, 'showLogin'])->name('auth.1button.showLogin');
     Route::post('/auth/1button', [OneButtonController::class, 'doLogin'])->name('auth.1button.doLogin');
