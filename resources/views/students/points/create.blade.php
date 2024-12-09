@@ -36,11 +36,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="points" class="form-label">{{ __('Points') }}</label>
-                    <input type="number" class="form-control" placeholder="{{ __('Select a criterion') }}" id="points" name="points" @if(old('points')) value="{{ @old('points') }}" @else disabled @endif>
+                    <input type="number" class="form-control" placeholder="{{ __('Select a criterion') }}" id="points" name="points" autocomplete="off" @if(old('points') || old('criterion_id')) value="{{ @old('points') }}" @else disabled @endif>
                 </div>
                 <div class="mb-3">
                     <label for="notes" class="form-label">{{ __('Notes') }} <small class="text-muted">({{ __('Optional') }})</small></label>
-                    <input type="text" class="form-control" placeholder="{{ __('Enter a private note') }}" id="notes" name="notes" maxlength="255" value="{{ old('notes') }}">
+                    <input type="text" class="form-control" placeholder="{{ __('Enter a private note') }}" id="notes" name="notes" maxlength="255" value="{{ old('notes') }}" autocomplete="off">
                 </div>
                 <button type="submit" class="btn btn-primary mt-2 w-100">{{ __('Allocate') }}</button>
             </form>
