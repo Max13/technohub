@@ -25,12 +25,19 @@ class TrainingController extends Controller
      */
     public function index(Request $request)
     {
-        $trainings = $request->user()
-                             ->trainings()
-                             ->with('students')
-                             ->orderBy('nth_year')
-                             ->orderBy('shortname')
-                             ->get();
+        if (
+               $request->user()->roles->contains('name', 'Admin')
+            || $request->user()->roles->contains('name', 'HeadTeacher')
+        ) {
+            $trainings = Training::query();
+        } else {
+            $trainings = $request->user()->trainings();
+        }
+
+        $trainings = $trainings->with('students')
+                               ->orderBy('nth_year')
+                               ->orderBy('shortname')
+                               ->get();
 
         return view('trainings.index', [
             'trainings' => $trainings,
