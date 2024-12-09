@@ -6,7 +6,13 @@
     <main class="container py-4">
         <h1>{{ $training->name }}</h1>
 
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 my-4">
+        <div class="row my-4">
+            <div class="col-auto">
+                <a href="{{ route('trainings.ranking', $training) }}" class="btn btn-primary">{{ __('Ranking') }}</a>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
             @foreach ($training->students->sortBy('lastname') as $student)
                 <div class="col">
                     <div class="card w-100 hover:shadow">

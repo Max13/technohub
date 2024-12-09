@@ -81,7 +81,7 @@ class TrainingController extends Controller
         ]);
 
         return view('trainings.ranking', [
-            'ranking' => $training->students,
+            'training' => $training,
         ]);
     }
 }
