@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classement</title>
+    <title>{{ __('Ranking') }}</title>
 
     <style>
         @import url(https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap);
@@ -82,14 +82,14 @@
 </head>
 <body>
 <header>
-    <h1>Classement BACH CDA</h1>
+    <h1>{{ __('Ranking') }} {{ $training->name }}</h1>
 </header>
 <table id="scoreTable">
     <tbody></tbody>
 </table>
 <script>
     function loadData() {
-        const data = {!! $ranking->toJson() !!};
+        const data = {!! $training->students->toJson() !!};
         const parsedData = data.map(user => {
             return {
                 name: user.firstname + ' ' + user.lastname[0] + '.',
