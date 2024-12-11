@@ -34,7 +34,14 @@ class PointController extends Controller
     {
         return view('students.points.create', [
             'criteria' => Criterion::orderBy('name')->get(),
-            'student' => $student->load('currentTraining'),
+            'student' => $student->loadSum('points as total_points', 'points')
+                                 ->load([
+                                     'currentTraining',
+                                     'points' => function ($query) {
+                                        $query->latest()
+                                              ->take(7);
+                                     },
+                                 ]),
         ]);
     }
 
