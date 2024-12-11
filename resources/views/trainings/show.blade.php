@@ -8,7 +8,8 @@
 
         <div class="row my-4">
             <div class="col-auto">
-                <a href="{{ route('trainings.ranking', $training) }}" class="btn btn-primary">{{ __('Ranking') }}</a>
+                <a href="{{ route('trainings.ranking', $training) }}" class="btn btn-primary me-2">{{ __('Ranking') }}</a>
+                <a href="{{ route('trainings.points.create', $training) }}" class="btn btn-primary">{{ __('Batch points') }}</a>
             </div>
         </div>
 

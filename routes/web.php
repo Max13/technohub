@@ -56,6 +56,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Trainings
     Route::resource('trainings', TrainingController::class)->only(['index', 'show']);
+    Route::get('/trainings/{training}/points/create', [PointController::class, 'createBatch'])->name('trainings.points.create');
+    Route::post('/trainings/{training}/points', [PointController::class, 'storeBatch'])->name('trainings.points.store');
 
     // Marking
     Route::group([
