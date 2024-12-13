@@ -39,6 +39,11 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/auth/ypareo', [YpareoController::class, 'doLogin'])->name('auth.ypareo.doLogin');
     Route::get('/auth/itic', [IticController::class, 'showLogin'])->name('auth.itic.showLogin');
     Route::post('/auth/itic', [IticController::class, 'doLogin'])->name('auth.itic.doLogin');
+    Route::post('/auth/itic/password-reset', [IticController::class, 'sendPasswordReset'])->name('auth.itic.sendPasswordReset');
+    Route::middleware(['signed'])->group(function () {
+        Route::get('/auth/itic/password-reset', [IticController::class, 'showPasswordReset'])->name('auth.itic.showPasswordReset');
+        Route::patch('/auth/itic/password-reset', [IticController::class, 'doPasswordReset'])->name('auth.itic.doPasswordReset');
+    });
 
     // Hotspot
     Route::get('/hotspot/login', [HotspotController::class, 'redirectToLogin'])->name('hotspot.redirectToLogin');

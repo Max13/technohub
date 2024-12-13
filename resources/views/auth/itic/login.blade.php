@@ -57,6 +57,12 @@
         <p class="text-center text-muted matrix-font fs-4">Follow the white rabbit.</p>
 
         <div class="col-md-4 offset-md-4">
+            @if (session()->has('success'))
+                <div class="alert alert-success mt-4 p-2" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             @if ($errors->any())
                 <div class="alert alert-danger mt-4 p-2" role="alert">
                     @if ($errors->count() === 1)
@@ -91,11 +97,9 @@
                     </div>
                 </div>
 
-                <style>
-
-                </style>
                 <div class="col-12">
                     <button type="submit" class="btn w-100">{{ __('Login') }}</button>
+                    <button type="button" class="btn btn-sm btn-link w-100 mt-1" data-bs-toggle="modal" data-bs-target="#password-reset-modal">{{ __('Reset my password') }}</button>
                 </div>
             </form>
 
@@ -103,6 +107,27 @@
 
         <p class="mt-4 text-center text-muted small">{{ __('If you need help, contact the IT!') }}</p>
     </main>
+
+    <div class="modal fade" id="password-reset-modal" tabindex="-1" aria-labelledby="password-reset-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="password-reset-label">{{ __('Reset my password') }}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close') }}"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="password-reset-form" action="{{ route('auth.itic.sendPasswordReset') }}" method="post">
+                        @csrf
+                        <label for="email" class="form-label mb-4">{{ __('Enter your NetYparéo email address, if it matches an account, you will receive a password reset link') }}</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="{{ __('Email') }}" value="{{ old('email') }}">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="password-reset-form" class="btn btn-primary">{{ __('Confirm') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
