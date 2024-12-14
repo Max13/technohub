@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Ypareo;
 
+use App\Models\Absence;
 use App\Models\Classroom;
 use App\Models\Role;
 use App\Models\Subject;
@@ -11,6 +12,7 @@ use App\Services\Ypareo;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -30,7 +32,7 @@ class SyncUsers extends Command
      *
      * @todo Split in multiple commands
      */
-    protected $description = 'Sync users from Ypareo APIs, including trainings, subjects and students in class';
+    protected $description = 'Sync users from Ypareo APIs, including absences, trainings, subjects and students in class';
 
     /**
      * Execute the console command.
@@ -172,6 +174,10 @@ class SyncUsers extends Command
                     'ypareo_id',
                     $ypareo->getClassroomsStudents($c->ypareo_id)->pluck('codeApprenant')
                 )->update(['training_id' => $c->training_id]);
+
+//                if ($c->ypareo_id == 56553) {
+//                    dd($c); // "codeApprenant" => 8296
+//                }
             });
         });
         // /Student's classroom
@@ -190,6 +196,48 @@ class SyncUsers extends Command
             });
         });
         // /Trainer's classroom
+
+        $this->newLine(2);
+
+        // Absences
+        $this->info('- Absences:');
+        DB::transaction(function () use ($ypareo) {
+            $absences = $ypareo->getAllAbsences();
+            Absence::whereNotNull('ypareo_id')->delete();
+
+            $this->withProgressBar($absences, function ($abs) {
+                $dbAbsence = Absence::firstOrNew(['ypareo_id' => $abs['codeAbsence']])
+                                    ->forceFill([
+                                        'label' => $abs['motifAbsence']['nomMotifAbsence'],
+                                        'is_delay' => $abs['isRetard'],
+                                        'is_justified' => $abs['isJustifie'],
+                                        'started_at' => Carbon::createFromFormat('d/m/Y', $abs['dateDeb'])
+                                                              ->addMinutes($abs['heureDeb']),
+                                        'ended_at' => Carbon::createFromFormat('d/m/Y', $abs['dateFin'])
+                                                            ->addMinutes($abs['heureFin']),
+                                        'duration' => $abs['duree'],
+                                    ]);
+
+                try {
+                    $training = Training::whereRelation('classrooms', 'ypareo_id', $abs['codeGroupe'])
+                                        ->first();
+                    $user = User::where('ypareo_id', $abs['codeApprenant'])
+                                ->first();
+
+                    if (is_null($training) || is_null($user)) {
+                        return;
+                    }
+
+                    $dbAbsence->student()->associate($user);
+                    $dbAbsence->training()->associate($training);
+
+                    $dbAbsence->save();
+                } catch (QueryException $e) {
+                    //
+                }
+            });
+        });
+        // /Absences
 
         return 0;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 
@@ -227,5 +228,59 @@ class Ypareo
         $response->throw();
 
         return $this->getAllClassrooms()->whereIn('codeGroupe', $response->collect()->pluck('codeGroupe'))->values();
+    }
+
+    /**
+     * Get absences for a given classroom
+     *
+     * @param  \Illuminate\Support\Carbon $startDate
+     * @param  \Illuminate\Support\Carbon $endDate
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     *
+     * @note Date filters doesn't work yet
+     */
+    public function getAllAbsences(Carbon $startDate = null, Carbon $endDate = null)
+    {
+        $currentPeriod = $this->getCurrentPeriod();
+        $startDate = $startDate ?? Carbon::createFromFormat('d/m/Y', $currentPeriod['dateDeb']);
+        $endDate = $endDate ?? Carbon::createFromFormat('d/m/Y', $currentPeriod['dateFin']);
+
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'X-Auth-Token' => $this->apiKey,
+         ])->get($this->baseUrl . '/r/v1/absences/'.$startDate->format('d-m-Y').'/'.$endDate->format('d-m-Y'));
+
+        $response->throw();
+
+        return $response->collect();
+    }
+
+    /**
+     * Get absences for a given classroom
+     *
+     * @param  int                        $classroomId
+     * @param  \Illuminate\Support\Carbon $startDate
+     * @param  \Illuminate\Support\Carbon $endDate
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     *
+     * @note Date filters doesn't work yet
+     */
+    public function getClassroomsAbsences($classroomId, Carbon $startDate = null, Carbon $endDate = null)
+    {
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'X-Auth-Token' => $this->apiKey,
+        ])->get($this->baseUrl . "/r/v1/groupes/$classroomId/absences", [
+            'dateDeb' => ($startDate ?? today())->format('d-m-Y'),
+            'dateFin' => ($endDate ?? today())->format('d-m-Y'),
+        ]);
+
+        $response->throw();
+
+        return $response->collect();
     }
 }

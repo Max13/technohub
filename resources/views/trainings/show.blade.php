@@ -19,8 +19,11 @@
                     <div class="card w-100 hover:shadow">
                         <a class="text-decoration-none text-reset" href="{{ route('students.points.create', $student) }}">
                             <div class="card-body">
-                                <h5 class="card-title">{{ $student->fullname }}</h5>
-                                <p class="card-text small text-muted">{{ $student->points()->sum('points') }} {{ __('Points') }}</p>
+                                <h5 class="card-title mb-3">{{ $student->fullname }}</h5>
+                                <div class="d-flex justify-content-between">
+                                    <span class="card-text badge text-bg-secondary">{{ $student->total_points }} {{ __('Points') }}</span>
+                                    <span class="card-text badge text-bg-{{ App\Models\Absence::color($student->total_absences) }}">{{ floor($student->total_absences / 60) }} h</span>
+                                </div>
                             </div>
                         </a>
                     </div>

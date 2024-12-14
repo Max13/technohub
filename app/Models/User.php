@@ -68,6 +68,16 @@ class User extends Authenticatable
     ];
 
     /**
+     * Retrieve user's absences
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function absences() : HasMany
+    {
+        return $this->hasMany(Absence::class);
+    }
+
+    /**
      * Retrieve user's classroom
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Training;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 
 class TrainingController extends Controller
@@ -61,7 +62,12 @@ class TrainingController extends Controller
     public function show(Training $training)
     {
         return view('trainings.show', [
-            'training' => $training->load('students'),
+            'training' => $training->load([
+                'students' => function ($query) {
+                    $query->withSum('absences as total_absences', 'duration')
+                          ->withSum('points as total_points', 'points');
+                },
+            ]),
         ]);
     }
 
