@@ -51,7 +51,7 @@
                                     @else
                                         <p class="card-text small text-muted mb-0">&nbsp;</p>
                                     @endif
-                                    <p class="card-text small text-muted mb-0">{{ $user->points->sum('points') }} {{ __('Points') }}</p>
+                                    <p class="card-text small text-muted mb-0">{{ $user->total_points }} {{ __('Points') }}</p>
                                 </div>
                             </div>
                         </a>

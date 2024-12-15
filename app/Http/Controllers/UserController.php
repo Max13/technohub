@@ -33,6 +33,7 @@ class UserController extends Controller
                             $query->orderBy('name');
                         },
                      ])
+                     ->withSum('points as total_points', 'points')
                      ->when($request->roles, function ($query, $roles) {
                          return $query->whereHas('roles', function (Builder $query) use ($roles) {
                              $query->whereIn('id', $roles);
