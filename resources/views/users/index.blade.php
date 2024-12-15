@@ -30,7 +30,8 @@
             </div>
         </div>
 
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 my-4">
+        {{ $users->links() }}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 my-2">
             @foreach ($users as $user)
                 <div class="col">
                     <div class="card h-100 w-100 hover:shadow">
@@ -58,6 +59,7 @@
                 </div>
             @endforeach
         </div>
+        {{ $users->links() }}
     </main>
 @endsection
 

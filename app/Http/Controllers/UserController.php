@@ -43,7 +43,8 @@ class UserController extends Controller
                                       ->orWhere('lastname', 'like', '%' . $name . '%');
                      })
                      ->orderBy('lastname')
-                     ->paginate(100);
+                     ->paginate(100)
+                     ->withQueryString();
 
         return view('users.index', [
             'roles' => Role::orderBy('name')->get(),
