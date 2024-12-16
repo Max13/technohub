@@ -3,6 +3,50 @@ $enable-shadows: true;
 @import "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons";
 
+// Breakpoint spy
+#breakpoint-spy {
+  @extend .border, .border-primary, .position-fixed, .end-0, .z-3, .p-1;
+  &::after {
+    content: 'xs';
+  }
+}
+@include media-breakpoint-up(sm) {
+  #breakpoint-spy {
+    &::after {
+      content: 'sm';
+    }
+  }
+}
+@include media-breakpoint-up(md) {
+  #breakpoint-spy {
+    &::after {
+      content: 'md';
+    }
+  }
+}
+@include media-breakpoint-up(lg) {
+  #breakpoint-spy {
+    &::after {
+      content: 'lg';
+    }
+  }
+}
+@include media-breakpoint-up(xl) {
+  #breakpoint-spy {
+    &::after {
+      content: 'xl';
+    }
+  }
+}
+@include media-breakpoint-up(xxl) {
+  #breakpoint-spy {
+    &::after {
+      content: 'xxl';
+    }
+  }
+}
+// ---
+
 :root {
   --matrix-green: #0f0;
 }

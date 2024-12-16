@@ -34,6 +34,10 @@
     </script>
 </head>
 <body class="@yield('bodyClass', null)">
+    @if (!App::environment('production'))
+        <span id="breakpoint-spy"></span>
+    @endif
+
     @yield('content')
 
     @stack('scripts')
