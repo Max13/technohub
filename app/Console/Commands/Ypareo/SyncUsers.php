@@ -174,10 +174,6 @@ class SyncUsers extends Command
                     'ypareo_id',
                     $ypareo->getClassroomsStudents($c->ypareo_id)->pluck('codeApprenant')
                 )->update(['training_id' => $c->training_id]);
-
-//                if ($c->ypareo_id == 56553) {
-//                    dd($c); // "codeApprenant" => 8296
-//                }
             });
         });
         // /Student's classroom
