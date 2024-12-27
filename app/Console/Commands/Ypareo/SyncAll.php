@@ -48,42 +48,7 @@ class SyncAll extends Command
         Artisan::call('ypareo:sync:users');
         $this->newLine(2);
 
-        // Classrooms
-        $this->info('- Classrooms:');
-        $yClassrooms = $ypareo->getAllClassrooms();
-        DB::transaction(function () use ($yClassrooms) {
-            Classroom::whereNotNull('ypareo_id')->delete();
-
-            $this->withProgressBar($yClassrooms, function ($c) {
-                $dbClass = Classroom::withTrashed()
-                                    ->firstOrNew(['ypareo_id' => $c['codeGroupe']])
-                                    ->forceFill([
-                                        'name' => $c['nomGroupe'],
-                                        'shortname' => $c['abregeGroupe'],
-                                        'fullname' => $c['etenduGroupe'],
-                                        'deleted_at' => null,
-                                    ]);
-
-                try {
-                    $dbClass->training()->associate(
-                        Training::updateOrCreate(
-                            [
-                                'name' => implode('-', explode('-', $c['abregeGroupe'], -1)) ?: $c['abregeGroupe'],
-                            ],[
-                                'fullname' => str_replace([' INITIAL', ' ALTERNANCE'], '', $c['etenduGroupe']),
-                                'nth_year' => $c['numeroAnnee'],
-                            ]
-                        )
-                    );
-
-                    $dbClass->save();
-                } catch (QueryException $e) {
-                    //
-                }
-            });
-        });
-        // /Classroom
-
+        Artisan::call('ypareo:sync:classrooms');
         $this->newLine(2);
 
         // Subjects
