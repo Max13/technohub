@@ -97,11 +97,12 @@ class Ypareo
      */
     public function getUsers($cached = true)
     {
+        $cacheKey = 'ypareo:'.__FUNCTION__;
         if (!$cached) {
-            cache()->forget('ypareo:getUsers');
+            cache()->forget($cacheKey);
         }
 
-        $users = cache()->remember('ypareo:getUsers', config('services.ypareo.cache.expiration'), function () {
+        $users = cache()->remember($cacheKey, config('services.ypareo.cache.expiration'), function () {
             return $this->getEmployeeUsers()->merge($this->getStudentUsers());
         });
 

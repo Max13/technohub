@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
                  ->daily()
                  ->runInBackground();
 
-        $schedule->command('ypareo:sync-users')
+        $schedule->command('ypareo:sync:all')
                  ->dailyAt('08:00')
                  ->weekdays();
     }
