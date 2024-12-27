@@ -127,20 +127,27 @@ class Ypareo
     /**
      * Get school periods
      *
+     * @param  bool  $cached  Return cached response. Defaults to true.
      * @return \Illuminate\Support\Collection
      * @throws \Illuminate\Http\Client\RequestException
      */
-    protected function getPeriods()
+    protected function getPeriods($cached = true)
     {
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'X-Auth-Token' => $this->apiKey,
-        ])->get($this->baseUrl . '/r/v1/periodes');
+        $cacheKey = 'ypareo:'.__FUNCTION__;
+        if (!$cached) {
+            cache()->forget($cacheKey);
+        }
 
-        $response->throw();
-
-        return $response->collect();
+        return cache()->remember($cacheKey, config('services.ypareo.cache.expiration'), function () {
+            return Http::withHeaders([
+                           'Accept' => 'application/json',
+                           'Content-Type' => 'application/json',
+                           'X-Auth-Token' => $this->apiKey,
+                       ])
+                       ->get($this->baseUrl . '/r/v1/periodes')
+                       ->throw()
+                       ->collect();
+        });
     }
 
     /**
