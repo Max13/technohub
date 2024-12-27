@@ -83,7 +83,11 @@ class SyncUsers extends Command
                     $dbUser->save();
                     $dbUser->roles()->attach($rolesToApply);
                 } catch (QueryException $e) {
-                    //
+                    logger()->notice('  Could not save user or attach roles', [
+                        'user' => $dbUser,
+                        'roles' => $rolesToApply,
+                        'exception' => $e,
+                    ]);
                 }
             });
         });
