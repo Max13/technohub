@@ -27,11 +27,15 @@ class User extends Authenticatable
         'is_trainer',
         'ypareo_id',
         'ypareo_login',
+        'ypareo_uuid',
+        'ypareo_sso',
         'firstname',
         'lastname',
         'email',
         'password',
         'training_id',
+        'birthdate',
+        'last_logged_in_at',
     ];
 
     /**
@@ -65,6 +69,8 @@ class User extends Authenticatable
         'ypareo_id' => 'integer',
         'email_verified_at' => 'datetime',
         'training_id' => 'integer',
+        'birthdate' => 'date',
+        'last_logged_in_at' => 'date',
     ];
 
     /**

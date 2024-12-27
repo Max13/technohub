@@ -91,40 +91,36 @@ class Ypareo
     /**
      * Get active users
      *
+     * @param  bool  $cached  Return cached response. Defaults to true.
      * @return \Illuminate\Support\Collection
      * @throws \Illuminate\Http\Client\RequestException
      */
-    public function getUsers()
+    public function getUsers($cached = true)
     {
-        $users = [];
+        if (!$cached) {
+            cache()->forget('ypareo:getUsers');
+        }
 
-        $this->getEmployeeUsers()->each(function ($u) use (&$users) {
-            $users[] = [
-                'is_staff' => $u['isAdministratif'] == 1,
-                'is_student' => false,
-                'is_trainer' => $u['isFormateur'] == 1,
-                'ypareo_id' => $u['codePersonnel'],
-                'ypareo_login' => $u['login'],
-                'lastname' => $u['nom'],
-                'firstname' => $u['prenom'],
-                'email' => $u['email'],
-            ];
+        $users = cache()->remember('ypareo:getUsers', config('services.ypareo.cache.expiration'), function () {
+            return $this->getEmployeeUsers()->merge($this->getStudentUsers());
         });
 
-        $this->getStudentUsers()->each(function ($u) use (&$users) {
-            $users[] = [
-                'is_staff' => false,
-                'is_student' => true,
-                'is_trainer' => false,
-                'ypareo_id' => $u['codeApprenant'],
-                'ypareo_login' => $u['login'],
-                'lastname' => $u['nom'],
-                'firstname' => $u['prenom'],
-                'email' => $u['email'],
+        return $users->map(function ($user) {
+            return [
+                'is_staff' => ($user['isAdministratif'] ?? false) == 1,
+                'is_student' => ($user['typeUtilisateur'] ?? null) == 'APPRENANT',
+                'is_trainer' => ($user['isFormateur'] ?? false) == 1,
+                'ypareo_id' => $user['codePersonnel'] ?? $user['codeApprenant'],
+                'ypareo_login' => $user['login'],
+                'ypareo_uuid' => $user['uuidNetUtilisateur'],
+                'ypareo_sso' => $user['identifiantSso'],
+                'lastname' => $user['nom'],
+                'firstname' => $user['prenom'],
+                'email' => $user['email'],
+                'birthdate' => $user['dateNaissance'] ? Carbon::createFromFormat('d/m/Y', $user['dateNaissance']) : null,
+                'last_logged_in_at' => $user['dateDerniereConnexion'] ? Carbon::createFromFormat('d/m/Y', $user['dateDerniereConnexion']) : null,
             ];
         });
-
-        return collect($users);
     }
 
     /**

@@ -20,12 +20,16 @@ class CreateUsersTable extends Migration
             $table->boolean('is_trainer');
             $table->integer('ypareo_id')->unsigned()->nullable()->unique();
             $table->string('ypareo_login')->unique()->nullable();
+            $table->uuid('ypareo_uuid')->nullable();
+            $table->string('ypareo_sso')->nullable();
             $table->string('lastname');
             $table->string('firstname');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->date('birthdate')->nullable();
+            $table->date('last_logged_in_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

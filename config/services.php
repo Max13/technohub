@@ -52,6 +52,11 @@ return [
     'ypareo' => [
         'apiKey' => env('YPAREO_APIKEY'),
         'baseUrl' => env('YPAREO_BASEURL'),
+        // Cache keys
+        'cache' => [
+            'expiration' => 7200, // In seconds
+        ],
+        'period' => 'ypareo.current_period',
     ],
 
 ];
