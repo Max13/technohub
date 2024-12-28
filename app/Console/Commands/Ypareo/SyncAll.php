@@ -54,33 +54,7 @@ class SyncAll extends Command
         Artisan::call('ypareo:sync:subjects');
         $this->newLine(2);
 
-        // Student's training
-        $this->info('- Students:');
-        DB::transaction(function () use ($ypareo) {
-            $this->withProgressBar(Classroom::all(), function ($c) use ($ypareo) {
-                User::whereIn(
-                    'ypareo_id',
-                    $ypareo->getClassroomsStudents($c->ypareo_id)->pluck('codeApprenant')
-                )->update(['training_id' => $c->training_id]);
-            });
-        });
-        // /Student's classroom
-
-        $this->newLine(2);
-
-        // Trainer's trainings
-        $this->info('- Trainers:');
-        DB::transaction(function () use ($ypareo) {
-            $this->withProgressBar(User::where('is_trainer', true)->get(), function ($u) use ($ypareo) {
-                $yClassrooms = $ypareo->getClassrooms($u['ypareo_id']);
-                $u->trainings()->sync(
-                    Classroom::whereIn('ypareo_id', $yClassrooms->pluck('codeGroupe'))
-                             ->pluck('training_id')
-                );
-            });
-        });
-        // /Trainer's classroom
-
+        Artisan::call('ypareo:sync:participants');
         $this->newLine(2);
 
         // Absences

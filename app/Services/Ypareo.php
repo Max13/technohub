@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Client\Request;
+use App\Models\Classroom;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use TypeError;
 
 /**
  * Ypareo service
@@ -201,44 +203,64 @@ class Ypareo
     /**
      * Get students in a given classroom
      *
-     * @param  $classroomId
+     * @param  \App\Models\Classroom  $classroom
+     * @param bool                    $cached    Return cached response.
+     *                                           Defaults to true.
      * @return \Illuminate\Support\Collection
      * @throws \Illuminate\Http\Client\RequestException
      */
-    public function getClassroomsStudents($classroomId)
+    public function getClassroomsStudents(Classroom $classroom, $cached = true)
     {
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'X-Auth-Token' => $this->apiKey,
-        ])->get($this->baseUrl . "/r/v1/groupes/$classroomId/apprenants");
+        $cacheKey = 'ypareo:'.__FUNCTION__.':'.$classroom->ypareo_id;
+        if (!$cached) {
+            cache()->forget($cacheKey);
+        }
 
-        $response->throw();
-
-        return $response->collect();
+        return cache()->remember($cacheKey, config('services.ypareo.cache.expiration'), function () use ($classroom) {
+            return Http::withHeaders([
+                           'Accept' => 'application/json',
+                           'Content-Type' => 'application/json',
+                           'X-Auth-Token' => $this->apiKey,
+                       ])
+                       ->get($this->baseUrl . "/r/v1/groupes/{$classroom->ypareo_id}/apprenants")
+                       ->throw()
+                       ->collect();
+        });
     }
 
     /**
-     * Get classrooms for a given employee
+     * Get classrooms for a given trainer
      *
-     * @param  $employeeYpareoId
+     * @param \App\Models\User  $trainer
+     * @param bool              $cached  Return cached response.
+     *                                   Defaults to true.
      * @return \Illuminate\Support\Collection
      * @throws \Illuminate\Http\Client\RequestException
      */
-    public function getClassrooms($employeeYpareoId)
+    public function getTrainersClassrooms(User $trainer, $cached = true)
     {
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'X-Auth-Token' => $this->apiKey,
-        ])->get($this->baseUrl . '/r/v1/groupes-personnels/from-planning', [
-            'codesPeriode' => $this->getCurrentPeriod()['codePeriode'],
-            'codesPersonnel' => $employeeYpareoId,
-        ]);
+        throw_if($trainer->is_trainer == false, TypeError::class, 'First argument ($trainer) must be a trainer');
 
-        $response->throw();
+        $cacheKey = 'ypareo:'.__FUNCTION__.':'.$trainer->ypareo_id;
+        if (!$cached) {
+            cache()->forget($cacheKey);
+        }
 
-        return $this->getAllClassrooms()->whereIn('codeGroupe', $response->collect()->pluck('codeGroupe'))->values();
+        $classrooms = cache()->remember($cacheKey, config('services.ypareo.cache.expiration'), function () use ($trainer) {
+            return Http::withHeaders([
+                           'Accept' => 'application/json',
+                           'Content-Type' => 'application/json',
+                           'X-Auth-Token' => $this->apiKey,
+                       ])
+                       ->get($this->baseUrl . '/r/v1/groupes-personnels/from-planning', [
+                           'codesPeriode'   => $this->getCurrentPeriod()['codePeriode'],
+                           'codesPersonnel' => $trainer->ypareo_id,
+                       ])
+                       ->throw()
+                       ->collect();
+        });
+
+        return $this->getAllClassrooms()->whereIn('codeGroupe', $classrooms->pluck('codeGroupe'))->values();
     }
 
     /**
