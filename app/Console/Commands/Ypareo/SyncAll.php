@@ -51,39 +51,7 @@ class SyncAll extends Command
         Artisan::call('ypareo:sync:classrooms');
         $this->newLine(2);
 
-        // Subjects
-        $this->info('- Subjects:');
-        DB::transaction(function () use ($yClassrooms) {
-            Subject::whereNotNull('ypareo_id')->delete();
-
-            $this->withProgressBar($yClassrooms, function ($c) {
-                foreach ($c['matieres'] as $m) {
-                    $dbSubject = Subject::withTrashed()
-                                        ->firstOrNew(['ypareo_id' => $m['codeMatiere']])
-                                        ->forceFill([
-                                            'name' => $m['nomMatiere'],
-                                            'type' => $m['nomTypeMatiere'],
-                                        ]);
-
-                    try {
-                        $dbSubject->save();
-                    } catch (QueryException $e) {
-                        //
-                    }
-                }
-
-                try {
-                    Classroom::firstWhere('ypareo_id', $c['codeGroupe'])
-                             ->training
-                             ->subjects()
-                             ->sync(Subject::whereIn('ypareo_id', array_column($c['matieres'], 'codeMatiere'))->pluck('id'));
-                } catch (Exception $e) {
-                    //
-                }
-            });
-        });
-        // /Subjects
-
+        Artisan::call('ypareo:sync:subjects');
         $this->newLine(2);
 
         // Student's training
