@@ -54,7 +54,7 @@ return [
         'baseUrl' => env('YPAREO_BASEURL'),
         // Cache keys
         'cache' => [
-            'expiration' => 7200, // In seconds
+            'expiration' => 14400, // 4 hours in seconds
         ],
         'period' => 'ypareo.current_period',
     ],
