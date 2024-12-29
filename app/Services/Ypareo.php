@@ -120,8 +120,8 @@ class Ypareo
                 'lastname' => $user['nom'],
                 'firstname' => $user['prenom'],
                 'email' => $user['email'],
-                'birthdate' => $user['dateNaissance'] ? Carbon::createFromFormat('d/m/Y', $user['dateNaissance']) : null,
-                'last_logged_in_at' => $user['dateDerniereConnexion'] ? Carbon::createFromFormat('d/m/Y', $user['dateDerniereConnexion']) : null,
+                'birthdate' => $user['dateNaissance'] ? Carbon::createFromFormat('d/m/Y', $user['dateNaissance'])->startOfDay() : null,
+                'last_logged_in_at' => $user['dateDerniereConnexion'] ? Carbon::createFromFormat('d/m/Y', $user['dateDerniereConnexion'])->startOfDay() : null,
             ];
         });
     }
