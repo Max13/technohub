@@ -45,19 +45,19 @@ class SyncAll extends Command
             'options' => $this->options(),
         ]);
 
-        Artisan::call('ypareo:sync:users');
+        $this->call('ypareo:sync:users');
         $this->newLine(2);
 
-        Artisan::call('ypareo:sync:classrooms');
+        $this->call('ypareo:sync:classrooms');
         $this->newLine(2);
 
-        Artisan::call('ypareo:sync:subjects');
+        $this->call('ypareo:sync:subjects');
         $this->newLine(2);
 
-        Artisan::call('ypareo:sync:participants');
+        $this->call('ypareo:sync:participants');
         $this->newLine(2);
 
-        Artisan::call('ypareo:sync:absences');
+        $this->call('ypareo:sync:absences');
         $this->newLine(2);
 
         return 0;
