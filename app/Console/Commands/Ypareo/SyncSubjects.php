@@ -2,17 +2,13 @@
 
 namespace App\Console\Commands\Ypareo;
 
-use App\Models\Classroom;
-use App\Models\Role;
 use App\Models\Subject;
 use App\Models\Training;
-use App\Models\User;
 use App\Services\Ypareo;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class SyncSubjects extends Command
 {

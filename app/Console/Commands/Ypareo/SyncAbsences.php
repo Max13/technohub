@@ -3,18 +3,14 @@
 namespace App\Console\Commands\Ypareo;
 
 use App\Models\Absence;
-use App\Models\Classroom;
-use App\Models\Role;
 use App\Models\Training;
 use App\Models\User;
 use App\Services\Ypareo;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class SyncAbsences extends Command
 {

@@ -332,4 +332,31 @@ class Ypareo
                        ->collect();
         });
     }
+
+    /**
+     * Get all courses, optionally filtered by classroom
+     *
+     * @param  int                             $classroomId
+     * @param  \Illuminate\Support\Carbon|null $startDate
+     * @param  \Illuminate\Support\Carbon|null $endDate
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function getCourses($classroomId = null, Carbon $startDate = null, Carbon $endDate = null)
+    {
+        $currentPeriod = $this->getCurrentPeriod();
+        $startDate = $startDate ?? Carbon::createFromFormat('d/m/Y', $currentPeriod['dateDeb']);
+        $endDate = $endDate ?? Carbon::today();
+        $classroom = $classroomId ? "/$classroomId" : null;
+
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'X-Auth-Token' => $this->apiKey,
+        ])->get($this->baseUrl . '/r/v1/planning/'.$startDate->format('d-m-Y').'/'.$endDate->format('d-m-Y').'/groupes'.$classroom);
+
+        $response->throw();
+
+        return $response->collect();
+    }
 }

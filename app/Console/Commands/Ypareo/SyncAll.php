@@ -2,20 +2,7 @@
 
 namespace App\Console\Commands\Ypareo;
 
-use App\Models\Absence;
-use App\Models\Classroom;
-use App\Models\Role;
-use App\Models\Subject;
-use App\Models\Training;
-use App\Models\User;
-use App\Services\Ypareo;
-use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class SyncAll extends Command
 {
@@ -38,7 +25,7 @@ class SyncAll extends Command
      *
      * @return int
      */
-    public function handle(Ypareo $ypareo)
+    public function handle()
     {
         logger()->debug('Syncing all data from Ypareo', [
             'arguments' => $this->arguments(),
