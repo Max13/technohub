@@ -268,52 +268,68 @@ class Ypareo
      *
      * @param  \Illuminate\Support\Carbon $startDate
      * @param  \Illuminate\Support\Carbon $endDate
+     * @param  bool                       $cached    Return cached response.
+     *                                               Defaults to true.
      * @return \Illuminate\Support\Collection
      * @throws \Illuminate\Http\Client\RequestException
-     *
-     * @note Date filters doesn't work yet
      */
-    public function getAllAbsences(Carbon $startDate = null, Carbon $endDate = null)
+    public function getAllAbsences(Carbon $startDate = null, Carbon $endDate = null, $cached = true)
     {
         $currentPeriod = $this->getCurrentPeriod();
         $startDate = $startDate ?? Carbon::createFromFormat('d/m/Y', $currentPeriod['dateDeb']);
         $endDate = $endDate ?? Carbon::createFromFormat('d/m/Y', $currentPeriod['dateFin']);
 
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'X-Auth-Token' => $this->apiKey,
-         ])->get($this->baseUrl . '/r/v1/absences/'.$startDate->format('d-m-Y').'/'.$endDate->format('d-m-Y'));
+        $cacheKey = 'ypareo:'.__FUNCTION__.':'.$startDate->toDateString().':'.$endDate->toDateString();
+        if (!$cached) {
+            cache()->forget($cacheKey);
+        }
 
-        $response->throw();
-
-        return $response->collect();
+        return cache()->remember($cacheKey, config('services.ypareo.cache.expiration'), function () use ($startDate, $endDate) {
+            return Http::withHeaders([
+                           'Accept' => 'application/json',
+                           'Content-Type' => 'application/json',
+                           'X-Auth-Token' => $this->apiKey,
+                       ])
+                       ->get($this->baseUrl . '/r/v1/absences/' . $startDate->format('d-m-Y') . '/' . $endDate->format('d-m-Y'))
+                       ->throw()
+                       ->collect();
+        });
     }
 
     /**
      * Get absences for a given classroom
      *
-     * @param  int                        $classroomId
+     * @param  \App\Models\Classroom      $classroom
      * @param  \Illuminate\Support\Carbon $startDate
      * @param  \Illuminate\Support\Carbon $endDate
+     * @param  bool                       $cached    Return cached response.
+     *                                               Defaults to true.
      * @return \Illuminate\Support\Collection
      * @throws \Illuminate\Http\Client\RequestException
-     *
-     * @note Date filters doesn't work yet
      */
-    public function getClassroomsAbsences($classroomId, Carbon $startDate = null, Carbon $endDate = null)
+    public function getClassroomsAbsences(Classroom $classroom, Carbon $startDate = null, Carbon $endDate = null, $cached = true)
     {
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'X-Auth-Token' => $this->apiKey,
-        ])->get($this->baseUrl . "/r/v1/groupes/$classroomId/absences", [
-            'dateDeb' => ($startDate ?? today())->format('d-m-Y'),
-            'dateFin' => ($endDate ?? today())->format('d-m-Y'),
-        ]);
+        $currentPeriod = $this->getCurrentPeriod();
+        $startDate = $startDate ?? Carbon::createFromFormat('d/m/Y', $currentPeriod['dateDeb']);
+        $endDate = $endDate ?? Carbon::createFromFormat('d/m/Y', $currentPeriod['dateFin']);
 
-        $response->throw();
+        $cacheKey = 'ypareo:'.__FUNCTION__.':'.$classroom->ypareo_id.':'.$startDate->toDateString().':'.$endDate->toDateString();
+        if (!$cached) {
+            cache()->forget($cacheKey);
+        }
 
-        return $response->collect();
+        return cache()->remember($cacheKey, config('services.ypareo.cache.expiration'), function () use ($classroom, $startDate, $endDate) {
+            return Http::withHeaders([
+                           'Accept' => 'application/json',
+                           'Content-Type' => 'application/json',
+                           'X-Auth-Token' => $this->apiKey,
+                       ])
+                       ->get($this->baseUrl . "/r/v1/groupes/{$classroom->ypareo_id}/absences", [
+                           'dateDebut' => $startDate->format('d-m-Y'),
+                           'dateFin' => $endDate->format('d-m-Y'),
+                       ])
+                       ->throw()
+                       ->collect();
+        });
     }
 }

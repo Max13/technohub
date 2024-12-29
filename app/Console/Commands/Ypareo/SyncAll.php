@@ -57,45 +57,8 @@ class SyncAll extends Command
         Artisan::call('ypareo:sync:participants');
         $this->newLine(2);
 
-        // Absences
-        $this->info('- Absences:');
-        DB::transaction(function () use ($ypareo) {
-            $absences = $ypareo->getAllAbsences();
-            Absence::whereNotNull('ypareo_id')->delete();
-
-            $this->withProgressBar($absences, function ($abs) {
-                $dbAbsence = Absence::firstOrNew(['ypareo_id' => $abs['codeAbsence']])
-                                    ->forceFill([
-                                        'label' => $abs['motifAbsence']['nomMotifAbsence'],
-                                        'is_delay' => $abs['isRetard'],
-                                        'is_justified' => $abs['isJustifie'],
-                                        'started_at' => Carbon::createFromFormat('d/m/Y', $abs['dateDeb'])
-                                                              ->addMinutes($abs['heureDeb']),
-                                        'ended_at' => Carbon::createFromFormat('d/m/Y', $abs['dateFin'])
-                                                            ->addMinutes($abs['heureFin']),
-                                        'duration' => $abs['duree'],
-                                    ]);
-
-                try {
-                    $training = Training::whereRelation('classrooms', 'ypareo_id', $abs['codeGroupe'])
-                                        ->first();
-                    $user = User::where('ypareo_id', $abs['codeApprenant'])
-                                ->first();
-
-                    if (is_null($training) || is_null($user)) {
-                        return;
-                    }
-
-                    $dbAbsence->student()->associate($user);
-                    $dbAbsence->training()->associate($training);
-
-                    $dbAbsence->save();
-                } catch (QueryException $e) {
-                    //
-                }
-            });
-        });
-        // /Absences
+        Artisan::call('ypareo:sync:absences');
+        $this->newLine(2);
 
         return 0;
     }
