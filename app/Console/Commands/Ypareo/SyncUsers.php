@@ -50,21 +50,18 @@ class SyncUsers extends Command
 
             $this->withProgressBar($ypareoUsers, function ($u) use ($roles, $rolesToDetach, $now) {
                 $dbUser = User::withTrashed()
-                              ->where('ypareo_id', $u['ypareo_id'])
-                              ->first();
+                              ->firstOrNew(['ypareo_id' => $u['ypareo_id']])
+                              ->forceFill(array_merge($u, [
+                                  'training_id' => null,
+                                  'email_verified_at' => $now,
+                                  'deleted_at' => null,
+                              ]));
 
-                if ($dbUser) {
+                if ($dbUser->exists) {
                     $dbUser->roles()->detach($rolesToDetach);
-
-                    $dbUser->fill($u);
-                    $dbUser->training_id = null;
-                    $dbUser->deleted_at = null;
                 } else {
-                    $dbUser = new User($u);
                     $dbUser->password = bcrypt(Str::random(10));
                 }
-
-                $dbUser->email_verified_at = $now;
 
                 $rolesToApply = [];
                 if ($u['is_staff']) {
