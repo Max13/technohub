@@ -84,6 +84,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Retrieve user's courses
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function courses() : BelongsToMany
+    {
+        return $this->belongsToMany(Course::class);
+    }
+
+    /**
      * Retrieve user's classroom
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

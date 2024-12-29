@@ -28,6 +28,16 @@ class Classroom extends Model
     ];
 
     /**
+     * Retrieve classroom's courses
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function courses() : BelongsToMany
+    {
+        return $this->belongsToMany(Course::class);
+    }
+
+    /**
      * Retrieve classroom's training
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

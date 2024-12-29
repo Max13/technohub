@@ -336,27 +336,42 @@ class Ypareo
     /**
      * Get all courses, optionally filtered by classroom
      *
-     * @param  int                             $classroomId
+     * @param  \App\Models\Classroom           $classroom
      * @param  \Illuminate\Support\Carbon|null $startDate
      * @param  \Illuminate\Support\Carbon|null $endDate
+     * @param  bool                            $cached    Return cached response.
+     *                                                    Defaults to true.
      * @return \Illuminate\Support\Collection
      * @throws \Illuminate\Http\Client\RequestException
+     *
+     * @note   This method will timeout without a classroom
      */
-    public function getCourses($classroomId = null, Carbon $startDate = null, Carbon $endDate = null)
+    public function getCourses(Classroom $classroom = null, Carbon $startDate = null, Carbon $endDate = null, $cached = true)
     {
         $currentPeriod = $this->getCurrentPeriod();
         $startDate = $startDate ?? Carbon::createFromFormat('d/m/Y', $currentPeriod['dateDeb']);
-        $endDate = $endDate ?? Carbon::today();
-        $classroom = $classroomId ? "/$classroomId" : null;
+        $endDate = $endDate ?? Carbon::createFromFormat('d/m/Y', $currentPeriod['dateFin']);
 
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'X-Auth-Token' => $this->apiKey,
-        ])->get($this->baseUrl . '/r/v1/planning/'.$startDate->format('d-m-Y').'/'.$endDate->format('d-m-Y').'/groupes'.$classroom);
+        $cacheKey = 'ypareo:'.__FUNCTION__.':'.optional($classroom)->ypareo_id.':'.$startDate->toDateString().':'.$endDate->toDateString();
+        if (!$cached) {
+            cache()->forget($cacheKey);
+        }
 
-        $response->throw();
+        return cache()->remember($cacheKey, 3600, function () use ($classroom, $startDate, $endDate) {
+            $url = $this->baseUrl . '/r/v1/planning/'.$startDate->format('d-m-Y').'/'.$endDate->format('d-m-Y').'/groupes';
 
-        return $response->collect();
+            if (!is_null($classroom)) {
+                $url .= "/{$classroom->ypareo_id}";
+            }
+
+            return Http::withHeaders([
+                           'Accept' => 'application/json',
+                           'Content-Type' => 'application/json',
+                           'X-Auth-Token' => $this->apiKey,
+                       ])
+                       ->get($url)
+                       ->throw()
+                       ->collect('cours');
+        });
     }
 }

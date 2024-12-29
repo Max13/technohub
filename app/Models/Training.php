@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships as HasDeepRelationships;
 
 class Training extends Model
 {
     use HasFactory;
+    use HasDeepRelationships;
     use SoftDeletes;
 
     /** @inheritdoc */
@@ -33,6 +36,16 @@ class Training extends Model
     public function classrooms() : HasMany
     {
         return $this->hasMany(Classroom::class);
+    }
+
+    /**
+     * Retrieve training's courses through classrooms
+     *
+     * @return \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+     */
+    public function courses() : HasManyDeep
+    {
+        return $this->hasManyDeepFromRelations($this->classrooms(), (new Classroom)->courses());
     }
 
     /**
