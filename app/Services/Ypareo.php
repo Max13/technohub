@@ -299,11 +299,11 @@ class Ypareo
     /**
      * Get absences for a given classroom
      *
-     * @param  \App\Models\Classroom      $classroom
-     * @param  \Illuminate\Support\Carbon $startDate
-     * @param  \Illuminate\Support\Carbon $endDate
-     * @param  bool                       $cached    Return cached response.
-     *                                               Defaults to true.
+     * @param  \App\Models\Classroom           $classroom
+     * @param  \Illuminate\Support\Carbon|null $startDate
+     * @param  \Illuminate\Support\Carbon|null $endDate
+     * @param  bool                            $cached    Return cached response.
+     *                                                    Defaults to true.
      * @return \Illuminate\Support\Collection
      * @throws \Illuminate\Http\Client\RequestException
      */
