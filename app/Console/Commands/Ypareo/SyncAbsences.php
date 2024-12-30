@@ -52,8 +52,10 @@ class SyncAbsences extends Command
                                         'is_delay' => $abs['isRetard'],
                                         'is_justified' => $abs['isJustifie'],
                                         'started_at' => Carbon::createFromFormat('d/m/Y', $abs['dateDeb'])
+                                                              ->startOfDay()
                                                               ->addMinutes($abs['heureDeb']),
                                         'ended_at' => Carbon::createFromFormat('d/m/Y', $abs['dateFin'])
+                                                            ->startOfDay()
                                                             ->addMinutes($abs['heureFin']),
                                         'duration' => $abs['duree'],
                                     ]);
