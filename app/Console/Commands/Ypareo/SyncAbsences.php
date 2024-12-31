@@ -42,10 +42,16 @@ class SyncAbsences extends Command
 
         $this->info('Syncing absences data from Ypareo:');
 
-        DB::transaction(function () use ($ypareo) {
+        $ypareoAbsences = $ypareo->getAllAbsences()->sortBy(function ($abs) {
+            return Carbon::createFromFormat('d/m/Y', $abs['dateDeb'])
+                         ->startOfDay()
+                         ->addMinutes($abs['heureDeb']);
+        });
+
+        DB::transaction(function () use ($ypareoAbsences) {
             Absence::whereNotNull('ypareo_id')->delete();
 
-            $this->withProgressBar($ypareo->getAllAbsences(), function ($abs) {
+            $this->withProgressBar($ypareoAbsences, function ($abs) {
                 $dbAbsence = Absence::firstOrNew(['ypareo_id' => $abs['codeAbsence']])
                                     ->forceFill([
                                         'label' => $abs['motifAbsence']['nomMotifAbsence'],
