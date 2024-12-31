@@ -42,59 +42,57 @@ class SyncCourses extends Command
 
         $this->info('Syncing courses data from Ypareo:');
 
-        $bar = $this->output->createProgressBar();
+        $courses = collect();
+        $this->withProgressBar(Classroom::all(), function ($cls) use ($courses, $ypareo) {
+            $ypareo->getCourses($cls)->each(function ($ypareoCourse) use ($courses) {
+                $courses->push($ypareoCourse);
+            });
+        });
+        $courses = $courses->sortBy(function ($crs) {
+            return Carbon::createFromFormat('d/m/Y H:i:s', $crs['date'].' '.$crs['heureDebut']);
+        });
 
-        DB::transaction(function () use ($bar, $ypareo) {
+        DB::transaction(function () use ($courses) {
             Course::whereNotNull('ypareo_id')->delete();
 
-            Classroom::eachById(function ($classroom) use ($bar, $ypareo) {
-                $courses = $ypareo->getCourses($classroom);
+            $this->withProgressBar($courses, function ($crs) {
+                $dbCourse = Course::firstOrNew(['ypareo_id' => $crs['codeSeance']])
+                                  ->forceFill([
+                                      'label' => $crs['nomMatiere'],
+                                      'started_at' => Carbon::createFromFormat('d/m/Y H:i:s', $crs['date'].' '.$crs['heureDebut']),
+                                      'ended_at' => Carbon::createFromFormat('d/m/Y H:i:s', $crs['date'].' '.$crs['heureFin']),
+                                      'duration' => $crs['duree'],
+                                  ]);
 
-                $bar->start($courses->count());
+                try {
+                    $dbCourse->save();
 
-                foreach ($courses as $course) {
-                    $dbCourse = Course::firstOrNew(['ypareo_id' => $course['codeSeance']])
-                                      ->forceFill([
-                                          'label' => $course['nomMatiere'],
-                                          'started_at' => Carbon::createFromFormat('d/m/Y H:i:s', $course['date'].' '.$course['heureDebut']),
-                                          'ended_at' => Carbon::createFromFormat('d/m/Y H:i:s', $course['date'].' '.$course['heureFin']),
-                                          'duration' => $course['duree'],
-                                      ]);
-
-                    try {
-                        $dbCourse->save();
-
-                        $dbCourse->classrooms()->sync(
-                            Classroom::whereIn('ypareo_id', $course['codesGroupe'])->pluck('id')
-                        );
-                        $dbCourse->users()->sync(
-                            User::whereIn(
-                                'ypareo_id',
-                                array_merge($course['codesApprenant'], $course['codesPersonnel'])
-                            )->pluck('id')
-                        );
-                    } catch (ModelNotFoundException $e) {
-                        logger()->notice('  Could not find subject, classrooms, students or trainers', [
-                            'course' => $dbCourse,
-                            'subject' => ['ypareo_id' => $course['codeMatiere']],
-                            'classrooms' => ['ypareo_id' => $course['codesGroupe']],
-                            'students' => ['ypareo_id' => $course['codesApprenant']],
-                            'trainers' => ['ypareo_id' => $course['codesPersonnel']],
-                            'exception' => $e,
-                        ]);
-                    } catch (QueryException $e) {
-                        logger()->notice('  Could not save course', [
-                            'course' => $dbCourse,
-                            'exception' => $e,
-                        ]);
-                    }
-
-                    $bar->advance();
+                    $dbCourse->classrooms()->sync(
+                        Classroom::whereIn('ypareo_id', $crs['codesGroupe'])->pluck('id')
+                    );
+                    $dbCourse->users()->sync(
+                        User::whereIn(
+                            'ypareo_id',
+                            array_merge($crs['codesApprenant'], $crs['codesPersonnel'])
+                        )->pluck('id')
+                    );
+                } catch (ModelNotFoundException $e) {
+                    logger()->notice('  Could not find subject, classrooms, students or trainers', [
+                        'course' => $dbCourse,
+                        'subject' => ['ypareo_id' => $crs['codeMatiere']],
+                        'classrooms' => ['ypareo_id' => $crs['codesGroupe']],
+                        'students' => ['ypareo_id' => $crs['codesApprenant']],
+                        'trainers' => ['ypareo_id' => $crs['codesPersonnel']],
+                        'exception' => $e,
+                    ]);
+                } catch (QueryException $e) {
+                    logger()->notice('  Could not save course', [
+                        'course' => $dbCourse,
+                        'exception' => $e,
+                    ]);
                 }
             });
         });
-
-        $bar->finish();
 
         return 0;
     }
