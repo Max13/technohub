@@ -39,11 +39,11 @@ class SyncClassrooms extends Command
 
         $this->info('Syncing classrooms data from Ypareo:');
 
-        DB::transaction(function () use ($ypareo) {
-            $ypareoClassrooms = $ypareo->getAllClassrooms()->reject(function ($c) {
-                return is_null($c['prixDeVente']);
-            });
+        $ypareoClassrooms = $ypareo->getAllClassrooms()->reject(function ($c) {
+            return is_null($c['prixDeVente']);
+        });
 
+        DB::transaction(function () use ($ypareoClassrooms) {
             Training::whereNotNull('id')->delete();
             Classroom::whereNotNull('ypareo_id')->delete();
 
