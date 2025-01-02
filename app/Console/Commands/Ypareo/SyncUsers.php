@@ -40,8 +40,9 @@ class SyncUsers extends Command
 
         $this->info('Syncing users data from Ypareo:');
 
-        DB::transaction(function () use ($ypareo) {
-            $ypareoUsers = $ypareo->getUsers();
+        $ypareoUsers = $ypareo->getUsers();
+
+        DB::transaction(function () use ($ypareoUsers) {
             $roles = Role::all()->keyBy('name');
             $rolesToDetach = $roles->where('is_from_ypareo', true)->pluck('id');
             $now = now();
