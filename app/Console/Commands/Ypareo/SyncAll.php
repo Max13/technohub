@@ -38,6 +38,9 @@ class SyncAll extends Command
         $this->call('ypareo:sync:classrooms');
         $this->newLine(2);
 
+        $this->call('ypareo:sync:sfp');
+        $this->newLine(2);
+
         $this->call('ypareo:sync:subjects');
         $this->newLine(2);
 
