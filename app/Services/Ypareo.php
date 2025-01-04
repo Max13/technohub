@@ -357,7 +357,7 @@ class Ypareo
             cache()->forget($cacheKey);
         }
 
-        return cache()->remember($cacheKey, 3600, function () use ($classroom, $startDate, $endDate) {
+        return cache()->remember($cacheKey, config('services.ypareo.cache.expiration'), function () use ($classroom, $startDate, $endDate) {
             $url = $this->baseUrl . '/r/v1/planning/'.$startDate->format('d-m-Y').'/'.$endDate->format('d-m-Y').'/groupes';
 
             if (!is_null($classroom)) {
