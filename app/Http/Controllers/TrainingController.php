@@ -64,7 +64,10 @@ class TrainingController extends Controller
             'training' => $training->load([
                 'students' => function ($query) {
                     $query->withSum('absences as total_absences', 'duration')
-                          ->withSum('points as total_points', 'points');
+                          ->withSum('points as total_points', 'points')
+                          ->with(['roles' => function ($query) {
+                              $query->where('is_from_ypareo', false);
+                          }]);
                 },
             ]),
         ]);

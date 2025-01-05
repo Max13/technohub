@@ -20,6 +20,13 @@
                         <a class="text-decoration-none text-reset" href="{{ route('students.points.create', $student) }}">
                             <div class="card-body">
                                 <h5 class="card-title mb-3">{{ $student->fullname }}</h5>
+
+                                <ul class="list-unstyled small">
+                                    @foreach ($student->roles as $role)
+                                        <li class="badge list-inline-item me-0 text-black" style="background-color:{{ $role->bgColor }}">{{ $role->name }}</li>
+                                    @endforeach
+                                </ul>
+
                                 <div class="d-flex justify-content-between">
                                     <span class="card-text badge text-bg-secondary">{{ $student->total_points }} {{ __('Points') }}</span>
                                     <span class="card-text badge text-bg-{{ App\Models\Absence::color($student->total_absences) }}">{{ floor($student->total_absences / 60) }} h</span>

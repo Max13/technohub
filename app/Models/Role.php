@@ -50,7 +50,7 @@ class Role extends Model
             'cyan' => '#42d4f4',
             'lavender' => '#dcbeff',
             'apricot' => '#ffd8b1',
-            'white' => '#ffffff',
+            'blue' => '#66ccff',
         ];
 
         return $colors[array_keys($colors)[($this->id - 1) % count($colors)]];
