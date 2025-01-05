@@ -22,7 +22,7 @@ class DropTrainingIdFromUsersTable extends Migration
             });
         } else {
             Schema::table('users', function (Blueprint $table) {
-                $table->dropConstrainedForeignId('training_id');
+                $table->dropColumn(['training_id']);
             });
         }
     }
