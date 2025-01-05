@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Ypareo;
 
 use App\Models\Classroom;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\Ypareo;
 use Illuminate\Console\Command;
@@ -43,32 +44,73 @@ class SyncParticipants extends Command
 
         // Classrooms students
         $classrooms = Classroom::all();
-        $ypareoStudents = [];
+        $ypareoStudents = collect();
         $this->withProgressBar($classrooms, function ($cls) use (&$ypareoStudents, $ypareo) {
-            $ypareoStudents[$cls->id] = [];
-            $ypareo->getClassroomsStudents($cls)->each(function ($student) use ($cls, &$ypareoStudents) {
-                $ypareoStudents[$cls->id][] = $student['codeApprenant'];
+            $students = [];
+            $ypareo->getClassroomsStudents($cls)->each(function ($s) use ($cls, &$students) {
+                $students[] = [
+                    'is_disabled_worker' => boolval($s['estReconnuHandicape']),
+                    'is_sfp' => collect($s['inscriptions'])->contains(function ($i) {
+                        return $i['statut']['abregeStatut'] === 'SFP';
+                    }),
+                    'ypareo_id' => $s['codeApprenant'],
+                ];
             });
-            sort($ypareoStudents[$cls->id]);
+            sort($students);
+            $ypareoStudents->put($cls->id, $students);
         });
 
-        // Students
-        DB::transaction(function () use ($classrooms, $ypareoStudents, $year, $ypareo) {
-            $this->withProgressBar($classrooms, function ($cls) use ($ypareoStudents, $year, $ypareo) {
+        // Students in classroom
+        DB::transaction(function () use ($classrooms, $ypareoStudents, $year) {
+            $this->withProgressBar($classrooms, function ($cls) use ($ypareoStudents, $year) {
                 try {
                     $cls->users()->syncWithPivotValues(
-                        User::whereIn('ypareo_id', $ypareoStudents[$cls->id])->pluck('id'),
+                        User::whereIn('ypareo_id', array_column($ypareoStudents[$cls->id], 'ypareo_id'))->pluck('id'),
                         ['year' => $year],
                         false
                     );
                 } catch (QueryException $e) {
                     logger()->notice('  Could not save classroom students', [
                         'classroom' => $cls,
-                        'ypareoStudentsIds' => $ypareoStudents[$cls->id],
+                        'studentsYpareoIds' => $ypareoStudents[$cls->id],
                         'exception' => $e,
                     ]);
                 }
             });
+        });
+
+        // Students as disabled workers
+        DB::transaction(function () use ($ypareoStudents) {
+            $role = Role::where('name', 'Disabled')->sole();
+            $disabledStudents = $ypareoStudents->collapse()->where('is_disabled_worker', true);
+
+            try {
+                $role->users()->syncWithoutDetaching(
+                    User::where('ypareo_id', $disabledStudents->pluck('ypareo_id'))->pluck('id')
+                );
+            } catch (QueryException $e) {
+                logger()->notice('  Could not attach Disabled role to student', [
+                    'studentsYpareoIds' => $disabledStudents->pluck('ypareo_id'),
+                    'exception' => $e,
+                ]);
+            }
+        });
+
+        // Students as SFP
+        DB::transaction(function () use ($ypareoStudents) {
+            $role = Role::where('name', 'SFP')->sole();
+            $sfpStudents = $ypareoStudents->collapse()->where('is_sfp', true);
+
+            try {
+                $role->users()->syncWithoutDetaching(
+                    User::where('ypareo_id', $sfpStudents->pluck('ypareo_id'))->pluck('id')
+                );
+            } catch (QueryException $e) {
+                logger()->notice('  Could not attach SFP role to students', [
+                    'studentsYpareoIds' => $sfpStudents->pluck('ypareo_id'),
+                    'exception' => $e,
+                ]);
+            }
         });
 
         // Classrooms trainers
