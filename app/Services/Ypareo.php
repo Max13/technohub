@@ -130,7 +130,7 @@ class Ypareo
      * Get school periods
      *
      * @param  bool  $cached  Return cached response. Defaults to true.
-     * @return \Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection|array{codePeriode: int, nomPeriode: string, dateDeb: string, dateFin: string}[]
      * @throws \Illuminate\Http\Client\RequestException
      */
     protected function getPeriods($cached = true)
@@ -148,14 +148,21 @@ class Ypareo
                        ])
                        ->get($this->baseUrl . '/r/v1/periodes')
                        ->throw()
-                       ->collect();
+                       ->collect()
+                       ->sortBy('codePeriode')
+                       ->values();
         });
     }
 
     /**
      * Get current school period
      *
-     * @return \Illuminate\Support\Collection
+     * @return array{
+     *             codePeriode: int,
+     *             nomPeriode: string,
+     *             dateDeb: string,    // Format: dd/mm/yyyy
+     *             dateFin: string,    // Format: dd/mm/yyyy
+     *         }
      * @throws \Illuminate\Http\Client\RequestException
      */
     public function getCurrentPeriod()
