@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Training;
-use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 
 class TrainingController extends Controller
@@ -42,14 +41,14 @@ class TrainingController extends Controller
 
         return view('trainings.index', [
             'trainings' => $trainings,
-            'students' => $trainings->pluck('students')
-                                    ->flatten(1)
-                                    ->map(function ($s) use ($trainings) {
-                                         return [
-                                             'id' => $s->id,
-                                             'fullname' => $s->fullname.' - '.$trainings->where('id', $s->training_id)->first()->name,
-                                         ];
-                                     }),
+            'students' => $trainings->flatMap(function ($t) {
+                return $t->students->map(function ($s) use ($t) {
+                    return [
+                        'id' => $s->id,
+                        'fullname' => $s->fullname.' - '.$t->name,
+                    ];
+                });
+            }),
         ]);
     }
 

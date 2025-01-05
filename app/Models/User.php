@@ -4,17 +4,22 @@ namespace App\Models;
 
 use App\Models\Marking\Criterion;
 use App\Models\Marking\Point;
+use App\Services\Ypareo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships as HasDeepRelationships;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, SoftDeletes;
+    use HasDeepRelationships;
 
     /**
      * The attributes that are mass assignable.
@@ -84,6 +89,28 @@ class User extends Authenticatable
     }
 
     /**
+     * Retrieve user's classroom
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function classrooms() : BelongsToMany
+    {
+        return $this->belongsToMany(Classroom::class);
+    }
+
+    /**
+     * Retrieve user's current classroom
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     */
+    public function currentClassroom() : HasOneThrough
+    {
+        return $this->hasOneThrough(Classroom::class, ClassroomUser::class, 'user_id', 'id', 'id', 'classroom_id')
+                    ->where('year', substr(app(Ypareo::class)->getCurrentPeriod()['dateDeb'], -4))
+                    ->latest('id');
+    }
+
+    /**
      * Retrieve user's courses
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -91,16 +118,6 @@ class User extends Authenticatable
     public function courses() : BelongsToMany
     {
         return $this->belongsToMany(Course::class);
-    }
-
-    /**
-     * Retrieve user's classroom
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function currentTraining() : BelongsTo
-    {
-        return $this->belongsTo(Training::class, 'training_id');
     }
 
     /**
@@ -118,9 +135,19 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function trainings() : BelongsToMany
+    public function trainings() : HasManyDeep
     {
-        return $this->belongsToMany(Training::class);
+        return $this->hasManyDeepFromRelations($this->classrooms(), (new Classroom)->training());
+    }
+
+    /**
+     * Retrieve user's classroom
+     *
+     * @return \Staudenmeir\EloquentHasManyDeep\HasOneDeep
+     */
+    public function currentTraining() : HasOneDeep
+    {
+        return $this->hasOneDeepFromRelations($this->currentClassroom(), (new Classroom)->training());
     }
 
     /**

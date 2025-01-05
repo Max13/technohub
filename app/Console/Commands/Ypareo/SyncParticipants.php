@@ -39,56 +39,61 @@ class SyncParticipants extends Command
 
         $this->info('Syncing participants data from Ypareo:');
 
-        // TODO: Use roles
-        $bar = $this->output->createProgressBar(
-            User::where('is_trainer', true)
-                ->orWhere('is_student', true)
-                ->count()
-        );
-        $bar->start();
+        $year = substr($ypareo->getCurrentPeriod()['dateDeb'], -4);
+
+        // Classrooms students
+        $classrooms = Classroom::all();
+        $ypareoStudents = [];
+        $this->withProgressBar($classrooms, function ($cls) use (&$ypareoStudents, $ypareo) {
+            $ypareoStudents[$cls->id] = [];
+            $ypareo->getClassroomsStudents($cls)->each(function ($student) use ($cls, &$ypareoStudents) {
+                $ypareoStudents[$cls->id][] = $student['codeApprenant'];
+            });
+            sort($ypareoStudents[$cls->id]);
+        });
 
         // Students
-        DB::transaction(function () use ($ypareo, $bar) {
-            Classroom::all()->each(function ($c) use ($ypareo, $bar) {
+        DB::transaction(function () use ($classrooms, $ypareoStudents, $year, $ypareo) {
+            $this->withProgressBar($classrooms, function ($cls) use ($ypareoStudents, $year, $ypareo) {
                 try {
-                    $students = $ypareo->getClassroomsStudents($c);
-                    // TODO: Add student to course instead of training ?
-                    User::whereIn('ypareo_id', $students->pluck('codeApprenant'))
-                        ->update(['training_id' => $c->training_id]);
+                    $cls->users()->syncWithPivotValues(
+                        User::whereIn('ypareo_id', $ypareoStudents[$cls->id])->pluck('id'),
+                        ['year' => $year],
+                        false
+                    );
                 } catch (QueryException $e) {
-                    logger()->notice('  Could not save classrooms students', [
-                        'classroom' => $c,
-                        'students' => $students->pluck('id'),
+                    logger()->notice('  Could not save classroom students', [
+                        'classroom' => $cls,
+                        'ypareoStudentsIds' => $ypareoStudents[$cls->id],
                         'exception' => $e,
                     ]);
                 }
-
-                $bar->advance($students->count());
             });
         });
 
+        // Classrooms trainers
+        $trainers = User::where('is_trainer', true)->get();
+        $ypareoTrnClass = [];
+        $this->withProgressBar($trainers, function ($trn) use (&$ypareoTrnClass, $ypareo) {
+            $ypareoTrnClass[$trn->id] = $ypareo->getTrainersClassrooms($trn)->pluck('codeGroupe')->sort();
+        });
+
         // Trainers
-        DB::transaction(function () use ($ypareo, $bar) {
-            User::where('is_trainer', true)->eachById(function ($t) use ($ypareo, $bar) {
+        DB::transaction(function () use ($trainers, $ypareoTrnClass, $year, $ypareo) {
+            $this->withProgressBar($trainers, function ($trn) use ($ypareoTrnClass, $year) {
                 try {
-                    $ypareoClassrooms = $ypareo->getTrainersClassrooms($t);
-                    $t->trainings()->sync(
-                        Classroom::whereIn('ypareo_id', $ypareoClassrooms->pluck('codeGroupe'))
-                                 ->pluck('training_id')
+                    $trn->classrooms()->sync(
+                        Classroom::whereIn('ypareo_id', $ypareoTrnClass[$trn->id])->pluck('id')
                     );
                 } catch (QueryException $e) {
-                    logger()->notice('  Could not save trainers classrooms', [
-                        'trainer' => $t,
-                        'classrooms' => $ypareoClassrooms->pluck('codeGroupe'),
+                    logger()->notice('  Could not save trainer classrooms', [
+                        'trainer' => $trn,
+                        'ypareoClassroomsIds' => $ypareoTrnClass[$trn->id],
                         'exception' => $e,
                     ]);
                 }
-
-                $bar->advance();
-            }, 100);
+            });
         });
-
-        $bar->finish();
 
         return 0;
     }

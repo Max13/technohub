@@ -53,7 +53,6 @@ class SyncUsers extends Command
                 $dbUser = User::withTrashed()
                               ->firstOrNew(['ypareo_id' => $u['ypareo_id']])
                               ->forceFill(array_merge($u, [
-                                  'training_id' => null,
                                   'email_verified_at' => $now,
                                   'deleted_at' => null,
                               ]));

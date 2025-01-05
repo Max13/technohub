@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Ypareo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -35,7 +36,8 @@ class Training extends Model
      */
     public function classrooms() : HasMany
     {
-        return $this->hasMany(Classroom::class);
+        return $this->hasMany(Classroom::class)
+                    ->where('year', substr(app(Ypareo::class)->getCurrentPeriod()['dateDeb'], -4));
     }
 
     /**
@@ -51,12 +53,14 @@ class Training extends Model
     /**
      * Retrieve students of a given training
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Staudenmeir\EloquentHasManyDeep\HasManyDeep
      */
-    public function students() : HasMany
+    public function students() : HasManyDeep
     {
-        return $this->hasMany(User::class)
-                    ->where('is_student', true);
+        // TODO : Use roles
+        return $this->hasManyDeepFromRelations(
+            $this->classrooms(), (new Classroom)->users()->where('is_student', true)
+        );
     }
 
     /**
@@ -76,7 +80,9 @@ class Training extends Model
      */
     public function trainers() : BelongsToMany
     {
-        return $this->belongsToMany(User::class)
-                    ->where('is_trainer', true);
+        // TODO : Use roles
+        return $this->hasManyDeepFromRelations(
+            $this->classrooms(), (new Classroom)->users()->where('is_trainer', true)
+        );
     }
 }
