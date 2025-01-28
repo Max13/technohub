@@ -133,11 +133,12 @@ class User extends Authenticatable
     /**
      * Retrieve user's trainings
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Staudenmeir\EloquentHasManyDeep\HasManyDeep
      */
     public function trainings() : HasManyDeep
     {
-        return $this->hasManyDeepFromRelations($this->classrooms(), (new Classroom)->training());
+        return $this->hasManyDeepFromRelations($this->classrooms(), (new Classroom)->training())
+                    ->orderBy('nth_year');
     }
 
     /**
