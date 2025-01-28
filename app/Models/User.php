@@ -138,6 +138,7 @@ class User extends Authenticatable
     public function trainings() : HasManyDeep
     {
         return $this->hasManyDeepFromRelations($this->classrooms(), (new Classroom)->training())
+                    ->distinct()
                     ->orderBy('nth_year');
     }
 
