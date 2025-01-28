@@ -124,8 +124,9 @@ class SyncParticipants extends Command
         DB::transaction(function () use ($trainers, $ypareoTrnClass, $year, $ypareo) {
             $this->withProgressBar($trainers, function ($trn) use ($ypareoTrnClass, $year) {
                 try {
-                    $trn->classrooms()->sync(
-                        Classroom::whereIn('ypareo_id', $ypareoTrnClass[$trn->id])->pluck('id')
+                    $trn->classrooms()->syncWithPivotValues(
+                        Classroom::whereIn('ypareo_id', $ypareoTrnClass[$trn->id])->pluck('id'),
+                        ['year' => $year],
                     );
                 } catch (QueryException $e) {
                     logger()->notice('  Could not save trainer classrooms', [
