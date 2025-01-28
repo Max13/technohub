@@ -36,8 +36,7 @@ class Training extends Model
      */
     public function classrooms() : HasMany
     {
-        return $this->hasMany(Classroom::class)
-                    ->where('year', substr(app(Ypareo::class)->getCurrentPeriod()['dateDeb'], -4));
+        return $this->hasMany(Classroom::class);
     }
 
     /**
