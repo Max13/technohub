@@ -13,5 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/hotspot/ypareo/login',
+        '/exams',
     ];
 }

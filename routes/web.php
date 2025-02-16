@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\OneButtonController;
 use App\Http\Controllers\Auth\YpareoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Exam\AssignmentController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\HotspotController;
 use App\Http\Controllers\Hotspot\StaffController;
 use App\Http\Controllers\Hotspot\StudentController;
@@ -13,6 +15,8 @@ use App\Http\Controllers\Marking\CriterionController;
 use App\Http\Controllers\Marking\PointController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\VerifySebIntegrity;
+use CFPropertyList\CFPropertyList;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -76,6 +80,21 @@ Route::middleware(['auth'])->group(function () {
     // Users
     Route::patch('/users/{user}/roles', [UserController::class, 'updateRoles'])->name('users.roles.update');
     Route::resource('users', UserController::class);
+
+    // Assignments (Students)
+    Route::get('/exams/assignments', [AssignmentController::class, 'index'])->name('exams.assignments.index');
+    Route::get('/exams/assignments/{assignment:uuid}', [AssignmentController::class, 'show'])->name('exams.assignments.show');
+    Route::get('/exams/assignments/{assignment:uuid}/start', [AssignmentController::class, 'start'])->name('exams.assignments.start')->middleware(VerifySebIntegrity::class);
+    Route::get('/exams/assignments/{assignment:uuid}/finish', [AssignmentController::class, 'finish'])->name('exams.assignments.finish');
+    Route::get('/exams/assignments/{assignment:uuid}/pass/{question}', [AssignmentController::class, 'pass'])->name('exams.assignments.pass')->middleware(VerifySebIntegrity::class);
+    Route::post('/exams/assignments/{assignment:uuid}/pass/{question}', [AssignmentController::class, 'answer'])->name('exams.assignments.answer')->middleware(VerifySebIntegrity::class);
+
+    // Exams (Trainer)
+    Route::get('/exams/{group_uuid}/report', [ExamController::class, 'downloadReport'])->name('exams.report');
+    Route::get('/exams/{exam}/assign', [ExamController::class, 'showAssign'])->name('exams.showAssign');
+    Route::post('/exams/{exam}/assign', [ExamController::class, 'doAssign'])->name('exams.doAssign');
+    Route::get('/exams/{exam}/self-assign', [ExamController::class, 'selfAssign'])->name('exams.self-assign');
+    Route::resource('exams', ExamController::class);
 });
 
 Route::get('/trainings/{training}/ranking', [TrainingController::class, 'ranking'])->name('trainings.ranking');

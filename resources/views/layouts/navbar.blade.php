@@ -26,6 +26,17 @@
                 @can('viewAny', App\Models\Training::class)
                     <a class="nav-link @if(Route::currentRouteName() == 'trainings.index') active @endif" @if(Route::currentRouteName() == 'trainings.index') aria-current="page" @endif href="{{ route('trainings.index') }}">{{ __('My trainings') }}</a>
                 @endcan
+                @can('viewAny', App\Models\Exam::class)
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Exams') }}</a>
+                        <div class="dropdown-menu">
+                            <a class="nav-link @if(Route::currentRouteName() == 'exams.index') active @endif" @if(Route::currentRouteName() == 'exams.index') aria-current="page" @endif href="{{ route('exams.index') }}">{{ __('My exams') }}</a>
+                            <a class="nav-link @if(Route::currentRouteName() == 'exams.assignments.index') active @endif" @if(Route::currentRouteName() == 'exams.assignments.index') aria-current="page" @endif href="{{ route('exams.assignments.index') }}">{{ __('Assignments') }}</a>
+                        </div>
+                    </div>
+                @elsecan('viewAny', App\Models\Exam\Assignment::class)
+                    <a class="nav-link @if(Route::currentRouteName() == 'exams.assignments.index') active @endif" @if(Route::currentRouteName() == 'exams.assignments.index') aria-current="page" @endif href="{{ route('exams.assignments.index') }}">{{ __('Assignments') }}</a>
+                @endcan
             </div>
 
             @auth

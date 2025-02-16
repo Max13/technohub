@@ -13,6 +13,7 @@
         "laravel/socialite": "^5.11",
         "laravel/tinker": "^2.5",
         "max13/laravel-sqfix": "^1.2",
+        "rodneyrehm/plist": "^2.0",
         "staudenmeir/eloquent-has-many-deep": "^1.14"
     },
     "require-dev": {

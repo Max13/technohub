@@ -239,6 +239,14 @@ $enable-shadows: true;
   @extend .shadow-lg;
 }
 
+.exam-timer {
+  @extend .d-flex, .justify-content-center, .align-items-center, .border, .border-info-subtle, .rounded-circle;
+
+  font-size: 1.8em;
+  height: 5rem;
+  width: 5rem;
+}
+
 @include media-breakpoint-up(md) {
   .modal-hs {
     --bs-modal-width: 600px;

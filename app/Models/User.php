@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Exam\Assignment;
 use App\Models\Marking\Criterion;
 use App\Models\Marking\Point;
 use App\Services\Ypareo;
@@ -89,6 +90,16 @@ class User extends Authenticatable
     }
 
     /**
+     * User's exam assignments
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function assignments() : HasMany
+    {
+        return $this->hasMany(Assignment::class)->latest('id');
+    }
+
+    /**
      * Retrieve user's classroom
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -118,6 +129,16 @@ class User extends Authenticatable
     public function courses() : BelongsToMany
     {
         return $this->belongsToMany(Course::class);
+    }
+
+    /**
+     * Returns exams authored by this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function exams() : HasMany
+    {
+        return $this->hasMany(Exam::class);
     }
 
     /**
