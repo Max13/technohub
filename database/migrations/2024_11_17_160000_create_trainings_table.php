@@ -21,14 +21,6 @@ class CreateTrainingsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('training_id')
-                  ->nullable()
-                  ->after('password')
-                  ->constrained()
-                  ->nullOnDelete();
-        });
     }
 
     /**
@@ -38,10 +30,6 @@ class CreateTrainingsTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('training_id');
-        });
-
         Schema::dropIfExists('trainings');
     }
 }
