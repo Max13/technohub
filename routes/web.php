@@ -67,7 +67,7 @@ Route::middleware(['auth'])->group(function () {
     // Marking
     Route::group([
         'prefix' => '/marking',
-        'as' => 'marking/'
+        'as' => 'marking/',
     ], function () {
         Route::resource('criteria', CriterionController::class);
     });
