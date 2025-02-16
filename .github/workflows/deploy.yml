@@ -11,13 +11,11 @@ jobs:
     uses: max13/zero-downtime/.github/workflows/deploy-via-rsync-ssh.yml@master
     secrets:
       SSH_HOST: ${{ secrets.SSH_HOST }}
-      SSH_PORT: ${{ secrets.SSH_PORT }}
+      SSH_PORT: "${{ secrets.SSH_PORT }}"
       SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-      SSH_KEY: ${{ secrets.SSH_KEY }}
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       SSH_BASE_PATH: ${{ secrets.SSH_BASE_PATH }}
 #      SSH_SYMLINK_PATH: 'staging'
-      SSH_CHOWN_USER: ${{ secrets.SSH_CHOWN_USER }}
-      SSH_CHOWN_GROUP: ${{ secrets.SSH_CHOWN_GROUP }}
     with:
 #      SCRIPT_AFTER_CHECKOUT:
 #      SCRIPT_AFTER_DST_SETUP:
@@ -26,10 +24,9 @@ jobs:
         npm install
         npm run production
       SCRIPT_ON_DST_BEFORE_DEPLOY: |
-        export SSH_KEYFILE="$(mktemp)" && echo "$SSH_KEY" > "$SSH_KEYFILE"
-        ssh -i "$SSH_KEYFILE" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "rm -rf \"$SSH_RELEASE_PATH\"/.env && ln -sfnr \"$SSH_BASE_PATH\"/data/.env \"$SSH_RELEASE_PATH\"/"
-        ssh -i "$SSH_KEYFILE" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "rm -rf \"$SSH_RELEASE_PATH\"/database/database.sqlite && ln -sfnr \"$SSH_BASE_PATH\"/data/database/database.sqlite \"$SSH_RELEASE_PATH\"/database/"
-        ssh -i "$SSH_KEYFILE" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "rm -rf \"$SSH_RELEASE_PATH\"/storage/app && ln -sfnr \"$SSH_BASE_PATH\"/data/storage/app \"$SSH_RELEASE_PATH\"/storage/"
-        # ssh -i "$SSH_KEYFILE" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "COMPOSER_ALLOW_SUPERUSER=1 composer -d \"$SSH_RELEASE_PATH\" -n config repositories.ypareo-auth vcs https://github.com/Max13/php-ypareauth.git && COMPOSER_ALLOW_SUPERUSER=1 composer -d \"$SSH_RELEASE_PATH\" -n --no-scripts require max13/php-ypareauth:^1.0 && COMPOSER_ALLOW_SUPERUSER=1 composer -d \"$SSH_RELEASE_PATH\" -n dump-autoload"
-        rm "$SSH_KEYFILE"
+        SSHPASS="$SSH_PASSWORD" sshpass -e ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "rm -rf \"$SSH_RELEASE_PATH\"/.ovhconfig && ln -sfnr \"$SSH_BASE_PATH\"/data/.ovhconfig \"$SSH_RELEASE_PATH\"/"
+        SSHPASS="$SSH_PASSWORD" sshpass -e ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "rm -rf \"$SSH_RELEASE_PATH\"/.env && ln -sfnr \"$SSH_BASE_PATH\"/data/.env \"$SSH_RELEASE_PATH\"/"
+        SSHPASS="$SSH_PASSWORD" sshpass -e ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "rm -rf \"$SSH_RELEASE_PATH\"/database/database.sqlite && ln -sfnr \"$SSH_BASE_PATH\"/data/database/database.sqlite \"$SSH_RELEASE_PATH\"/database/"
+        SSHPASS="$SSH_PASSWORD" sshpass -e ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "rm -rf \"$SSH_RELEASE_PATH\"/storage/app && ln -sfnr \"$SSH_BASE_PATH\"/data/storage/app \"$SSH_RELEASE_PATH\"/storage/"
+        SSHPASS="$SSH_PASSWORD" sshpass -e ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p $SSH_PORT "$SSH_USERNAME"@"$SSH_HOST" "php \"$SSH_RELEASE_PATH\"/artisan storage:link"
 #      SCRIPT_ON_DST_AFTER_DEPLOY:
