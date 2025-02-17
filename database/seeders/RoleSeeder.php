@@ -31,6 +31,12 @@ class RoleSeeder extends Seeder
             ],[
                 'is_from_ypareo' => true,
                 'name' => 'Student'
+            ],[
+                'is_from_ypareo' => true,
+                'name' => 'Disabled',
+            ],[
+                'is_from_ypareo' => true,
+                'name' => 'SFP',
             ],
         ])->keyBy('name');
 
