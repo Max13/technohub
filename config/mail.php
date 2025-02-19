@@ -93,7 +93,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'nepasrepondre@iticparis.com'),
-        'name' => env('MAIL_FROM_NAME', 'ITIC Paris – Portail'),
+        'name' => env('MAIL_FROM_NAME', 'TechnoHub – ITIC Paris'),
     ],
 
     /*

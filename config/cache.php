@@ -105,6 +105,6 @@ return [
     |
     */
 
-    'prefix' => env('CACHE_PREFIX', 'intra_cache_'),
+    'prefix' => env('CACHE_PREFIX', 'technohub_cache_'),
 
 ];

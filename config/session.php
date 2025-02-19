@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
-
 return [
 
     /*
@@ -126,7 +124,7 @@ return [
     |
     */
 
-    'cookie' => env('SESSION_COOKIE', 'intra_session_'),
+    'cookie' => env('SESSION_COOKIE', 'technohub_session_'),
 
     /*
     |--------------------------------------------------------------------------
