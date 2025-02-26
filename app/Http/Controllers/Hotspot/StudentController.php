@@ -28,6 +28,7 @@ class StudentController extends Controller
             'auth.user.ypareo_login' => [
                 'required',
                 Rule::exists('users', 'ypareo_login')->where(function ($query) {
+                    // FIXME: Use roles
                     return $query->where('is_trainer', true)
                                  ->orWhere('is_student', true);
                 }),

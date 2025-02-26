@@ -56,10 +56,10 @@ class Training extends Model
      */
     public function students() : HasManyDeep
     {
-        // TODO : Use roles
         return $this->hasManyDeepFromRelations(
-            $this->classrooms(), (new Classroom)->users()->where('is_student', true)
-        );
+                        $this->classrooms(), (new Classroom)->users()
+                    )
+                    ->whereRelation('roles', 'name', 'Student');
     }
 
     /**
@@ -79,9 +79,9 @@ class Training extends Model
      */
     public function trainers() : BelongsToMany
     {
-        // TODO : Use roles
         return $this->hasManyDeepFromRelations(
-            $this->classrooms(), (new Classroom)->users()->where('is_trainer', true)
-        );
+                        $this->classrooms(), (new Classroom)->users()
+                    )
+                    ->whereRelation('roles', 'name', 'Trainer');
     }
 }

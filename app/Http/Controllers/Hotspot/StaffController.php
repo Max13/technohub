@@ -23,6 +23,7 @@ class StaffController extends Controller
                 'required',
                 'email',
                 Rule::exists('users', 'email')->where(function ($query) {
+                    // FIXME: Use roles
                     return $query->where('is_staff', true);
                 }),
             ],
