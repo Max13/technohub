@@ -84,7 +84,8 @@ class PointController extends Controller
             'criteria' => Criterion::orderBy('name')->get(),
             'training' => $training->load([
                 'students' => function ($query) {
-                    $query->withSum('points as sum_points', 'points')
+                    $query->distinct()
+                          ->withSum('points as sum_points', 'points')
                           ->orderBy('lastname');
                 }
             ]),

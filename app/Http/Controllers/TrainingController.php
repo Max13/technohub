@@ -85,7 +85,8 @@ class TrainingController extends Controller
     {
         $training->load([
             'students' => function ($query) {
-                $query->withSum('points as total_points', 'points');
+                $query->distinct()
+                      ->withSum('points as total_points', 'points');
             },
         ]);
 
