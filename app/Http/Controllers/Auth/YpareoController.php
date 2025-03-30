@@ -79,7 +79,7 @@ class YpareoController extends Controller
             ]
         );
 
-        if ($ypareo->auth($data['username'], $data['password'], app(Generator::class)->userAgent())) {
+        if ($ypareo->auth($data['username'], $data['password'], $request->userAgent())) {
             $user = User::where('ypareo_login', $data['username'])->first();
 
             $request->session()->keep(['auth.entryPoint']);

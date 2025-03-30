@@ -99,6 +99,10 @@
 
                 <div class="col-12">
                     <button type="submit" class="btn w-100">{{ __('Login') }}</button>
+                    <button type="button" class="btn w-100 d-none" disabled>
+                        <span role="status">{{ __('Loading') }}</span>
+                        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                    </button>
                     <button type="button" class="btn btn-sm btn-link w-100 mt-1" data-bs-toggle="modal" data-bs-target="#password-reset-modal">{{ __('Reset my password') }}</button>
                 </div>
             </form>
@@ -132,4 +136,13 @@
 
 @push('scripts')
     <script src="{{ mix('/js/app.js') }}"></script>
+    <script>
+        document.getElementById('form-matrix').addEventListener('submit', ev => {
+            const submitBtn = ev.submitter;
+            const loadingBtn = submitBtn.nextElementSibling;
+
+            submitBtn.classList.add('d-none');
+            loadingBtn.classList.remove('d-none');
+        });
+    </script>
 @endpush

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\Ypareo;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -45,7 +46,7 @@ class IticController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function doLogin(Request $request)
+    public function doLogin(Request $request, Ypareo $ypareo)
     {
         $data = $request->validate(
             [
@@ -57,7 +58,8 @@ class IticController extends Controller
             ]
         );
 
-        if (auth()->attempt(['ypareo_login' => $data['username'], 'password' => $data['password']], $data['remember'] ?? false)) {
+        if ($ypareo->auth($data['username'], $data['password'], $request->userAgent())) {
+            auth()->login(User::where('ypareo_login', $data['username'])->sole(), $data['remember'] ?? false);
             $request->session()->regenerate();
 
             return redirect()->intended(route('dashboard'));

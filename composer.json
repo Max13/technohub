@@ -13,6 +13,7 @@
         "laravel/socialite": "^5.11",
         "laravel/tinker": "^2.5",
         "max13/laravel-sqfix": "^1.2",
+        "max13/php-ypareauth": "^1.1",
         "rodneyrehm/plist": "^2.0",
         "staudenmeir/eloquent-has-many-deep": "^1.14"
     },
@@ -71,5 +72,11 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": {
+        "ypareo-auth": {
+            "type": "vcs",
+            "url": "https://github.com/Max13/php-ypareauth.git"
+        }
+    }
 }
