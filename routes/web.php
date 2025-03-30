@@ -16,7 +16,6 @@ use App\Http\Controllers\Marking\PointController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\VerifySebIntegrity;
-use CFPropertyList\CFPropertyList;
 use Illuminate\Support\Facades\Route;
 
 /*
