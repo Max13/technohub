@@ -5,14 +5,17 @@ namespace App\Models;
 use App\Models\Exam\Assignment;
 use App\Models\Marking\Criterion;
 use App\Models\Marking\Point;
+use App\Services\Wallet\Google;
 use App\Services\Ypareo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships as HasDeepRelationships;
@@ -61,6 +64,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'badge',
     ];
 
     /**
@@ -77,6 +81,7 @@ class User extends Authenticatable
         'training_id' => 'integer',
         'birthdate' => 'date',
         'last_logged_in_at' => 'date',
+        'badge' => 'object',
     ];
 
     /**

@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\IticController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\OneButtonController;
 use App\Http\Controllers\Auth\YpareoController;
+use App\Http\Controllers\BadgeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Exam\AssignmentController;
 use App\Http\Controllers\ExamController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Marking\PointController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\VerifySebIntegrity;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -77,6 +79,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('students.points', PointController::class)->shallow()->except(['show']);
 
     // Users
+    Route::get('/me/badge/{platform}', function (Authenticatable $user, $platform) {
+        return response()->redirectToRoute('users.badge.getToken', [$user, $platform]);
+    });
+    Route::get('/users/{user}/badge/{platform}', [BadgeController::class, 'getToken'])->name('users.badge.getToken');
     Route::patch('/users/{user}/roles', [UserController::class, 'updateRoles'])->name('users.roles.update');
     Route::resource('users', UserController::class);
 

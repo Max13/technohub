@@ -37,6 +37,11 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'birthdate' => $this->faker->dateTimeInInterval('-30 years', '-18 years')->setTime(0, 0),
             'last_logged_in_at' => $this->faker->dateTimeThisMonth,
+            'badge' => $this->faker->boolean ? null : [
+                'platform' => $this->faker->randomElement(['android', 'ios']),
+                'uuid' => $this->faker->uuid,
+                'token' => $this->faker->md5,
+            ],
         ];
     }
 

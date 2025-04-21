@@ -24,6 +24,11 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT'),
         'allowed_domains' => explode(',', env('GOOGLE_ALLOWED_DOMAINS')),
+        'wallet' => [
+            'credentials' => env('GOOGLE_WALLET_CREDENTIALS'),
+            'issuer' => env('GOOGLE_WALLET_ISSUER'),
+            'class' => env('GOOGLE_WALLET_CLASS'),
+        ],
     ],
 
     'mailgun' => [

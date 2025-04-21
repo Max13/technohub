@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Services\Mikrotik\Hotspot;
+use App\Services\Wallet;
 use App\Services\Ypareo;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use RuntimeException;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,18 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(Ypareo::class, function ($app) {
             return new Ypareo(config('services.ypareo.apiKey'), config('services.ypareo.baseUrl'));
+        });
+
+        $this->app->bind(Wallet::class, function ($app, array $parameters) {
+            $class = 'App\Services\Wallet\\' . ucfirst($parameters[0]);
+
+            throw_if(
+                !class_exists($class),
+                RuntimeException::class,
+                'Service Container cannot find Wallet class for platform: ' . $parameters[0] . '.'
+            );
+
+            return new $class(...array_values(config("services.$parameters[0].wallet")));
         });
     }
 
