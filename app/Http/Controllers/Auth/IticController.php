@@ -58,8 +58,16 @@ class IticController extends Controller
             ]
         );
 
-        if ($ypareo->auth($data['username'], $data['password'], $request->userAgent())) {
-            auth()->login(User::where('ypareo_login', $data['username'])->sole(), $data['remember'] ?? false);
+        if (
+            // Try local login first
+               auth()->attempt(['ypareo_login' => $data['username'], 'password' => $data['password']], $data['remember'] ?? false)
+            // Then try Ypareo login
+            || $ypareo->auth($data['username'], $data['password'], $request->userAgent())
+        ) {
+            if (!auth()->check()) {
+                auth()->login(User::where('ypareo_login', $data['username'])->sole(), $data['remember'] ?? false);
+            }
+
             $request->session()->regenerate();
 
             return redirect()->intended(route('dashboard'));
