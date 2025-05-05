@@ -10,8 +10,8 @@
         <div class="row mt-5 mb-4">
             <div class="col-md-8 offset-md-2">
                 <div class="card">
-                    <div class="card-header">{{ __('Random numbers generator') }}</div>
-                    <div class="card-body">
+                    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#rngCollapse" aria-expanded="false" aria-controls="rngCollapse">{{ __('Random numbers generator') }}</div>
+                    <div class="card-body collapse" id="rngCollapse">
                         <form id="rng">
                             <div class="row g-2 mb-3">
                                 <div class="col">
@@ -94,8 +94,8 @@
         <div class="row my-4">
             <div class="col-md-8 offset-md-2">
                 <div class="card">
-                    <div class="card-header">{{ __('Hash function') }}</div>
-                    <div class="card-body">
+                    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#digestCollapse" aria-expanded="false" aria-controls="digestCollapse">{{ __('Hash function') }}</div>
+                    <div class="card-body collapse" id="digestCollapse">
                         <form>
                             <div class="mb-3">
                                 <label for="digest_algorithm" class="form-label">{{ __('Algorithm') }}</label>
@@ -218,5 +218,20 @@
     <script src="{{ mix('/js/app.js') }}"></script>
     <script>
         const crypto = window.crypto.subtle;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            Array.from(document.getElementsByClassName('collapse')).forEach(el => {
+                if (localStorage[el.id] == 1) {
+                    el.classList.add('show');
+                }
+
+                el.addEventListener('shown.bs.collapse', () => {
+                    localStorage[el.id] = 1;
+                });
+                el.addEventListener('hidden.bs.collapse', () => {
+                    localStorage[el.id] = 0;
+                });
+            });
+        });
     </script>
 @endpush
