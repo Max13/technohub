@@ -119,6 +119,17 @@
                                     <div class="col" id="digest_text_result"></div>
                                 </div>
                             </div>
+                            <hr>
+                            <div class="mb-3">
+                                <label for="digest_file" class="form-label">{{ __('File to hash') }}</label>
+                                <input class="form-control" type="file" id="digest_file">
+                                <div class="row mt-3 align-items-center">
+                                    <div class="col-auto">
+                                        <button type="button" id="digest_file_btn" class="btn btn-primary">{{ __('Submit') }}</button>
+                                    </div>
+                                    <div class="col" id="digest_file_result"></div>
+                                </div>
+                            </div>
                         </form>
                         <script>
                             // Digest - Algorithm
@@ -166,6 +177,32 @@
                                 }
 
                                 digestTextResult.innerHTML = '{{ __('Hash:') }}&nbsp;<code>' + result + '</code>';
+                            });
+
+                            // Digest - File
+                            const digestFile = document.getElementById('digest_file');
+                            const digestFileBtn = document.getElementById('digest_file_btn');
+                            const digestFileResult = document.getElementById('digest_file_result');
+
+                            digestFile.addEventListener('change', () => {
+                                digestFileResult.innerHTML = '';
+                            });
+
+                            digestFileBtn.addEventListener('click', async () => {
+                                let result;
+
+                                if (selectedDigestAlgorithm.value === 'MD5') {
+                                    // const buf = await digestFile.files[0].arrayBuffer();
+                                    // const data = (new TextDecoder()).decode(buf);
+                                    // result = md5(data);
+                                    result = 'Non fonctionnel pour MD5';
+                                } else {
+                                    result = Array.from(new Uint8Array(await crypto.subtle.digest(selectedDigestAlgorithm, await digestFile.files[0].arrayBuffer())))
+                                                  .map(b => b.toString(16).padStart(2, '0'))
+                                                  .join('');
+                                }
+
+                                digestFileResult.innerHTML = '{{ __('Hash:') }}&nbsp;<code>' + result + '</code>';
                             });
                         </script>
                     </div>
