@@ -37,6 +37,12 @@
                 @elsecan('viewAny', App\Models\Exam\Assignment::class)
                     <a class="nav-link @if(Route::currentRouteName() == 'exams.assignments.index') active @endif" @if(Route::currentRouteName() == 'exams.assignments.index') aria-current="page" @endif href="{{ route('exams.assignments.index') }}">{{ __('Assignments') }}</a>
                 @endcan
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Miscellaneous') }}</a>
+                    <div class="dropdown-menu">
+                        <a class="nav-link @if(Route::currentRouteName() == 'misc.crypto') active @endif" @if(Route::currentRouteName() == 'misc.crypto') aria-current="page" @endif href="{{ route('misc.crypto') }}">{{ __('Crypto') }}</a>
+                    </div>
+                </div>
             </div>
 
             @auth

@@ -14,6 +14,7 @@ use App\Http\Controllers\Hotspot\StaffController;
 use App\Http\Controllers\Hotspot\StudentController;
 use App\Http\Controllers\Marking\CriterionController;
 use App\Http\Controllers\Marking\PointController;
+use App\Http\Controllers\Misc\CryptoController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\VerifySebIntegrity;
@@ -100,6 +101,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/exams/{exam}/assign', [ExamController::class, 'doAssign'])->name('exams.doAssign');
     Route::get('/exams/{exam}/self-assign', [ExamController::class, 'selfAssign'])->name('exams.self-assign');
     Route::resource('exams', ExamController::class);
+
+    // Misc
+    Route::get('/misc/crypto', CryptoController::class)->name('misc.crypto');
+    Route::get('/misc/crypto/rng', [CryptoController::class, 'getRandomNumber'])->name('misc.crypto.getRng');
 });
 
 Route::get('/trainings/{training}/ranking', [TrainingController::class, 'ranking'])->name('trainings.ranking');
