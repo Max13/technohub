@@ -6,9 +6,9 @@
     <main class="container py-4">
         <h1>{{ $user->fullname }}</h1>
 
-        <div class="row my-4">
+        <div class="row my-4 g-3">
             <!-- User details -->
-            <div class="col-auto col-md-5 mx-auto">
+            <div class="col-auto col-10 col-lg-5 mx-auto">
                 <div class="card h-100 w-100">
                     <div class="card-body">
                         <ul class="small list-inline mb-4">
@@ -67,7 +67,7 @@
             </div>
 
             <!-- Graph -->
-            <div class="col-auto col-md mx-auto">
+            <div class="col-auto col-10 col-lg-7 mx-auto">
                 <div class="card h-100 w-100">
                     <div class="card-body">
                         <canvas id="courses-details-graph"></canvas>
@@ -147,10 +147,12 @@
                 datasets: [
                     {
                         label: 'Cours',
-                        data: coursesDetails.durations,
+                        data: coursesDetails.durations.map(duration => duration === 0 ? null : duration),
+                        minBarLength: 5,
                     },{
                         label: 'Absences',
-                        data: coursesDetails.absences,
+                        data: coursesDetails.absences.map(duration => duration === 0 ? null : duration),
+                        minBarLength: 5,
                     },
                 ],
             },

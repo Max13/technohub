@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 100 142.2" xmlns="http://www.w3.org/2000/svg">
-  <g fill="none" fill-rule="evenodd" transform="matrix(2.314815, 0, 0, 2.346457, -0.5, -0.873002)" style="transform-origin: 0.5px 0.873002px;">
-    <path d="M 0.932 1.479 L 0.932 27.138 C 0.933 31.97 2.201 36.45 4.109 40.468 L 43.268 1.479 L 0.932 1.479 Z" style="stroke-width: 0.429067px; stroke: rgb(0, 0, 0); fill: rgba(0, 0, 0, 0);"/>
-    <path d="M 43.265 6.788 L 5.965 43.929 C 12.214 54.351 22.061 60.869 22.061 60.869 L 22.138 60.869 C 22.138 60.869 43.266 46.899 43.266 27.137 L 43.259 27.137 L 43.265 6.79 L 43.265 6.788 Z" style="fill: rgb(0, 0, 0); stroke-width: 0.429067px;"/>
+<svg viewBox="0 0 100 139.6" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="71.607" y1="357.545" x2="71.607" y2="443.315" id="gradient-0" gradientTransform="matrix(0.808166, -0.594542, 0.585499, 0.81104, -212.942628, 110.894204)">
+      <stop offset="0" style="stop-color: rgb(8.2353% 48.235% 76.863%)"/>
+      <stop offset="1" style="stop-color: rgb(220, 27, 120);"/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="104.277" y1="358.897" x2="104.277" y2="477.877" id="gradient-1" gradientTransform="matrix(0.819688, -0.578243, 0.379296, 0.547918, -150.594483, 219.527101)">
+      <stop offset="0" style="stop-color: rgb(8.2353% 48.235% 76.863%)"/>
+      <stop offset="1" style="stop-color: rgb(220, 27, 120);"/>
+    </linearGradient>
+  </defs>
+  <g id="XMLID_185_" style="transform-origin: 89.217px 420.563px;" transform="matrix(1.0784, 0, 0, 1.068268, -38.621704, -350.88736)">
+    <path id="XMLID_204_" class="st1" d="M 42.3 355.34 L 42.3 411.79 L 42.3 411.79 C 42.3 422.42 45.08 432.27 49.26 441.11 L 135.03 355.34 L 42.3 355.34 Z" style="fill: url(&quot;#gradient-0&quot;); stroke-miterlimit: 4; stroke-width: 1.00077px; stroke: none; transform-origin: 42.3px 355.34px;"/>
+    <path id="XMLID_203_" class="st0" d="M 135.03 367.02 L 53.32 448.73 C 67.01 471.66 88.58 486 88.58 486 L 88.75 486 C 88.75 486 135.03 455.26 135.03 411.79 L 135.01 411.79 L 135.03 367.02 Z" style="fill: url(&quot;#gradient-1&quot;); transform-origin: 42.3px 355.34px;"/>
   </g>
 </svg>
