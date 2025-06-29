@@ -7,6 +7,7 @@
         <h1>{{ $user->fullname }}</h1>
 
         <div class="row my-4">
+            <!-- User details -->
             <div class="col-auto col-md-5 mx-auto">
                 <div class="card h-100 w-100">
                     <div class="card-body">
@@ -64,6 +65,15 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Graph -->
+            <div class="col-auto col-md mx-auto">
+                <div class="card h-100 w-100">
+                    <div class="card-body">
+                        <canvas id="courses-details-graph"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -100,5 +110,50 @@
 @endsection
 
 @push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{{ mix('/js/app.js') }}"></script>
+    <script>
+        // Dark mode
+        if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
+            Chart.defaults.backgroundColor = window.getComputedStyle(document.body).getPropertyValue('--bs-body-bg');
+            Chart.defaults.borderColor = window.getComputedStyle(document.body).getPropertyValue('--bs-body-color');
+            Chart.defaults.color = window.getComputedStyle(document.body).getPropertyValue('--bs-body-color');
+            Chart.defaults.scale.ticks.backdropColor = window.getComputedStyle(document.body).getPropertyValue('--bs-body-bg');
+        }
+
+        let coursesDetails = {
+            durations: {!! $courses_details->pluck('courses_duration')->toJson() !!}.map(duration => duration / 60),
+            absences: {!! $courses_details->pluck('absences_duration')->toJson() !!}.map(duration => duration / 60),
+        };
+
+        coursesDetails.totalDuration = coursesDetails.durations.reduce((carry, duration) => carry + duration);
+        coursesDetails.relativeCourses = coursesDetails.durations.map(duration => Math.round(100 / (coursesDetails.totalDuration / duration)));
+        coursesDetails.relativeAbsences = coursesDetails.absences.map((duration, i) => Math.round(100 / (coursesDetails.durations[i] / duration)));
+
+        let coursesDetailsGraphCtx = document.getElementById('courses-details-graph');
+        let coursesDetailsGraph = new Chart(coursesDetailsGraphCtx, {
+            type: 'bar',
+            data: {
+                labels: {!! $courses_details->keys()->toJson() !!}.map(name => {
+                    if (name.startsWith('BLOC ')) {
+                        name = name.replace(/BLOC ?/i, 'B');
+                    }
+                    if (name.includes(' : ')) {
+                        nameParts = name.split(' : ', 2);
+                        name = nameParts[0] + ' : ' + nameParts[1].split(' ', 1)[0];
+                    }
+                    return name;
+                }),
+                datasets: [
+                    {
+                        label: 'Cours',
+                        data: coursesDetails.durations,
+                    },{
+                        label: 'Absences',
+                        data: coursesDetails.absences,
+                    },
+                ],
+            },
+        });
+    </script>
 @endpush

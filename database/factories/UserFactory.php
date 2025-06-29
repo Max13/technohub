@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Classroom;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class UserFactory extends Factory
@@ -99,7 +101,14 @@ class UserFactory extends Factory
      */
     public function student()
     {
+        $today = today();
+        $year = $today->month >= Carbon::SEPTEMBER ? $today->year : $today->year - 1;
+
         return $this->hasAttached(Role::firstOrCreate(['name' => 'Student']))
+                    ->hasAttached(
+                        Classroom::factory(),
+                        ['year' => $year],
+                    )
                     ->state(function () {
                         return [
                             'is_student' => true,

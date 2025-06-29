@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 
 class Absence extends Model
 {
@@ -30,6 +32,32 @@ class Absence extends Model
         'ended_at' => 'datetime',
         'duration' => 'integer',
     ];
+
+    /** @inheritDoc */
+    protected static function booted()
+    {
+        static::saved(function (Absence $absence) {
+            DB::transaction(function () use ($absence) {
+                $absence->courses()->sync(
+                    Course::whereBetween('started_at', [$absence->started_at, $absence->ended_at])
+                          ->orWhereBetween('ended_at', [$absence->started_at, $absence->ended_at])
+                          ->orWhereBetweenColumns($absence->started_at, ['started_at', 'ended_at'])
+                          ->orWhereBetweenColumns($absence->ended_at, ['started_at', 'ended_at'])
+                          ->pluck('id')
+                );
+            });
+        });
+    }
+
+    /**
+     * Retrieve the courses related to this absence
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function courses() : BelongsToMany
+    {
+        return $this->belongsToMany(Course::class);
+    }
 
     /**
      * Retrieve the student of this absence

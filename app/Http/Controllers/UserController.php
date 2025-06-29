@@ -82,17 +82,42 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $user->load([
+            'currentTraining',
+            'courses' => function ($query) use ($user) {
+                $query->where('label', 'NOT LIKE', '%annulé%')
+                      ->with(['absences' => function ($query) use ($user) {
+                          $query->where('user_id', $user->id);
+                      }])
+                      ->orderBy('label');
+            },
+            'roles' => function ($query) {
+                $query->orderBy('name');
+            },
+        ]);
+
+        $coursesDetails = $user->courses
+                               ->groupBy('label')
+                               ->mapWithKeys(function ($courses, $courseName) {
+                                   $courseDuration = $courses->sum('duration');
+                                   $absenceDuration = $courses->reduce(function ($carry, $course) {
+                                       return $carry + $course->absences->reduce(function ($carry, $absence) use ($course) {
+                                           $startedAt = $course->started_at->max($absence->started_at);
+                                           $endedAt = $course->ended_at->min($absence->ended_at);
+                                           return $carry + $startedAt->diffInRealMinutes($endedAt);
+                                       });
+                                   });
+
+                                   return [$courseName => [
+                                       'courses_duration' => $courseDuration,
+                                       'absences_duration' => $absenceDuration,
+                                   ]];
+                               });
+
         return view('users.show', [
+            'courses_details' => $coursesDetails,
             'roles' => Role::orderBy('name')->get(),
-            'user' => $user->load([
-                'currentTraining',
-                'roles' => function ($query) {
-                    $query->orderBy('name');
-                },
-                'trainings' => function ($query) {
-                    $query->orderBy('nth_year');
-                },
-            ]),
+            'user' => $user,
         ]);
     }
 
