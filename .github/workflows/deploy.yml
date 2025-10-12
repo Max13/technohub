@@ -10,6 +10,7 @@ jobs:
   deploy-via-rsync:
     uses: max13/zero-downtime/.github/workflows/deploy-via-rsync-ssh.yml@master
     secrets:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_PORT: "${{ secrets.SSH_PORT }}"
       SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
@@ -20,6 +21,7 @@ jobs:
 #      SCRIPT_AFTER_CHECKOUT:
 #      SCRIPT_AFTER_DST_SETUP:
       SCRIPT_BEFORE_UPLOAD: |
+        composer config --global github-oauth.github.com $ACCESS_TOKEN
         composer install -n -o --no-dev --no-scripts
         npm install
         npm run production
