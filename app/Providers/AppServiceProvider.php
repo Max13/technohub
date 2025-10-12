@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\ActiveDirectory;
 use App\Services\Mikrotik\Hotspot;
 use App\Services\Wallet;
 use App\Services\Ypareo;
@@ -18,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton(ActiveDirectory::class, function ($app) {
+            return new ActiveDirectory(config('ldap'));
+        });
+
         $this->app->bind(Hotspot::class, function ($app) {
             return new Hotspot(config('services.mikrotik.baseUrl'), config('services.mikrotik.username'), config('services.mikrotik.password'));
         });

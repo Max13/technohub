@@ -381,4 +381,80 @@ class Ypareo
                        ->collect('cours');
         });
     }
+
+    /**
+     * Retrieve trainers custom data, optionally filtered by trainers and data id.
+     *
+     * @param  int[] $trainerIds If no ids are specified, returns all custom data for every trainer.
+     * @param  int[] $dataIds    If no ids are specified, returns every custom data.
+     *
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function getTrainerCustomData(array $trainerIds = [], array $dataIds = [])
+    {
+        $httpRequst = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'X-Auth-Token' => $this->apiKey,
+        ]);
+
+        if ($trainerIds === []) {
+            $httpRequst = $httpRequst->get($this->baseUrl . '/r/v1/renseignements-parametres/structure/personnel');
+        } else {
+            $httpRequst = $httpRequst->get($this->baseUrl . '/r/v1/renseignements-parametres/personnels', [
+                'codesPersonnel' => $trainerIds,
+                'codesRubrique' => $dataIds,
+            ]);
+        }
+
+        return $httpRequst->throw()
+                          ->collect();
+    }
+
+    /**
+     * Set trainer's custom data
+     *
+     * @param  int    $trainerId
+     * @param  int    $dataId
+     * @param  string $dataName
+     * @param  int    $entityId
+     * @param  int    $valueId
+     * @param  string $valueName
+     * @param  string $valueType One of: date, montant, nombre, observation, texteLibre
+     * @param         $value
+     *
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function setTrainerCustomData(
+        int $trainerId,
+        int $dataId,
+        string $dataName,
+        int $entityId,
+        int $valueId,
+        string $valueName,
+        string $valueType,
+        $value
+    ) {
+        $response = Http::withHeaders([
+                            'Accept' => 'application/json',
+                            'Content-Type' => 'application/json',
+                            'X-Auth-Token' => $this->apiKey,
+                        ])
+                        ->put($this->baseUrl . '/r/v1/renseignements-parametres/personnels', [
+                            'codePersonnel' => $trainerId,
+                            'codeRubrique' => $dataId,
+                            'nomRubrique' => $dataName,
+                            'codeRubDetailEntite' => $entityId,
+                            'valeur' => [
+                                'codeValeur' => $valueId,
+                                'nomValeur' => $valueName,
+                            ],
+                            $valueType => $value,
+                        ])
+                        ->throw();
+
+        return $response->successful();
+    }
 }
