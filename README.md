@@ -1,4 +1,6 @@
-# ITIC Paris – Intranet
+# ITIC Paris – Technohub
+
+[![Deploy](https://github.com/Max13/technohub/actions/workflows/deploy.yml/badge.svg)](https://github.com/Max13/technohub/actions/workflows/deploy.yml)
 
 ## Intro
 Bienvenue sur l'intranet de ITIC Paris, il est Open-Source dans le but d'inciter les étudiants à proposer des modifications, fonctionnalités ou des corrections d'erreurs.
