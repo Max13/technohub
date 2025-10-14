@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{!! isset($title) ? $title.' &ndash; ' : null !!}{{ config('app.name') }}</title>
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
+    <link rel="stylesheet" href="{{ mix('/css/styles.css') }}">
     @stack('styles')
 
     <!-- Favicons -->
@@ -18,8 +19,6 @@
     <meta name="msapplication-TileColor" content="#2d89ef">
     <meta name="msapplication-config" content="{{ mix('/img/favicons/browserconfig.xml') }}">
     <meta name="theme-color" content="#ffffff">
-
-    @stack('styles')
 
     <script>
         (() => {

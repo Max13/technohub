@@ -1,4 +1,8 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+@php
+    $route = request()->route()->getName()
+@endphp
+
+<nav class="container navbar navbar-expand-lg bg-body-tertiary rounded-5 hover:shadow">
     <div class="container">
         <a class="navbar-brand" href="#">
             <img class="dark:d-none" src="{{ mix('/img/logo-h_black.svg') }}" alt="ITIC Logo" height="24">
@@ -14,33 +18,33 @@
                 <a class="nav-link @if(Route::currentRouteName() == 'dashboard') active @endif" @if(Route::currentRouteName() == 'dashboard') aria-current="page" @endif href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
                 @can('viewAny', App\Models\Marking\Criterion::class)
                     <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Marking') }}</a>
+                        <a class="nav-link dropdown-toggle @if(str_contains($route, 'marking')) active @endif" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Marking') }}&nbsp;</a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{{ route('marking/criteria.index') }}">{{ __('Criteria') }}</a>
                         </div>
                     </div>
                 @endcan
                 @can('viewAny', App\Models\User::class)
-                    <a class="nav-link @if(Route::currentRouteName() == 'users.index') active @endif" @if(Route::currentRouteName() == 'users.index') aria-current="page" @endif href="{{ route('users.index') }}">{{ __('Users') }}</a>
+                    <a class="nav-link @if(str_contains($route, 'users.')) active @endif" @if(Route::currentRouteName() == 'users.index') aria-current="page" @endif href="{{ route('users.index') }}">{{ __('Users') }}</a>
                 @endcan
                 @can('viewAny', App\Models\Training::class)
-                    <a class="nav-link @if(Route::currentRouteName() == 'trainings.index') active @endif" @if(Route::currentRouteName() == 'trainings.index') aria-current="page" @endif href="{{ route('trainings.index') }}">{{ __('My trainings') }}</a>
+                    <a class="nav-link @if(str_contains($route, 'training')) active @endif" @if(Route::currentRouteName() == 'trainings.index') aria-current="page" @endif href="{{ route('trainings.index') }}">{{ __('My trainings') }}</a>
                 @endcan
                 @can('viewAny', App\Models\Exam::class)
                     <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Exams') }}</a>
+                        <a class="nav-link dropdown-toggle @if(str_contains($route, 'exams.')) active @endif" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Exams') }}&nbsp;</a>
                         <div class="dropdown-menu">
-                            <a class="nav-link @if(Route::currentRouteName() == 'exams.index') active @endif" @if(Route::currentRouteName() == 'exams.index') aria-current="page" @endif href="{{ route('exams.index') }}">{{ __('My exams') }}</a>
-                            <a class="nav-link @if(Route::currentRouteName() == 'exams.assignments.index') active @endif" @if(Route::currentRouteName() == 'exams.assignments.index') aria-current="page" @endif href="{{ route('exams.assignments.index') }}">{{ __('Assignments') }}</a>
+                            <a class="nav-link" @if(Route::currentRouteName() == 'exams.index') aria-current="page" @endif href="{{ route('exams.index') }}">{{ __('My exams') }}</a>
+                            <a class="nav-link" @if(Route::currentRouteName() == 'exams.assignments.index') aria-current="page" @endif href="{{ route('exams.assignments.index') }}">{{ __('Assignments') }}</a>
                         </div>
                     </div>
                 @elsecan('viewAny', App\Models\Exam\Assignment::class)
                     <a class="nav-link @if(Route::currentRouteName() == 'exams.assignments.index') active @endif" @if(Route::currentRouteName() == 'exams.assignments.index') aria-current="page" @endif href="{{ route('exams.assignments.index') }}">{{ __('Assignments') }}</a>
                 @endcan
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Miscellaneous') }}</a>
+                    <a class="nav-link dropdown-toggle @if(str_contains($route, 'misc.')) active @endif" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Miscellaneous') }}&nbsp;</a>
                     <div class="dropdown-menu">
-                        <a class="nav-link @if(Route::currentRouteName() == 'misc.crypto') active @endif" @if(Route::currentRouteName() == 'misc.crypto') aria-current="page" @endif href="{{ route('misc.crypto') }}">{{ __('Crypto') }}</a>
+                        <a class="nav-link" @if(Route::currentRouteName() == 'misc.crypto') aria-current="page" @endif href="{{ route('misc.crypto') }}">{{ __('Crypto') }}</a>
                     </div>
                 </div>
             </div>
@@ -48,7 +52,7 @@
             @auth
             {{-- Right side --}}
             <div class="d-flex">
-                <img class="avatar rounded-circle me-3" alt="Avatar" src="https://gravatar.com/avatar/{{ hash('sha256', strtolower(auth()->user()->email)) }}.jpg?s=200&d=identicon">
+                <img class="avatar rounded-circle me-3 px-0" alt="Avatar" src="https://gravatar.com/avatar/{{ hash('sha256', strtolower(auth()->user()->email)) }}.jpg?s=200&d=identicon">
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {{ auth()->user()->firstname }} {{ auth()->user()->lastname[0] }}.
