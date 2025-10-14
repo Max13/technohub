@@ -31,27 +31,33 @@
         </div>
 
         {{ $users->links() }}
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2 my-2">
+        <div class="row">
             @foreach ($users as $user)
-                <div class="col">
-                    <div class="card h-100 w-100 hover:shadow">
-                        <a class="text-decoration-none text-reset" href="{{ route('users.show', $user) }}">
+                <div class="col-xl-4 col-sm-6 py-2">
+                    <div class="card h-100 hover:shadow">
+                        <a href="{{ route('users.show', $user) }}" class="text-dark">
                             <div class="card-body">
-                                <p class="card-title">{{ $user->lastname }} {{ $user->firstname }}</p>
-
-                                <ul class="list-unstyled small">
-                                    @foreach($user->roles as $role)
-                                        <li class="badge list-inline-item me-0 text-black" style="background-color:{{ $role->bgColor }}">{{ $role->name }}</li>
-                                    @endforeach
-                                </ul>
-
-                                <div class="d-flex justify-content-between">
-                                    @if ($user->currentTraining)
-                                        <p class="card-text small text-muted mb-0">{{ $user->currentTraining->name }}</p>
-                                    @else
-                                        <p class="card-text small text-muted mb-0">&nbsp;</p>
-                                    @endif
-                                    <p class="card-text small text-muted mb-0">{{ $user->total_points }} {{ __('Points') }}</p>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-md">
+                                        <div class="avatar-title bg-soft-primary text-primary display-6 m-0 rounded-circle">
+                                            <i class="bi bi-person p-3"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 ms-3">
+                                        <h5 class="font-size-16 mb-1">{{ $user->fullname }}</h5>
+                                        @foreach($user->roles as $role)
+                                            <li class="badge list-inline-item me-0 text-black" style="background-color:{{ $role->bgColor }}">{{ $role->name }}</li>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="mt-3 pt-1">
+                                    <p class="text-muted mb-0">
+                                        <i class="bi bi-info-circle font-size-15 align-middle pe-2 text-primary"></i>
+                                        <span class="badge badge-soft-success mb-0">{{ optional($user->currentTraining)->name ?? '–' }}</span>
+                                    </p>
+                                    <p class="text-muted mb-0 mt-2">
+                                        <i class="bi bi-award font-size-15 align-middle pe-2 text-primary"></i>{{ $user->total_points ?? '-' }} Points
+                                    </p>
                                 </div>
                             </div>
                         </a>
