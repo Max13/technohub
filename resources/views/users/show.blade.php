@@ -4,73 +4,115 @@
     @include('layouts.navbar')
 
     <main class="container py-4">
-        <h1>{{ $user->fullname }}</h1>
-
-        <div class="row my-4 g-3">
-            <!-- User details -->
-            <div class="col-auto col-10 col-lg-5 mx-auto">
-                <div class="card h-100 w-100">
-                    <div class="card-body">
-                        <ul class="small list-inline mb-4">
-                            @foreach($user->roles as $role)
-                                <li class="badge list-inline-item me-0 text-black" style="background-color:{{ $role->bgColor }}">{{ $role->name }}</li>
-                            @endforeach
-                            <li class="list-inline-item ms-2" data-bs-toggle="modal" data-bs-target="#user-roles-modal">
-                                <button class="btn btn-link btn-sm">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                            </li>
-                        </ul>
-
-                        <table class="table table-borderless">
-                            <tbody>
-                                <tr>
-                                    <td class="p-0">{{ __('Lastname') }}</td>
-                                    <td class="p-0">{{ $user->lastname }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-0">{{ __('Firstname') }}</td>
-                                    <td class="p-0">{{ $user->firstname }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-0">{{ __('Ypareo Email') }}</td>
-                                    <td class="p-0">{{ $user->email }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-0">{{ __('Ypareo ID') }}</td>
-                                    <td class="p-0">{{ $user->ypareo_id ?? '–' }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-0">{{ __('Ypareo Login') }}</td>
-                                    <td class="p-0">{{ $user->ypareo_login ?? '–' }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-0">{{ __('Current training') }}</td>
-                                    <td class="p-0">{{ optional($user->currentTraining)->name ?? '–' }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        @if ($user->trainings->isNotEmpty())
-                            <ul class="list-unstyled">
-                                <li>{{ __('Trainings') }}
-                                    <ul>
-                                        @foreach ($user->trainings as $training)
-                                            <li>{{ $training->name }}</li>
-                                        @endforeach
-                                    </ul>
-                                </li>
-                            </ul>
-                        @endif
+        <div class="main-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-column align-items-center text-center">
+                                <img src="{{ asset('/img/person.png') }}" alt="Admin" class="rounded-circle p-1" width="130">
+                                <div class="mt-3">
+                                    <h4>{{ $user->fullname }}</h4>
+                                    @foreach($user->roles as $role)
+                                        <p class="badge list-inline-item me-0 text-black mb-2" style="background-color:{{ $role->bgColor }}">{{ $role->name }}</p>
+                                    @endforeach
+                                    <p class="text-muted font-size-sm">{{ optional($user->currentTraining)->name ?? '–' }}</p>
+                                    <a class="list-inline-item ms-2" data-bs-toggle="modal" data-bs-target="#user-roles-modal">
+                                        <button class="btn btn-link btn-sm"><i class="bi bi-key"></i></button>
+                                    </a>
+                                    <button class="btn btn-outline-primary">Noter</button>
+                                    <button class="btn btn-outline-primary">Contacter</button>
+                                </div>
+                                </div>
+                                <hr class="my-4">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                        <h6 class="mb-0"><i class="bi bi-award"></i>&nbsp; Points</h6>
+                                        <span class="text-secondary">{{ $user->total_points ?? '-' }}</span>
+                                    </li>
+                                </ul>
+                            @if ($user->trainings->isNotEmpty())
+                                <hr class="my-2">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <h6 class="mb-2">
+                                            {{ __('Trainings') }}
+                                        </h6>
+                                        <ul>
+                                            @foreach ($user->trainings as $training)
+                                                <li>{{ $training->name }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                </ul>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="col-lg-8">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">First name</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $user->firstname }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Last name</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $user->lastname }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Email</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $user->email }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Login Ypareo</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $user->ypareo_login }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Ypareo ID</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ $user->ypareo_id }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <a class="btn btn-primary" target="__blank" href="#">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-            <!-- Graph -->
-            <div class="col-auto col-10 col-lg-7 mx-auto">
-                <div class="card h-100 w-100">
-                    <div class="card-body">
-                        <canvas id="courses-details-graph"></canvas>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <canvas id="courses-details-graph"></canvas>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

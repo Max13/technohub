@@ -13,22 +13,27 @@
             </div>
         </div>
 
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        <div class="row">
             @foreach ($training->students->sortBy('lastname') as $student)
-                <div class="col">
-                    <div class="card w-100 hover:shadow">
-                        <a class="text-decoration-none text-reset" href="{{ route('students.points.create', $student) }}">
+                <div class="col-xl-4 col-sm-6 py-2">
+                    <div class="card h-100 hover:shadow">
+                        <a href="{{ route('students.points.create', $student) }}" class="text-dark">
                             <div class="card-body">
-                                <h5 class="card-title mb-3">{{ $student->fullname }}</h5>
-
-                                <ul class="list-unstyled small">
-                                    @foreach ($student->roles as $role)
-                                        <li class="badge list-inline-item me-0 text-black" style="background-color:{{ $role->bgColor }}">{{ $role->name }}</li>
-                                    @endforeach
-                                </ul>
-
-                                <div class="d-flex justify-content-between">
-                                    <strong class="card-text small text-secondary">{{ $student->total_points }} {{ __('Points') }}</strong>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-md">
+                                        <div class="avatar-title bg-soft-primary text-primary display-6 m-0 rounded-circle">
+                                            <i class="bi bi-person p-3"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 ms-3">
+                                        <h5 class="font-size-16 mb-1">{{ $student->fullname }}</h5>
+                                        @foreach($student->roles as $role)
+                                            <li class="badge list-inline-item me-0 text-black" style="background-color:{{ $role->bgColor }}">{{ $role->name }}</li>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="mt-3 pt-1 d-flex justify-content-between">
+                                    <strong class="card-text small text-secondary"><i class="bi bi-award font-size-15 align-middle pe-2 text-primary"></i>{{ $student->total_points ?? '-' }} {{ __('Points') }}</strong>
                                     <strong class="card-text small text-{{ App\Models\Absence::color($student->total_absences) }}">{{ floor($student->total_absences / 60) }} h</strong>
                                 </div>
                             </div>
