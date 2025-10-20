@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\ActiveDirectory;
 use App\Services\Mikrotik\Hotspot;
+use App\Services\Mqtt;
 use App\Services\Wallet;
 use App\Services\Ypareo;
 use Illuminate\Pagination\Paginator;
@@ -25,6 +26,16 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(Hotspot::class, function ($app) {
             return new Hotspot(config('services.mikrotik.baseUrl'), config('services.mikrotik.username'), config('services.mikrotik.password'));
+        });
+
+        $this->app->singleton(Mqtt::class, function ($app) {
+            return new Mqtt(
+                config('services.mqtt.host'),
+                config('services.mqtt.username'),
+                config('services.mqtt.password'),
+                config('services.mqtt.clientId'),
+                config('services.mqtt.port'),
+            );
         });
 
         $this->app->bind(Ypareo::class, function ($app) {

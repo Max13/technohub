@@ -44,6 +44,15 @@ return [
         'password' => env('MIKROTIK_PASSWORD'),
     ],
 
+    'mqtt' => [
+        'host' => env('MQTT_HOST'),
+        'port' => env('MQTT_PORT', 1883),
+        'clientId' => env('MQTT_CLIENT_ID', 'technohub'),
+        'username' => env('MQTT_USERNAME'),
+        'password' => env('MQTT_PASSWORD'),
+        'version' => env('MQTT_VERSION', PhpMqtt\Client\MqttClient::MQTT_3_1_1),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

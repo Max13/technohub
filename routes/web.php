@@ -12,6 +12,7 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\HotspotController;
 use App\Http\Controllers\Hotspot\StaffController;
 use App\Http\Controllers\Hotspot\StudentController;
+use App\Http\Controllers\LedStripController;
 use App\Http\Controllers\Marking\CriterionController;
 use App\Http\Controllers\Marking\PointController;
 use App\Http\Controllers\Misc\CryptoController;
@@ -105,6 +106,10 @@ Route::middleware(['auth'])->group(function () {
     // Misc
     Route::get('/misc/crypto', CryptoController::class)->name('misc.crypto');
     Route::get('/misc/crypto/rng', [CryptoController::class, 'getRandomNumber'])->name('misc.crypto.getRng');
+
+    // LEDs
+    Route::post('/ledstrip/{ledstrip}/control', [LedStripController::class, 'control'])->name('ledstrip.control');
+    Route::resource('/ledstrip', LedStripController::class);
 });
 
 Route::get('/trainings/{training}/ranking', [TrainingController::class, 'ranking'])->name('trainings.ranking');
