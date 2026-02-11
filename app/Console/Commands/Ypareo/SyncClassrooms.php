@@ -48,24 +48,26 @@ class SyncClassrooms extends Command
             Classroom::whereNotNull('ypareo_id')->delete();
 
             $this->withProgressBar($ypareoClassrooms, function ($c) {
-                try {
-                    $dbTraining = Training::withTrashed()
-                                          ->firstOrNew(['name' => implode('-', explode('-', $c['abregeGroupe'], -1)) ?: $c['abregeGroupe']])
-                                          ->forceFill([
-                                              'fullname' => str_replace([' INITIAL', ' ALTERNANCE'], '', $c['etenduGroupe']),
-                                              'nth_year' => $c['numeroAnnee'],
-                                              'deleted_at' => null,
-                                          ]);
-                    $dbTraining->save();
+                $dbTraining = Training::withTrashed()
+                                      ->firstOrNew(['name' => implode('-', explode('-', $c['abregeGroupe'], -1)) ?: $c['abregeGroupe']])
+                                      ->forceFill([
+                                          'ypareo_id' => $c['codeFormation'],
+                                          'fullname' => str_replace([' INITIAL', ' ALTERNANCE'], '', $c['etenduGroupe']),
+                                          'nth_year' => $c['numeroAnnee'] ?? 1,
+                                          'deleted_at' => null,
+                                      ]);
 
-                    $dbClass = Classroom::withTrashed()
-                                        ->firstOrNew(['ypareo_id' => $c['codeGroupe']])
-                                        ->forceFill([
-                                            'name' => $c['nomGroupe'],
-                                            'shortname' => $c['abregeGroupe'],
-                                            'fullname' => $c['etenduGroupe'],
-                                            'deleted_at' => null,
-                                        ]);
+                $dbClass = Classroom::withTrashed()
+                                    ->firstOrNew(['ypareo_id' => $c['codeGroupe']])
+                                    ->forceFill([
+                                        'name' => $c['nomGroupe'],
+                                        'shortname' => $c['abregeGroupe'],
+                                        'fullname' => $c['etenduGroupe'],
+                                        'deleted_at' => null,
+                                    ]);
+
+                try {
+                    $dbTraining->save();
                     $dbClass->training()->associate($dbTraining);
                     $dbClass->save();
                 } catch (QueryException $e) {

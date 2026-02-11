@@ -15,6 +15,7 @@ class CreateTrainingsTable extends Migration
     {
         Schema::create('trainings', function (Blueprint $table) {
             $table->id();
+            $table->integer('ypareo_id')->unsigned();
             $table->string('name')->unique();
             $table->string('fullname');
             $table->tinyInteger('nth_year')->unsigned();

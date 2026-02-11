@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Classroom;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use TypeError;
 
@@ -456,5 +457,106 @@ class Ypareo
                         ->throw();
 
         return $response->successful();
+    }
+
+    /**
+     * Get all trainings for the current period
+     *
+     * @param  bool $cached  Return cached response. Defaults to true.
+     *
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function getTrainings($cached = true)
+    {
+        $cacheKey = 'ypareo:'.__FUNCTION__;
+        if (!$cached) {
+            cache()->forget($cacheKey);
+        }
+
+        return cache()->remember($cacheKey, config('services.ypareo.cache.expiration'), function () {
+            return Http::withHeaders([
+                       'Accept' => 'application/json',
+                       'Content-Type' => 'application/json',
+                       'X-Auth-Token' => $this->apiKey,
+                   ])
+                   ->get($this->baseUrl . '/r/v1/formations')
+                   ->throw()
+                   ->collect();
+        });
+    }
+
+    /**
+     * Retrieve trainings custom data, filtered by trainings and optionnaly data id.
+     *
+     * @param  int[] $trainingIds Filter by training ids.
+     * @param  int[] $dataIds     If no ids are specified, returns every custom data.
+     * @param  bool  $cached      Return cached response. Defaults to true.
+     *
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function getTrainingsCustomData(array $trainingIds, array $dataIds = [], $cached = true)
+    {
+        sort($trainingIds);
+        sort($dataIds);
+
+        $cacheKey = 'ypareo:'.__FUNCTION__.':'.implode(',', $trainingIds).':'.implode(',', $dataIds);
+        if (!$cached) {
+            cache()->forget($cacheKey);
+        }
+
+        return cache()->remember($cacheKey, config('services.ypareo.cache.expiration'), function () use ($trainingIds, $dataIds) {
+            $query = [
+                'codesFormation' => $trainingIds,
+            ];
+
+            if ($dataIds !== []) {
+                $query['codesRubrique'] = $dataIds;
+            }
+
+            return Http::withHeaders([
+                           'Accept' => 'application/json',
+                           'Content-Type' => 'application/json',
+                           'X-Auth-Token' => $this->apiKey,
+                       ])
+                       ->get($this->baseUrl . '/r/v1/renseignements-parametres/formations', $query)
+                       ->throw()
+                       ->collect();
+        });
+    }
+
+    /**
+     * Retrieve a specific training's custom data, optionnaly filtered by data ids.
+     *
+     * @param  int[] $id      Training ids.
+     * @param  int[] $dataIds If no ids are specified, returns every custom data.
+     * @param  bool  $cached  Return cached response. Defaults to true.
+     *
+     * @return \Illuminate\Support\Collection
+     * @throws \Illuminate\Http\Client\RequestException
+     */
+    public function getTrainingCustomData(int $id, array $dataIds = [], $cached = true)
+    {
+        sort($dataIds);
+
+        $cacheKey = 'ypareo:'.__FUNCTION__.":$id:".implode(',', $dataIds);
+        if (!$cached) {
+            cache()->forget($cacheKey);
+        }
+
+        return cache()->remember($cacheKey, config('services.ypareo.cache.expiration'), function () use ($id, $dataIds) {
+            return Http::withHeaders([
+                           'Accept' => 'application/json',
+                           'Content-Type' => 'application/json',
+                           'X-Auth-Token' => $this->apiKey,
+                       ])
+                       ->get(
+                           $this->baseUrl . "/r/v1/renseignements-parametres/formations/$id",
+                           $dataIds === [] ?: ['codesRubrique' => $dataIds],
+                       )
+                       ->throw()
+                       ->collect();
+        });
     }
 }

@@ -9,6 +9,10 @@ const bootstrap = require('bootstrap');
                 (new bootstrap.Modal(modal)).show();
             });
 
+    // Show tooltips
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            .forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
     // Show loading on .login-with buttons
     Array.from(document.getElementsByTagName('form'))
          .forEach(form => {

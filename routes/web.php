@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\IticController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -62,6 +63,10 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     // Auth
     Route::get('/auth/logout', LogoutController::class)->name('auth.logout');
+
+    // Administrative
+    Route::get('/administrative/trainings', [AdministrativeController::class, 'getTrainingsTable'])->name('administrative.trainings');
+    Route::get('/administrative/trainings/export', [AdministrativeController::class, 'exportTrainingsTable'])->name('administrative.trainings.export');
 
     // Common
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
