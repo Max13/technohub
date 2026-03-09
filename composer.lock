@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e666a0afbc435efc69b8d5cb2dab594",
+    "content-hash": "856f2426d642278acbbc4760271a68f2",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -644,6 +644,80 @@
             "time": "2024-10-09T13:47:03+00:00"
         },
         {
+            "name": "ebics-api/ebics-client-php",
+            "version": "3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ebics-api/ebics-client-php.git",
+                "reference": "aaa9ad8f5d3b2bfc213ba52f9b900972fe88b062"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ebics-api/ebics-client-php/zipball/aaa9ad8f5d3b2bfc213ba52f9b900972fe88b062",
+                "reference": "aaa9ad8f5d3b2bfc213ba52f9b900972fe88b062",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "ext-curl": "*",
+                "ext-dom": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-openssl": "*",
+                "ext-zip": "*",
+                "ext-zlib": "*",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "ebics-api/cfonb-php": "^1.0",
+                "ebics-api/mt942-php": "^1.0",
+                "phpseclib/phpseclib": "~2.0.51",
+                "phpstan/phpstan": "~1.9.18",
+                "phpunit/phpunit": "~9.6.34",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.1",
+                "setasign/fpdf": "^1.8",
+                "squizlabs/php_codesniffer": "~3.7.2"
+            },
+            "suggest": {
+                "ebics-api/cfonb-php": "If you need to parse format CFONB from FDL requests.",
+                "ebics-api/mt942-php": "If you need to parse format MT942 from VMK, STA requests.",
+                "setasign/fpdf": "If you need to generate PDF file letter for Bank."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "EbicsApi\\Ebics\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrew Svirin"
+                }
+            ],
+            "description": "PHP library to communicate with bank through EBICS protocol.",
+            "keywords": [
+                "cfonb.120",
+                "cfonb.240",
+                "client",
+                "ebics",
+                "mt940",
+                "mt942",
+                "openssl",
+                "php",
+                "rsa",
+                "x509"
+            ],
+            "support": {
+                "source": "https://github.com/ebics-api/ebics-client-php/tree/v3.0.3"
+            },
+            "time": "2026-02-12T09:39:48+00:00"
+        },
+        {
             "name": "egulias/email-validator",
             "version": "2.1.25",
             "source": {
@@ -773,6 +847,59 @@
                 "source": "https://github.com/firebase/php-jwt/tree/v6.10.0"
             },
             "time": "2023-12-01T16:26:39+00:00"
+        },
+        {
+            "name": "fpdf/fpdf",
+            "version": "1.86.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/coreydoughty/Fpdf.git",
+                "reference": "2034ab9f7b03b8294933d7fd27828d13963368e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/coreydoughty/Fpdf/zipball/2034ab9f7b03b8294933d7fd27828d13963368e5",
+                "reference": "2034ab9f7b03b8294933d7fd27828d13963368e5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "FPDF": "Fpdf\\Fpdf"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fpdf\\": "src/Fpdf"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Corey Doughty",
+                    "email": "corey@doughty.ca"
+                }
+            ],
+            "description": "FPDF Composer Wrapper",
+            "homepage": "https://github.com/coreydoughty/Fpdf",
+            "keywords": [
+                "fpdf",
+                "pdf",
+                "wrapper"
+            ],
+            "support": {
+                "issues": "https://github.com/coreydoughty/Fpdf/issues",
+                "source": "https://github.com/coreydoughty/Fpdf/tree/1.86.1"
+            },
+            "time": "2025-12-08T14:03:59+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",
@@ -9264,5 +9391,5 @@
         "ext-ldap": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

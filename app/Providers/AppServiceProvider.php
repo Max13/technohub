@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\ActiveDirectory;
+use App\Services\Ebics;
 use App\Services\Mikrotik\Hotspot;
 use App\Services\Mqtt;
 use App\Services\Wallet;
@@ -22,6 +23,18 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ActiveDirectory::class, function ($app) {
             return new ActiveDirectory(config('ldap'));
+        });
+
+        $this->app->singleton(Ebics::class, function ($app) {
+            return new Ebics(
+                config('ebics.url'),
+                config('ebics.version'),
+                config('ebics.host_id'),
+                config('ebics.partner_id'),
+                config('ebics.user_id'),
+                config('ebics.keyring_password'),
+                config('ebics.path') . '/keyring.json',
+            );
         });
 
         $this->app->bind(Hotspot::class, function ($app) {
