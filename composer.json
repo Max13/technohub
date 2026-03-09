@@ -7,7 +7,10 @@
     "require": {
         "php": "^7.3|^8.0",
         "ext-ldap": "*",
+        "ext-simplexml": "*",
         "directorytree/ldaprecord": "^3.8",
+        "ebics-api/ebics-client-php": "^3.0",
+        "fpdf/fpdf": "^1.86",
         "fruitcake/laravel-cors": "^2.0",
         "google/apiclient": "^2.15",
         "guzzlehttp/guzzle": "^7.0.1",
