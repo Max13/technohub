@@ -40,6 +40,10 @@
 
     @yield('content')
 
+    @if (session('alert'))
+        <x-toast :type="session('alert.type', 'primary')" :message="session('alert.message')"/>
+    @endif
+
     @stack('scripts')
 </body>
 </html>

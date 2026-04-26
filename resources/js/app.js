@@ -13,6 +13,10 @@ const bootstrap = require('bootstrap');
     document.querySelectorAll('[data-bs-toggle="tooltip"]')
             .forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
+    // Show toasts
+    document.querySelectorAll('.toast')
+            .forEach(toastEl => (new bootstrap.Toast(toastEl)).show());
+
     // Show loading on .login-with buttons
     Array.from(document.getElementsByTagName('form'))
          .forEach(form => {
