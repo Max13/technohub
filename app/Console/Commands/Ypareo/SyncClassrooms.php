@@ -48,12 +48,24 @@ class SyncClassrooms extends Command
             Classroom::whereNotNull('ypareo_id')->delete();
 
             $this->withProgressBar($ypareoClassrooms, function ($c) {
+                $name = implode('-', explode('-', $c['abregeGroupe'], -1)) ?: $c['abregeGroupe'];
                 $dbTraining = Training::withTrashed()
-                                      ->firstOrNew(['name' => implode('-', explode('-', $c['abregeGroupe'], -1)) ?: $c['abregeGroupe']])
+                                      ->firstOrNew(['name' => $name])
                                       ->forceFill([
                                           'ypareo_id' => $c['codeFormation'],
                                           'fullname' => str_replace([' INITIAL', ' ALTERNANCE'], '', $c['etenduGroupe']),
-                                          'nth_year' => $c['numeroAnnee'] ?? 1,
+                                          'nth_year' => value(function ($name) {
+                                              if (str_starts_with($name, 'M1-')) {
+                                                  return 4;
+                                              }
+                                              if (str_starts_with($name, 'M2-')) {
+                                                  return 5;
+                                              }
+                                              if (str_starts_with($name, 'BACH ')) {
+                                                  return 3;
+                                              }
+                                              return substr($name, -1);
+                                          }, $name),
                                           'deleted_at' => null,
                                       ]);
 

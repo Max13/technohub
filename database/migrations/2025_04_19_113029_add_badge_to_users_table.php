@@ -15,7 +15,7 @@ class AddBadgeToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->json('badge')->unique()->nullable()->after('birthdate');
+            $table->string('badge')->unique()->nullable()->after('birthdate');
         });
     }
 

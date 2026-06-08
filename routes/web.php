@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Accounting\AccountingController;
+use App\Http\Controllers\Accounting\TransactionsQueueController;
 use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\IticController;
@@ -10,9 +12,9 @@ use App\Http\Controllers\BadgeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Exam\AssignmentController;
 use App\Http\Controllers\ExamController;
-use App\Http\Controllers\HotspotController;
 use App\Http\Controllers\Hotspot\StaffController;
 use App\Http\Controllers\Hotspot\StudentController;
+use App\Http\Controllers\HotspotController;
 use App\Http\Controllers\LedStripController;
 use App\Http\Controllers\Marking\CriterionController;
 use App\Http\Controllers\Marking\PointController;
@@ -84,6 +86,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('criteria', CriterionController::class);
     });
     Route::resource('students.points', PointController::class)->shallow()->except(['show']);
+
+    // Accounting
+    Route::get('/accounting/transactions/queue', [TransactionsQueueController::class, 'index'])->name('accounting.transactions.queue.index');
+    Route::post('/accounting/transactions/queue', [TransactionsQueueController::class, 'process'])->name('accounting.transactions.queue.process');
+    Route::get('/accounting', [AccountingController::class, 'dashboard'])->name('users.accounting.dashboard');
+    Route::resource('users.accounting', AccountingController::class);
 
     // Users
     Route::get('/me/badge/{platform}', function (Authenticatable $user, $platform) {

@@ -49,6 +49,20 @@ return [
             'lock_connection' => null,
         ],
 
+        'sqlite_cache' => [
+            'driver' => 'database',
+            'table' => 'cache',
+            'connection' => 'sqlite_cache',
+            'lock_connection' => null,
+        ],
+
+        'database_memory' => [
+            'driver' => 'database',
+            'table' => 'cache',
+            'connection' => 'sqlite_memory',
+            'lock_connection' => null,
+        ],
+
         'file' => [
             'driver' => 'file',
             'path' => storage_path('framework/cache/data'),

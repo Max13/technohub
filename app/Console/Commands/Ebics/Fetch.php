@@ -30,7 +30,7 @@ class Fetch extends Command
 
         try {
             if (($from = $this->argument('from')) !== null) {
-                $from = Carbon::createFromFormat('Y-m-d', $from);
+                $from = Carbon::createFromFormat('Y-m-d', $from)->startOfDay();
                 throw_if($from->gt($today));
             } else {
                 $from = $today;
@@ -42,7 +42,7 @@ class Fetch extends Command
 
         try {
             if (($to = $this->argument('to')) !== null) {
-                $to = Carbon::createFromFormat('Y-m-d', $to);
+                $to = Carbon::createFromFormat('Y-m-d', $to)->startOfDay();
                 throw_if($to->lt($from) || $to->gt($today));
             } else {
                 $to = $from;
@@ -69,14 +69,14 @@ class Fetch extends Command
         $rows = [];
         $search = $this->argument('search');
         $this->withProgressBar($statements->pluck('BkToCstmrStmt.Stmt.Ntry')->flatten(1), function ($statement) use (&$rows, $search) {
-            if ($search === null || str_contains(strtolower($statement->NtryDtls->TxDtls->AddtlTxInf), strtolower($search))) {
+            if ($search === null || str_contains(strtolower($statement['NtryDtls']['TxDtls']['AddtlTxInf']), strtolower($search))) {
                 $rows[] = [
-                    'date' => $statement->ValDt->Dt,
-                    'amount' => floatval($statement->Amt) * ($statement->CdtDbtInd === 'CRDT' ? 1 : -1),
-                    'operation' => $statement->BkTxCd->Domn->Cd . '-' . $statement->BkTxCd->Domn->Fmly->Cd . '-' . $statement->BkTxCd->Domn->Fmly->SubFmlyCd,
+                    'date' => $statement['ValDt']['Dt'],
+                    'amount' => floatval($statement['Amt']) * ($statement['CdtDbtInd'] === 'CRDT' ? 1 : -1),
+                    'operation' => $statement['BkTxCd']['Domn']['Cd'] . '-' . $statement['BkTxCd']['Domn']['Fmly']['Cd'] . '-' . $statement['BkTxCd']['Domn']['Fmly']['SubFmlyCd'],
                     'rtrinf' => data_get($statement, 'NtryDtls.TxDtls.RtrInf.Rsn.Cd'),
-                    'parties' => data_get($statement, 'NtryDtls.TxDtls.RltdPties.'.($statement->CdtDbtInd === 'CRDT' ? 'Cdtr' : 'Dbtr').'.Nm'),
-                    'reference' => preg_replace('/ {2,}/', ' ', $statement->NtryDtls->TxDtls->AddtlTxInf),
+                    'parties' => data_get($statement, 'NtryDtls.TxDtls.RltdPties.'.($statement['CdtDbtInd'] === 'CRDT' ? 'Cdtr' : 'Dbtr').'.Nm'),
+                    'reference' => preg_replace('/ {2,}/', ' ', $statement['NtryDtls']['TxDtls']['AddtlTxInf']),
                 ];
             }
         });

@@ -43,12 +43,27 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
+        'sqlite_cache' => [
+            'driver' => 'sqlite',
+            'url' => env('DATABASE_URL'),
+            'database' => env('DB_DATABASE_CACHE', database_path('database_cache.sqlite')),
+            'prefix' => '',
+            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+        ],
+
         'queue' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
             'database' => env('DB_DATABASE_QUEUE', database_path('database_queue.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+        ],
+
+        'sqlite_memory' => [
+            'driver' => 'sqlite',
+            'url' => env('DATABASE_URL'),
+            'database' => ':memory:',
+            'prefix' => '',
         ],
 
         'mysql' => [

@@ -17,7 +17,7 @@ class CreateClassroomsTable extends Migration
         Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Training::class)->constrained()->cascadeOnDelete();
-            $table->string('ypareo_id')->unsigned()->unique();
+            $table->integer('ypareo_id')->unsigned()->unique();
             $table->string('name');
             $table->string('shortname');
             $table->string('fullname');

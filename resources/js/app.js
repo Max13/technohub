@@ -28,4 +28,14 @@ const bootstrap = require('bootstrap');
                       });
                   });
          });
+
+    // Cascade dropdown open on hover
+    document.querySelectorAll('.dropdown-menu .dropdown-toggle')
+            .forEach(hoverable => {
+                const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(hoverable);
+
+                hoverable.addEventListener('mouseenter', () => {
+                    dropdownInstance.show();
+                });
+            })
 })();

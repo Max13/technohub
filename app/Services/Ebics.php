@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Carbon\CarbonInterface;
 use EbicsApi\Ebics\Contexts\BTDContext;
 use EbicsApi\Ebics\Contracts\EbicsResponseExceptionInterface;
 use EbicsApi\Ebics\EbicsBankLetter;
@@ -15,7 +16,6 @@ use EbicsApi\Ebics\Models\Bank;
 use EbicsApi\Ebics\Models\User;
 use EbicsApi\Ebics\EbicsClient;
 use EbicsApi\Ebics\Models\X509\BankX509Generator;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
@@ -181,7 +181,7 @@ final class Ebics
     // -------------------------------------------------------------------------
     // Bank statements — camt.053 (BTD on EBICS 3.0)
     // -------------------------------------------------------------------------
-    public function getStatements(Carbon $from, Carbon $to): Collection
+    public function getStatements(CarbonInterface $from, CarbonInterface $to): Collection
     {
         // On EBICS 3.0, C53 uses BTD with the service name EOP
         $ctx = new BTDContext();
@@ -190,17 +190,13 @@ final class Ebics
         $ctx->setScope('GLB');
         $ctx->setParserFormat(EbicsClient::FILE_PARSER_FORMAT_XML_FILES);
 
-        try {
-            $trx = [];
-            $response = $this->client->executeDownloadOrder(new BTD($ctx, $from, $to));
+        $statements = [];
+        $response = $this->client->executeDownloadOrder(new BTD($ctx, $from, $to));
 
-            foreach ($response->getDataFiles() as $file) {
-                $trx[] = json_decode(json_encode(simplexml_load_string($file->getContent())));
-            }
-
-            return collect($trx);
-        } catch (EbicsResponseExceptionInterface $e) {
-            throw new RuntimeException("BTD/C53 failed [{$e->getResponseCode()}] : {$e->getMeaning()}", 0, $e);
+        foreach ($response->getDataFiles() as $file) {
+            $statements[] = json_decode(json_encode(simplexml_load_string($file->getContent())), true);
         }
+
+        return collect($statements);
     }
 }

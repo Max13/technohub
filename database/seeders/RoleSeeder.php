@@ -21,6 +21,9 @@ class RoleSeeder extends Seeder
                 'name' => 'Admin'
             ],[
                 'is_from_ypareo' => false,
+                'name' => 'Bank'
+            ],[
+                'is_from_ypareo' => false,
                 'name' => 'HeadTeacher'
             ],[
                 'is_from_ypareo' => true,

@@ -36,7 +36,6 @@ class TrainingController extends Controller
 
         $trainings = $trainings->with('students')
                                ->orderBy('nth_year')
-                               ->orderBy('shortname')
                                ->get();
 
         return view('trainings.index', [

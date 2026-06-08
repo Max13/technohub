@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Accounting\Transaction;
 use App\Models\Exam\Assignment;
 use App\Models\Marking\Criterion;
 use App\Models\Marking\Point;
@@ -11,10 +12,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
@@ -111,7 +114,7 @@ class User extends Authenticatable
      */
     public function classrooms() : BelongsToMany
     {
-        return $this->belongsToMany(Classroom::class);
+        return $this->belongsToMany(Classroom::class)->withPivot('year');
     }
 
     /**
@@ -163,9 +166,9 @@ class User extends Authenticatable
      */
     public function trainings() : HasManyDeep
     {
-        return $this->hasManyDeepFromRelations($this->classrooms(), (new Classroom)->training())
-                    ->distinct()
-                    ->orderBy('nth_year');
+        return $this->hasManyDeepFromRelations($this->classrooms(), (new Classroom)->training())->distinct()->orderBy(
+                'nth_year',
+            );
     }
 
     /**
@@ -196,6 +199,26 @@ class User extends Authenticatable
     public function points() : HasMany
     {
         return $this->hasMany(Point::class, 'student_id');
+    }
+
+    /**
+     * Query user's transactions
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions() : HasMany
+    {
+        return $this->hasMany(Transaction::class, 'student_id');
+    }
+
+    /**
+     * Query user's last transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function lastTransaction() : HasOne
+    {
+        return $this->hasOne(Transaction::class, 'student_id')->latest();
     }
 
     /**
