@@ -92,7 +92,7 @@ class TransactionsImport implements WithMultipleSheets
                         },
                         'rejection_status' => strtolower($row[0]) === 'impayé' ? TransactionStatus::MISSED : TransactionStatus::OK,
                         'note' => $row[13],
-                        'year' => 2024,
+                        'year' => 2025,
                         'created_at' => $date,
                     ]);
                 }
