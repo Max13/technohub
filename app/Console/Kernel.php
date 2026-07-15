@@ -18,11 +18,23 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('hotspot:clear hs-students') // Todo: Set name in config file
                  ->daily()
-                 ->runInBackground();
+                 ->runInBackground()
+                 ->withoutOverlapping();
+
+        $schedule->command('ebics:import', [
+                    '2026-01-01',
+                    today()->format('Y-m-d'),
+                 ])
+                 ->dailyAt('05:00')
+                 ->weekdays()
+                 ->runInBackground()
+                 ->withoutOverlapping();
 
         $schedule->command('ypareo:sync:all')
                  ->dailyAt('08:00')
-                 ->weekdays();
+                 ->weekdays()
+                 ->runInBackground()
+                 ->withoutOverlapping();
     }
 
     /**
