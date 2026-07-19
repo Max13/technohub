@@ -43,6 +43,8 @@ class Ypareo
      * @param  string $password
      * @param  string $userAgent
      * @return bool
+     *
+     * @deprecated
      */
     public function auth($username, $password, $userAgent, $returnInDev = true): bool
     {
@@ -51,6 +53,32 @@ class Ypareo
         }
 
         return \Mx\Ypareo\Auth::check($this->baseUrl, $username, $password, $userAgent);
+    }
+
+    /**
+     * Retrieve a user data against Ypareo
+     *
+     * @param  string $username
+     * @param  bool   $cached      Defaults to true
+     * @param  bool   $returnInDev Returns a fix value in development
+     * @return array
+     *
+     * @throws \Exception|\InvalidArgumentException
+     */
+    public function retrieve($username, $cached = true, $returnInDev = true): bool
+    {
+        if (!app()->environment('production') && !class_exists(\Mx\Ypareo\Auth::class)) {
+            return $returnInDev;
+        }
+
+        $cacheKey = 'ypareo:'.__FUNCTION__;
+        if (!$cached) {
+            cache()->forget($cacheKey);
+        }
+
+        return cache()->remember($cacheKey, config('services.ypareo.cache.expiration'), function () use ($username) {
+            return \Mx\Ypareo\Auth::retrieve($this->baseUrl, $this->apiKey, $username);
+        });
     }
 
     /**
