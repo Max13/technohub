@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Hotspot;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -48,6 +49,8 @@ class DeployCommand extends Command
         parent::__construct();
 
         $tmpPath = sys_get_temp_dir().'/'.Str::random(10);
+        Log::debug('Local temporary directory for hotspot files: ' . $tmpPath);
+
         throw_if(!mkdir($tmpPath), RuntimeException::class, 'Could not create temporary directory');
         $this->tmpDisk = Storage::build([
             'driver' => 'local',
