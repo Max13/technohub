@@ -34,29 +34,7 @@ class DeployCommand extends Command
      */
     protected $description = 'Generate and deploy login/redirect files to the hotspot'.PHP_EOL
                             .'(using the default hotspot filesystem, or env variables: '
-                            .'HOTSPOT_HOST, HOTSPOT_USERNAME, HOTSPOT_PASSWORD';
-
-    /**
-     * @var \Illuminate\Contracts\Filesystem\Filesystem
-     */
-    protected $tmpDisk;
-
-    /**
-     * Create a new command instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $tmpPath = sys_get_temp_dir().'/'.Str::random(10);
-        Log::debug('Local temporary directory for hotspot files: ' . $tmpPath);
-
-        throw_if(!mkdir($tmpPath), RuntimeException::class, 'Could not create temporary directory');
-        $this->tmpDisk = Storage::build([
-            'driver' => 'local',
-            'root' => $tmpPath,
-        ]);
-    }
+                            .'HOTSPOT_HOST, HOTSPOT_USERNAME, HOTSPOT_PASSWORD)';
 
     /**
      * Execute the console command.
@@ -65,21 +43,31 @@ class DeployCommand extends Command
      */
     public function handle()
     {
+        $tmpPath = sys_get_temp_dir().'/'.Str::random(10);
+        Log::debug('Local temporary directory for hotspot files: ' . $tmpPath);
+
+        throw_if(!mkdir($tmpPath), RuntimeException::class, 'Could not create temporary directory');
+        $tmpDisk = Storage::build([
+            'driver' => 'local',
+            'root' => $tmpPath,
+        ]);
+
         // Variables
         $authUrl = $this->argument('authUrl') ?? config('app.url');
         $queryStr = 'captive=$(link-login-only-esc)&dst=$(link-orig-esc)&hs=$(server-name-esc)&ip=$(ip-esc)&mac=$(mac-esc)';
         $toReplace = [
             '/{{ ?loginUrl ?}}/' => $authUrl.route('hotspot.redirectToLogin', [], false).'?'.$queryStr,
             '/{{ ?loggedInUrl ?}}/' => $authUrl.route('hotspot.showConnected', [], false).'?'.$queryStr,
+            '/{{ ?statusUrl ?}}/' => $authUrl.route('hotspot.redirectToLogin', [], false).'?hs=$(server-name-esc)&ip=$(ip-esc)&mac=$(mac-esc)',
         ];
 
         // Write temporary files
         $this->line('Writing temporary files:');
-        $this->withProgressBar(Storage::disk('stubs')->files('hotspot/mikrotik'), function ($stub) use ($toReplace) {
+        $this->withProgressBar(Storage::disk('stubs')->files('hotspot/mikrotik'), function ($stub) use ($tmpDisk, $toReplace) {
             $content = Storage::disk('stubs')->get($stub);
             $tmpFile = basename($stub);
             throw_if(
-                !$this->tmpDisk->put($tmpFile, preg_replace(array_keys($toReplace), array_values($toReplace), $content)),
+                !$tmpDisk->put($tmpFile, preg_replace(array_keys($toReplace), array_values($toReplace), $content)),
                 RuntimeException::class,
                 'Could not write to temporary file'
             );
@@ -93,8 +81,8 @@ class DeployCommand extends Command
             'Could not create target hotspot directory'
         );
         $this->line('Deploying login/redirect files to hotspot:');
-        $this->withProgressBar($this->tmpDisk->files(), function ($file) {
-            Storage::disk('hotspot')->putFileAs('hs', $this->tmpDisk->path($file), $file);
+        $this->withProgressBar($tmpDisk->files(), function ($file) use ($tmpDisk) {
+            Storage::disk('hotspot')->putFileAs('hs', $tmpDisk->path($file), $file);
         });
         $this->newLine(2);
 

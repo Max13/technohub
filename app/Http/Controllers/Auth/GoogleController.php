@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
@@ -59,6 +60,8 @@ class GoogleController extends Controller
      */
     public function redirect(Request $request)
     {
+        Log::debug("Hotspot: Google Auth - Validating request.", $request->all());
+
         $data = $request->validate([
             'callback' => 'required|string',
             'domains'  => 'required|array|min:0',
@@ -72,6 +75,8 @@ class GoogleController extends Controller
         } else {
             $with = [];
         }
+
+        Log::debug("Hotspot: Google Auth - Redirecting to Google.", $with);
 
         return Socialite::driver('google')
                         ->with($with)
@@ -88,6 +93,8 @@ class GoogleController extends Controller
      */
     public function callback(Request $request)
     {
+        Log::debug("Hotspot: Google Auth - Callback.", $request->all());
+
         $entryPointRoute = route(
             'auth.google.showLogin',
             $request->session()->only(['callback', 'domains']),
@@ -101,8 +108,12 @@ class GoogleController extends Controller
         ]);
 
         if ($validator->fails()) {
+            Log::debug("Hotspot: Google Auth - Callback validation failed.", $validator->failed());
+
             return redirect($entryPointRoute)->withErrors($validator);
         }
+
+        Log::debug("Hotspot: Google Auth - Callback validation success.", $validator->validated());
 
         $sessionData = $validator->validated();
         // End session data validation
@@ -118,11 +129,15 @@ class GoogleController extends Controller
         // Validate the user's domain
         $domains = $sessionData['domains'];
         if (count($domains) && !in_array($request->hd, $domains)) {
+            Log::debug("Hotspot: Google Auth - Domain not authorized.", [$request->all(), $user, $domains]);
+
             return redirect($entryPointRoute)->withErrors([
                 __('validation.custom.hd.in', ['domains' => join(', ', $domains)]),
             ]);
         }
         // End user's domain validation
+
+        Log::debug("Hotspot: Google Auth - Redirecting user to app.", [$request->all(), $user, $entryPointRoute]);
 
         $request->session()->flash('auth.entryPoint', $entryPointRoute);
         $request->session()->flash('auth.user', $user);
