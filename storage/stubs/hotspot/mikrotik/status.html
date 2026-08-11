@@ -1,0 +1,14 @@
+$(if http-status == 302)Redirection$(endif)
+$(if http-header == "Location"){{ statusUrl }}$(endif)
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0; url={{ statusUrl }}" />
+
+        <title>Redirecting to {{ statusUrl }}</title>
+    </head>
+    <body>
+        Redirecting to <a href="{{ statusUrl }}">{{ statusUrl }}</a>.
+    </body>
+</html>

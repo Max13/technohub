@@ -58,4 +58,25 @@ class HotspotController extends Controller
     {
         return view('hotspot.connected');
     }
+
+    /**
+     * Show "status" view, showing current consumption.
+     *
+     * @param  \Illuminate\Http\Request       $request
+     * @param  \App\Services\Mikrotik\Hotspot $hotspot
+     * @return \Illuminate\Http\Response
+     * @throws \App\Exceptions\Hotspot\BadRequestException
+     */
+    public function showStatus(Request $request, Hotspot $hotspot)
+    {
+        if (($user = $hotspot->findUser($request->hs, $request->mac)) !== false) {
+            Log::debug("Hotspot from $request->mac : User found.", [$request->all(), $user]);
+
+            return view('hotspot.status');
+        }
+
+        Log::debug("Hotspot from $request->mac : User not found.", $request->all());
+
+        return view('hotspot.generic-error');
+    }
 }

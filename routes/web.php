@@ -60,6 +60,7 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/hotspot/staff/callback', [StaffController::class, 'callback'])->name('hotspot.staff.callback');
     Route::get('/hotspot/students/callback', [StudentController::class, 'callback'])->name('hotspot.students.callback');
     Route::get('/hotspot/connected', [HotspotController::class, 'showConnected'])->name('hotspot.showConnected');
+    Route::get('/hotspot/status', [HotspotController::class, 'showStatus'])->name('hotspot.showStatus');
 });
 
 Route::middleware(['auth'])->group(function () {

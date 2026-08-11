@@ -23,7 +23,7 @@
         <img class="d-block light:d-none mx-auto" src="{{ mix('/img/logo-h_white.svg') }}" alt="ITIC Logo">
 
         <div class="alert alert-danger mt-5 p-2" role="alert">
-            <span class="visually-hidden">{{ __('Error') }}: </span>{{ __('An error occured while showing the captive portal, please contact the IT in room 14') }}
+            <span class="visually-hidden">{{ __('Error') }}: </span>{{ __('An error occured while showing the captive portal, please contact the IT in room 11') }}
         </div>
     </main>
 @endsection
