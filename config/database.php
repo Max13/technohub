@@ -51,7 +51,7 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
-        'queue' => [
+        'sqlite_queue' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
             'database' => env('DB_DATABASE_QUEUE', database_path('database_queue.sqlite')),

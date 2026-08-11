@@ -67,8 +67,12 @@
         "start": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php -r \"touch('database/database.sqlite');\"",
+            "@php -r \"touch('database/database_cache.sqlite');\"",
+            "@php -r \"touch('database/database_queue.sqlite');\"",
             "@composer install -o",
             "@php artisan key:generate --ansi",
+            "@php artisan migrate --database sqlite_cache --path database/migrations/2023_12_15_001942_create_cache_table.php --path database/migrations/2023_12_15_002007_create_sessions_table.php --force",
+            "@php artisan migrate --database sqlite_queue --path database/migrations/2023_12_15_002037_create_jobs_table.php --path database/migrations/2023_12_15_002052_create_job_batches_table.php --force",
             "npm install",
             "npm run dev"
         ]
