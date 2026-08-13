@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\Ypareo;
+use Exception;
 use Faker\Generator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -60,18 +61,84 @@ class YpareoController extends Controller
     }
 
     /**
+     * Check user credentials for authentication.
+     *
+     * This method attempts to authenticate the user by validating local credentials
+     * and, if necessary, retrieving and updating the user's information from Ypareo.
+     *
+     * @param  string               $username
+     * @param  string               $password
+     *
+     * @return bool
+     */
+    protected function checkCredentials($username, $password) : bool
+    {
+        /** @var \App\Services\Ypareo $ypareo */
+        $ypareo = app(Ypareo::class);
+
+        Log::debug("Hotspot login: Checking local credentials.", [
+            'request' => request()->all(),
+            'username' => $username,
+        ]);
+
+        try {
+            // Try local login first
+            if (auth()->validate(['ypareo_login' => $username, 'password' => $password])) {
+                Log::debug("Hotspot login: Local credentials passed.", [
+                    'username' => $username,
+                ]);
+
+                return true;
+            }
+
+            Log::debug("Hotspot login: Local credentials failed.", [
+                'username' => $username,
+            ]);
+            // ---
+
+            // Retrieve and update Ypareo user
+            if (($ypareoUser = $ypareo->retrieve($username, false))) {
+                Log::debug("Hotspot login: Retrieve and update Ypareo user.", $ypareoUser);
+                User::where('ypareo_login', $username)
+                    ->sole()
+                    ->forceFill(['password' => $ypareoUser['PASSWORD_UTILISATEUR_CRYPTE']])
+                    ->save();
+            }
+
+            // Try local login final
+            if (auth()->validate(['ypareo_login' => $username, 'password' => $password])) {
+                Log::debug("Hotspot login: Local credentials passed.", [
+                    'username' => $username,
+                ]);
+
+                return true;
+            }
+
+            Log::debug("Hotspot login: Local credentials failed AGAIN. Aborting", [
+                'username' => $username,
+            ]);
+            // ---
+        } catch (Exception $e) {
+            //
+        }
+
+        return false;
+    }
+
+    /**
      * Logs in user via Ypareo
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function doLogin(Request $request, Ypareo $ypareo)
+    public function doLogin(Request $request)
     {
         Log::debug("Hotspot from $request->mac : Logging in to Ypareo.", $request->all());
 
         $data = $request->validate(
             [
                 'callback' => 'required|string',
+                'hs' => 'required|in:hs-staff',
                 'username' => 'required|exists:users,ypareo_login',
                 'password' => 'required',
             ],[
@@ -79,18 +146,21 @@ class YpareoController extends Controller
             ]
         );
 
-        if ($ypareo->auth($data['username'], $data['password'], $request->userAgent())) {
-            $user = User::where('ypareo_login', $data['username'])->first();
+        if ($this->checkCredentials($data['username'], $data['password'])) {
+            $user = User::where('ypareo_login', $data['username'])->sole();
+            $callback = $data['callback'] . '?' . http_build_query($request->all());
+
 
             $request->session()->keep(['auth.entryPoint']);
-            $request->session()->flash('auth.user', $user->toArray());
+            $request->session()->flash('auth.user', $user->only(['id', 'fullname']));
 
-            Log::debug("Hotspot from $request->mac : Credentials accepted. Injecting user to session", [
+            Log::debug("Hotspot from $request->mac : Credentials accepted. Injecting user to session, redirecting to callback", [
                 'request' => $request->all(),
                 'session' => $request->session()->all(),
+                'callback' => $callback,
             ]);
 
-            return redirect($data['callback']);
+            return redirect($callback);
         }
 
         Log::debug("Hotspot from $request->mac : Credentials refused.", [

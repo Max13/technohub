@@ -26,7 +26,7 @@
             </div>
         @endif
 
-        <form class="mt-4 text-start" method="POST" action="{{ route('auth.ypareo.doLogin', $request, false) }}">
+        <form class="mt-4 text-start" method="POST" action="{{ route('auth.ypareo.doLogin', request()->all(), false) }}">
             @csrf
 
             <div class="row mb-3">
@@ -46,7 +46,7 @@
             <button class="btn login-with ypareo w-100 @error('callback') disabled @enderror" type="submit">{{ __('Login with Ypareo') }}</button>
         </form>
 
-        <p class="text-muted mt-3">{{ __('If you need help, come see us in room 14!') }}</p>
+        <p class="text-muted mt-3">{{ __('If you need help, come see us in room 11!') }}</p>
     </main>
 
     <x-hs-terms-modal id="termsModal" />

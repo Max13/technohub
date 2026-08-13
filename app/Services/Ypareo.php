@@ -56,7 +56,7 @@ class Ypareo
     }
 
     /**
-     * Retrieve a user data against Ypareo
+     * Retrieve a user's data from Ypareo
      *
      * @param  string $username
      * @param  bool   $cached      Defaults to true
@@ -65,7 +65,7 @@ class Ypareo
      *
      * @throws \Exception|\InvalidArgumentException
      */
-    public function retrieve($username, $cached = true, $returnInDev = true): bool
+    public function retrieve($username, $cached = true, $returnInDev = true): array
     {
         if (!app()->environment('production') && !class_exists(\Mx\Ypareo\Auth::class)) {
             return $returnInDev;

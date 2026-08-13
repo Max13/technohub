@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('hotspot:clear hs-students') // Todo: Set name in config file
+        $schedule->command('hotspot:clear hs-staff') // Todo: Set name in config file
                  ->daily()
                  ->runInBackground()
                  ->withoutOverlapping();

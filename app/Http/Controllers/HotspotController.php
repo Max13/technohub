@@ -36,10 +36,14 @@ class HotspotController extends Controller
         if ($request->hs === 'hs-staff') {
             Log::debug("Hotspot from $request->mac : Redirecting staff member.", $request->all());
 
-            return redirect()->route('auth.google.showLogin', [
-                'callback' => route('hotspot.staff.callback', $request->query(), false),
-                'domains' => config('services.google.allowed_domains'),
-            ]);
+            return redirect()->route('auth.ypareo.showLogin',
+                array_merge(
+                    $request->query(),
+                    [
+                        'callback' => route('hotspot.staff.callback', absolute: false)
+                    ],
+                ),
+            );
         }
 
         if ($request->hs === 'hs-students') {
