@@ -2949,16 +2949,16 @@
         },
         {
             "name": "max13/php-ypareauth",
-            "version": "v1.1",
+            "version": "v1.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:Max13/php-ypareauth.git",
-                "reference": "38366113c37b03e4b02a0731cdbe56d4d4645475"
+                "reference": "1067a1e3e8fdd16f0574322806e69e5451582008"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Max13/php-ypareauth/zipball/38366113c37b03e4b02a0731cdbe56d4d4645475",
-                "reference": "38366113c37b03e4b02a0731cdbe56d4d4645475",
+                "url": "https://api.github.com/repos/Max13/php-ypareauth/zipball/1067a1e3e8fdd16f0574322806e69e5451582008",
+                "reference": "1067a1e3e8fdd16f0574322806e69e5451582008",
                 "shasum": ""
             },
             "require": {
@@ -2991,7 +2991,7 @@
                 "ypareo-auth"
             ],
             "support": {
-                "source": "https://github.com/Max13/php-ypareauth/tree/v1.1"
+                "source": "https://github.com/Max13/php-ypareauth/tree/v1.2"
             },
             "funding": [
                 {
@@ -3003,7 +3003,7 @@
                     "url": "https://adnan.rihan.fr/"
                 }
             ],
-            "time": "2025-03-17T06:56:18+00:00"
+            "time": "2026-08-13T16:45:34+00:00"
         },
         {
             "name": "monolog/monolog",
