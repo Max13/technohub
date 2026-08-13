@@ -21,6 +21,11 @@ class Kernel extends ConsoleKernel
                  ->runInBackground()
                  ->withoutOverlapping();
 
+        $schedule->command('hotspot:clear hs-students') // Todo: Set name in config file
+                 ->twiceDaily(0, 13)
+                 ->runInBackground()
+                 ->withoutOverlapping();
+
         $schedule->command('ebics:import', [
                     '2026-01-01',
                     today()->format('Y-m-d'),

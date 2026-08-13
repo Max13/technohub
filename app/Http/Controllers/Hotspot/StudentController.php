@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Hotspot;
 
 use App\Models\User;
 use App\Services\Mikrotik\Hotspot;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -16,6 +18,8 @@ class StudentController extends Controller
 {
     /**
      * @inheritDoc
+     *
+     * TODO: Merge with StaffController::callback()
      */
     public function callback(Request $request, Hotspot $hotspot)
     {
@@ -24,50 +28,45 @@ class StudentController extends Controller
             'session' => $request->session()->all(),
         ]);
 
+        // This will merge session's auth.user and auth.entryPoint to Request
         $data = $this->validateCallback($request, [
-            'auth.user.ypareo_login' => [
+            'auth.user.id' => [
                 'required',
-                Rule::exists('users', 'ypareo_login')->where(function ($query) {
-                    // FIXME: Use roles
+                Rule::exists('users', 'id')->where(function (Builder $query) {
                     return $query->where('is_trainer', true)
-                                 ->orWhere('is_student', true);
+                                 ->orWhere('is_student', true)
+                                 ->orWhere(function (Builder $query) {
+                                     $query->join('role_user', 'users.id', '=', 'role_user.user_id')
+                                           ->join('roles', function (JoinClause $join) {
+                                               $join->on('role_user.role_id', '=', 'roles.id')
+                                                    ->whereIn('roles.name', [
+                                                        'HeadTeacher',
+                                                        'Trainer',
+                                                        'Student',
+                                                    ]);
+                                           });
+                                 });
                 }),
-            ]
+            ],
+            'auth.user.fullname' => 'required|string',
         ]);
 
-        if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['auth']['user']['ypareo_login'], true)) {
-            Log::debug("Hotspot from $request->mac : User authenticated on Hotspot.", [
-                'request' => $request->all(),
-                'session' => $request->session()->all(),
-            ]);
-
+        if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['auth']['user']['fullname'])) {
             DB::table('hotspot_history')->insert([
                 'server' => $data['hs'],
-                'user_id' => User::firstWhere('ypareo_login', $data['auth']['user']['ypareo_login'])->id,
+                'user_id' => $data['auth']['user']['id'],
                 'mac' => $data['mac'],
                 'created_at' => now(),
             ]);
 
-            $redirectTo = $data['captive'] . '?' . http_build_query([
-                'dst' => $data['dst'] ?? null,
-                'username' => $data['mac'],
-                'password' => $data['mac'],
-            ]);
-
-            Log::debug("Hotspot from $request->mac : Redirecting user to $redirectTo.", [
-                'request' => $request->all(),
-                'session' => $request->session()->all(),
-            ]);
-
-            return redirect()->away($redirectTo);
+            return redirect()->away($data['captive'] . '?' . http_build_query([
+                    'dst' => route('hotspot.showConnected'),
+                    'username' => $data['mac'],
+                    'password' => $data['mac'],
+                ]));
         }
 
-        Log::debug("Hotspot from $request->mac : User could not be authenticated on Hotspot.", [
-            'request' => $request->all(),
-            'session' => $request->session()->all(),
-        ]);
-
-        return redirect($data['auth']['entryPoint'])->withErrors([
+        return redirect($data['auth.entryPoint'])->withErrors([
             __('Hotspot authentication failed. Please try again.'),
         ])->withInput();
     }

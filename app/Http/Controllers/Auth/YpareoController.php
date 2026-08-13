@@ -138,7 +138,7 @@ class YpareoController extends Controller
         $data = $request->validate(
             [
                 'callback' => 'required|string',
-                'hs' => 'required|in:hs-staff',
+                'hs' => 'required|in:hs-students',
                 'username' => 'required|exists:users,ypareo_login',
                 'password' => 'required',
             ],[
