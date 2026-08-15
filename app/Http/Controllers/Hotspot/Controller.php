@@ -17,11 +17,12 @@ abstract class Controller extends BaseController
      *
      * @param  \Illuminate\Http\Request $request
      * @param  array                    $additionnalRules
+     * @param  array                    $messages
      * @return \Illuminate\Http\Response|array
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function validateCallback(Request $request, array $additionnalRules = [])
+    public function validateCallback(Request $request, array $additionnalRules = [], array $messages = [])
     {
         // Validates hotspot + auth data
         $rules = array_merge([
@@ -39,7 +40,7 @@ abstract class Controller extends BaseController
                 'user'       => $request->session()->pull('auth.user'),
             ],
         ]);
-        $validator = validator($request->all(), $rules);
+        $validator = validator($request->all(), $rules, $messages);
 
         throw_if(
             $validator->fails(),

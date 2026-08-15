@@ -29,27 +29,33 @@ class StudentController extends Controller
         ]);
 
         // This will merge session's auth.user and auth.entryPoint to Request
-        $data = $this->validateCallback($request, [
-            'auth.user.id' => [
-                'required',
-                Rule::exists('users', 'id')->where(function (Builder $query) {
-                    return $query->where('is_trainer', true)
-                                 ->orWhere('is_student', true)
-                                 ->orWhere(function (Builder $query) {
-                                     $query->join('role_user', 'users.id', '=', 'role_user.user_id')
-                                           ->join('roles', function (JoinClause $join) {
-                                               $join->on('role_user.role_id', '=', 'roles.id')
-                                                    ->whereIn('roles.name', [
-                                                        'HeadTeacher',
-                                                        'Trainer',
-                                                        'Student',
-                                                    ]);
-                                           });
-                                 });
-                }),
+        $data = $this->validateCallback(
+            $request,
+            [
+                'auth.user.id' => [
+                    'required',
+                    Rule::exists('users', 'id')->where(function (Builder $query) {
+                        return $query->where('is_trainer', true)
+                                     ->orWhere('is_student', true)
+                                     ->orWhere(function (Builder $query) {
+                                         $query->join('role_user', 'users.id', '=', 'role_user.user_id')
+                                               ->join('roles', function (JoinClause $join) {
+                                                   $join->on('role_user.role_id', '=', 'roles.id')
+                                                        ->whereIn('roles.name', [
+                                                            'HeadTeacher',
+                                                            'Trainer',
+                                                            'Student',
+                                                        ]);
+                                               });
+                                     });
+                    }),
+                ],
+                'auth.user.fullname' => 'required|string',
             ],
-            'auth.user.fullname' => 'required|string',
-        ]);
+            [
+                'auth.user.id.exists' => __('This network is only authorized to Students and Trainers of ITIC Paris.'),
+            ]
+        );
 
         if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['auth']['user']['fullname'])) {
             DB::table('hotspot_history')->insert([

@@ -199,6 +199,8 @@
     "The utilities on this page are processed in your browser. Nothing is sent to the server except the <abbr title=\"Random Number Generator\">RNG</abbr>.": "Les outils de cette page sont entièrement executés sur le navigateur. Rien n'est envoyé au serveur excepté le <abbr title=\"Générateur de Nombres Aléatoires\">GNA</abbr>.",
     "This exam (<u>:name</u>) has ongoing assignments. It cannot be modified, here is the form to create a new exam based on the one you wanted to modify.": "Cet examen (<i>:name</i>) a déjà été assigné. Il ne peut pas être modifié, voici le formulaire pour créer un nouvel examen basé sur celui que vous vouliez modifier.",
     "This exam code is invalid. Either you already have answered it, or it is not yet enabled, or its assignment is expired.": "Ce code d'examen est invalide. Soit vous l'avez déjà passé, il n'est pas encore actif, ou sa validité a expiré.",
+    "This network is only authorized to the Staff of ITIC Paris.": "Ce réseau n'est accessible qu'aux Équipes d'ITIC Paris.",
+    "This network is only authorized to the Students and Trainers of ITIC Paris.": "Ce réseau n'est accessible qu'aux Étudiants et Enseignants d'ITIC Paris.",
     "This question has expired. Either you have already answered it, took too long to answer, or tried to refresh it.": "Cette question a expiré. Soit vous y avez déjà répondu, vous avez prit trop de temps à répondre, ou avez essayé de rafraîchir la page.",
     "Trainers": "Formateurs",
     "Training": "Formation",

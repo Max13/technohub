@@ -29,22 +29,28 @@ class StaffController extends Controller
         ]);
 
         // This will merge session's auth.user and auth.entryPoint to Request
-        $data = $this->validateCallback($request, [
-            'auth.user.id' => [
-                'required',
-                Rule::exists('users', 'id')->where(function (Builder $query) {
-                    return $query->where('is_staff', true)
-                                 ->orWhere(function (Builder $query) {
-                                     $query->join('role_user', 'users.id', '=', 'role_user.user_id')
-                                           ->join('roles', function (JoinClause $join) {
-                                               $join->on('role_user.role_id', '=', 'roles.id')
-                                                    ->where('roles.name', 'Staff');
-                                           });
-                                 });
-                }),
+        $data = $this->validateCallback(
+            $request,
+            [
+                'auth.user.id' => [
+                    'required',
+                    Rule::exists('users', 'id')->where(function (Builder $query) {
+                        return $query->where('is_staff', true)
+                                     ->orWhere(function (Builder $query) {
+                                         $query->join('role_user', 'users.id', '=', 'role_user.user_id')
+                                               ->join('roles', function (JoinClause $join) {
+                                                   $join->on('role_user.role_id', '=', 'roles.id')
+                                                        ->where('roles.name', 'Staff');
+                                               });
+                                     });
+                    }),
+                ],
+                'auth.user.fullname' => 'required|string',
             ],
-            'auth.user.fullname' => 'required|string',
-        ]);
+            [
+                'auth.user.id.exists' => __('This network is only authorized to the Staff of ITIC Paris.'),
+            ]
+        );
 
         if ($hotspot->createUser($data['hs'], $data['mac'], $data['mac'], $data['auth']['user']['fullname'])) {
             DB::table('hotspot_history')->insert([

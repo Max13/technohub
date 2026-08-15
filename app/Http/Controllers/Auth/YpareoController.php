@@ -143,6 +143,7 @@ class YpareoController extends Controller
                 'password' => 'required',
             ],[
                 'username.exists' => __('The username or password is incorrect.'),
+                'hs.in' => __('This hotspot server is invalid.'),
             ]
         );
 
