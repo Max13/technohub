@@ -9,7 +9,7 @@
         "ext-ldap": "*",
         "ext-libxml": "*",
         "ext-simplexml": "*",
-        "directorytree/ldaprecord": "^3.8",
+        "directorytree/ldaprecord-laravel": "^4.0",
         "ebics-api/ebics-client-php": "^3.0",
         "fpdf/fpdf": "^1.86",
         "fruitcake/laravel-cors": "^2.0",

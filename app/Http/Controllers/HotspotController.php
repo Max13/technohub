@@ -36,7 +36,7 @@ class HotspotController extends Controller
         if ($request->hs === 'hs-staff') {
             Log::debug("Hotspot from $request->mac : Redirecting staff member.", $request->all());
 
-            return redirect()->route('auth.ypareo.showLogin',
+            return redirect()->route('auth.ldap.showLogin',
                 array_merge(
                     $request->query(),
                     [

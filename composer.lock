@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f687d6aceeca73b060d32d8bd4974c4",
+    "content-hash": "a08a88e4db86032064c19da552df1081",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -489,16 +489,16 @@
         },
         {
             "name": "directorytree/ldaprecord",
-            "version": "v3.8.6",
+            "version": "v4.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DirectoryTree/LdapRecord.git",
-                "reference": "a1cab9f078eb4756fc6fad58caea1e3d11cad0ec"
+                "reference": "75f25c84f8ffc4b10029be8a310c72fc0d46bf71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DirectoryTree/LdapRecord/zipball/a1cab9f078eb4756fc6fad58caea1e3d11cad0ec",
-                "reference": "a1cab9f078eb4756fc6fad58caea1e3d11cad0ec",
+                "url": "https://api.github.com/repos/DirectoryTree/LdapRecord/zipball/75f25c84f8ffc4b10029be8a310c72fc0d46bf71",
+                "reference": "75f25c84f8ffc4b10029be8a310c72fc0d46bf71",
                 "shasum": ""
             },
             "require": {
@@ -561,7 +561,74 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-03-19T20:55:30+00:00"
+            "time": "2026-05-28T13:39:48+00:00"
+        },
+        {
+            "name": "directorytree/ldaprecord-laravel",
+            "version": "v4.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DirectoryTree/LdapRecord-Laravel.git",
+                "reference": "e52ee08744327317cef17abcdb8a22bb079085da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DirectoryTree/LdapRecord-Laravel/zipball/e52ee08744327317cef17abcdb8a22bb079085da",
+                "reference": "e52ee08744327317cef17abcdb8a22bb079085da",
+                "shasum": ""
+            },
+            "require": {
+                "directorytree/ldaprecord": "^4.0",
+                "ext-json": "*",
+                "ext-ldap": "*",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+                "php": ">=8.1",
+                "ramsey/uuid": "*"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.9",
+                "laravel/sanctum": "*",
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+                "phpunit/phpunit": "^8.0|^9.0|^10.0|^11.0",
+                "spatie/ray": "^1.28"
+            },
+            "type": "project",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LdapRecord\\Laravel\\LdapServiceProvider",
+                        "LdapRecord\\Laravel\\LdapAuthServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "LdapRecord\\Laravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "LDAP Authentication & Management for Laravel.",
+            "keywords": [
+                "adldap2",
+                "laravel",
+                "ldap",
+                "ldaprecord"
+            ],
+            "support": {
+                "issues": "https://github.com/DirectoryTree/LdapRecord-Laravel/issues",
+                "source": "https://github.com/DirectoryTree/LdapRecord-Laravel/tree/v4.0.5"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/stevebauman",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-08-10T14:24:38+00:00"
         },
         {
             "name": "doctrine/inflector",

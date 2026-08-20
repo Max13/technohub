@@ -5,6 +5,7 @@ use App\Http\Controllers\Accounting\TransactionsQueueController;
 use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\IticController;
+use App\Http\Controllers\Auth\LdapController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\OneButtonController;
 use App\Http\Controllers\Auth\YpareoController;
@@ -49,6 +50,8 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/auth/ypareo', [YpareoController::class, 'doLogin'])->name('auth.ypareo.doLogin');
     Route::get('/auth/itic', [IticController::class, 'showLogin'])->name('auth.itic.showLogin');
     Route::post('/auth/itic', [IticController::class, 'doLogin'])->name('auth.itic.doLogin');
+    Route::get('/auth/ldap', [LdapController::class, 'showLogin'])->name('auth.ldap.showLogin');
+    Route::post('/auth/ldap', [LdapController::class, 'doLogin'])->name('auth.ldap.doLogin');
     Route::post('/auth/itic/password-reset', [IticController::class, 'sendPasswordReset'])->name('auth.itic.sendPasswordReset');
     Route::middleware(['signed'])->group(function () {
         Route::get('/auth/itic/password-reset', [IticController::class, 'showPasswordReset'])->name('auth.itic.showPasswordReset');
