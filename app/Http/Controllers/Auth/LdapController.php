@@ -54,12 +54,12 @@ class LdapController extends Controller
         $request->session()->flash('auth.entryPoint', $_SERVER['REQUEST_URI']);
 
         Log::debug("Hotspot from $request->mac : Entry point added to the session.", [
-            'request' => $request->all(),
+            'request' => $request->except('password'),
             'session' => $request->session()->all(),
         ]);
 
         return $view->with([
-            'request' => $request->all(),
+            'request' => $request->except('password'),
         ]);
     }
 
@@ -90,7 +90,7 @@ class LdapController extends Controller
             Container::getDefaultConnection()->auth()->bind($userprincipalname, $data['password']);
         } catch (Exception $e) {
             Log::debug("Hotspot from $request->mac : Credentials refused.", [
-                'request' => $request->all(),
+                'request' => $request->except('password'),
                 'session' => $request->session()->all(),
                 'errorType' => get_class($e),
                 'error' => $e->getDetailedError(),
@@ -136,13 +136,13 @@ class LdapController extends Controller
                 ]
             );
         });
-        $callback = $data['callback'] . '?' . http_build_query($request->all());
+        $callback = $data['callback'] . '?' . http_build_query($request->except('password'));
 
         $request->session()->keep(['auth.entryPoint']);
         $request->session()->flash('auth.user', $localUser->only(['id', 'fullname']));
 
         Log::debug("Hotspot from $request->mac : Credentials accepted. Injecting user to session, redirecting to callback", [
-            'request' => $request->all(),
+            'request' => $request->except('password'),
             'session' => $request->session()->all(),
             'callback' => $callback,
         ]);

@@ -30,17 +30,17 @@ class YpareoController extends Controller
      */
     public function showLogin(Request $request)
     {
-        Log::debug("Hotspot from $request->mac : Showing login form.", $request->all());
+        Log::debug("Hotspot from $request->mac : Showing login form.", $request->except('password'));
 
         $view = view('auth.ypareo.login');
 
         // Validate request: Shows view with errors
-        $validator = validator($request->all(), [
+        $validator = validator($request->except('password'), [
             'callback' => 'required|string',
         ]);
 
         if ($validator->fails()) {
-            Log::debug("Hotspot from $request->mac : Validator fails.", $request->all());
+            Log::debug("Hotspot from $request->mac : Validator fails.", $request->except('password'));
 
             return $view->with([
                 'callback' => null,
@@ -51,12 +51,12 @@ class YpareoController extends Controller
         $request->session()->flash('auth.entryPoint', $_SERVER['REQUEST_URI']);
 
         Log::debug("Hotspot from $request->mac : Entry point added to the session.", [
-            'request' => $request->all(),
+            'request' => $request->except('password'),
             'session' => $request->session()->all(),
         ]);
 
         return $view->with([
-            'request' => $request->all(),
+            'request' => $request->except('password'),
         ]);
     }
 
@@ -133,7 +133,7 @@ class YpareoController extends Controller
      */
     public function doLogin(Request $request)
     {
-        Log::debug("Hotspot from $request->mac : Logging in to Ypareo.", $request->all());
+        Log::debug("Hotspot from $request->mac : Logging in to Ypareo.", $request->except('password'));
 
         $data = $request->validate(
             [
@@ -149,14 +149,14 @@ class YpareoController extends Controller
 
         if ($this->checkCredentials($data['username'], $data['password'])) {
             $user = User::where('ypareo_login', $data['username'])->sole();
-            $callback = $data['callback'] . '?' . http_build_query($request->all());
+            $callback = $data['callback'] . '?' . http_build_query($request->except('password'));
 
 
             $request->session()->keep(['auth.entryPoint']);
             $request->session()->flash('auth.user', $user->only(['id', 'fullname']));
 
             Log::debug("Hotspot from $request->mac : Credentials accepted. Injecting user to session, redirecting to callback", [
-                'request' => $request->all(),
+                'request' => $request->except('password'),
                 'session' => $request->session()->all(),
                 'callback' => $callback,
             ]);
@@ -165,7 +165,7 @@ class YpareoController extends Controller
         }
 
         Log::debug("Hotspot from $request->mac : Credentials refused.", [
-            'request' => $request->all(),
+            'request' => $request->except('password'),
             'session' => $request->session()->all(),
         ]);
 

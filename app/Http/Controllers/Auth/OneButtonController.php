@@ -34,7 +34,7 @@ class OneButtonController extends Controller
         $request->session()->flash('auth.entryPoint', $_SERVER['REQUEST_URI']);
 
         Log::debug("Hotspot from $request->mac : Entry point added to the session.", [
-            'request' => $request->all(),
+            'request' => $request->except('password'),
             'session' => $request->session()->all(),
         ]);
 
