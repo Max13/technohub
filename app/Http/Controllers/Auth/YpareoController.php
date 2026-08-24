@@ -119,7 +119,14 @@ class YpareoController extends Controller
             ]);
             // ---
         } catch (Exception $e) {
-            //
+            Log::debug("Hotspot login: Exception.", [
+                'username' => $username,
+                'exception' => [
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                    'line' => $e->getLine(),
+                ],
+            ]);
         }
 
         return false;
