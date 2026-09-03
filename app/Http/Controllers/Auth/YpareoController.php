@@ -8,6 +8,7 @@ use App\Services\Ypareo;
 use Exception;
 use Faker\Generator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class YpareoController extends Controller
@@ -99,25 +100,28 @@ class YpareoController extends Controller
             // Retrieve and update Ypareo user
             if (($ypareoUser = $ypareo->retrieve($username, false))) {
                 Log::debug("Hotspot login: Retrieve and update Ypareo user.", $ypareoUser);
-                User::where('ypareo_login', $username)
-                    ->sole()
-                    ->forceFill(['password' => $ypareoUser['PASSWORD_UTILISATEUR_CRYPTE']])
-                    ->save();
+
+                if (Hash::check($password, $ypareoUser['PASSWORD_UTILISATEUR_CRYPTE'])) {
+                    Log::debug("Hotspot login: Passwords match.", $ypareoUser);
+
+                    if (Hash::needsRehash($ypareoUser['PASSWORD_UTILISATEUR_CRYPTE'])) {
+                        Log::debug("Hotspot login: Password needs rehashing.", $ypareoUser);
+
+                        $ypareoUser['PASSWORD_UTILISATEUR_CRYPTE'] = Hash::make($password);
+                    }
+
+                    User::where('ypareo_login', $username)
+                        ->sole()
+                        ->forceFill(['password' => $ypareoUser['PASSWORD_UTILISATEUR_CRYPTE']])
+                        ->save();
+
+                    return true;
+                }
             }
 
-            // Try local login final
-            if (auth()->validate(['ypareo_login' => $username, 'password' => $password])) {
-                Log::debug("Hotspot login: Local credentials passed.", [
-                    'username' => $username,
-                ]);
-
-                return true;
-            }
-
-            Log::debug("Hotspot login: Local credentials failed AGAIN. Aborting", [
+            Log::debug("Hotspot login: Password mismatch. Aborting", [
                 'username' => $username,
             ]);
-            // ---
         } catch (Exception $e) {
             Log::debug("Hotspot login: Exception.", [
                 'username' => $username,
