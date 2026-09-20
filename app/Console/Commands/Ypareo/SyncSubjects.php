@@ -7,6 +7,7 @@ use App\Models\Training;
 use App\Services\Ypareo;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
@@ -51,13 +52,21 @@ class SyncSubjects extends Command
 
             Subject::whereNotNull('ypareo_id')->delete();
 
+            $notProcessed = 0;
             $bar = $this->output->createProgressBar($ypareoSubjects->flatten()->count());
             $bar->start();
 
             foreach ($ypareoSubjects as $classYpareoId => $subjects) {
-                $dbTraining = Training::whereHas('classrooms', function (Builder $query) use ($classYpareoId) {
-                    return $query->where('ypareo_id', $classYpareoId);
-                })->sole();
+                try {
+                    $dbTraining = Training::whereHas('classrooms', function (Builder $query) use ($classYpareoId) {
+                        return $query->where('ypareo_id', $classYpareoId);
+                    })->sole();
+                } catch (ModelNotFoundException $e) {
+                    $countSubjects = count($subjects);
+                    $notProcessed += $countSubjects;
+                    $bar->advance($countSubjects);
+                    continue;
+                }
 
                 foreach ($subjects as $s) {
                     $dbSubject = Subject::withTrashed()
@@ -71,6 +80,7 @@ class SyncSubjects extends Command
                     try {
                         $dbSubject->save();
                     } catch (QueryException $e) {
+                        ++$notProcessed;
                         logger()->notice('  Could not save subject', [
                             'subject' => $dbSubject,
                             'exception' => $e,
@@ -93,6 +103,10 @@ class SyncSubjects extends Command
             }
 
             $bar->finish();
+
+            if ($notProcessed > 0) {
+                $this->warn('  > ' . $notProcessed . ' subjects could not be processed');
+            }
         });
 
         return 0;

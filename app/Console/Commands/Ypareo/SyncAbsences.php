@@ -51,7 +51,8 @@ class SyncAbsences extends Command
         DB::transaction(function () use ($ypareoAbsences) {
             Absence::whereNotNull('ypareo_id')->delete();
 
-            $this->withProgressBar($ypareoAbsences, function ($abs) {
+            $notProcessed = 0;
+            $this->withProgressBar($ypareoAbsences, function ($abs) use (&$notProcessed) {
                 $dbAbsence = Absence::firstOrNew(['ypareo_id' => $abs['codeAbsence']])
                                     ->forceFill([
                                         'label' => $abs['motifAbsence']['nomMotifAbsence'],
@@ -75,17 +76,23 @@ class SyncAbsences extends Command
 
                     $dbAbsence->save();
                 } catch (ModelNotFoundException $e) {
+                    ++$notProcessed;
                     logger()->notice('  Could not find training or student', [
                         'absence' => $abs,
                         'exception' => $e,
                     ]);
                 } catch (QueryException $e) {
+                    ++$notProcessed;
                     logger()->notice('  Could not save absence', [
                         'absence' => $dbAbsence,
                         'exception' => $e,
                     ]);
                 }
             });
+
+            if ($notProcessed > 0) {
+                $this->warn('  > ' . $notProcessed . ' absences could not be processed');
+            }
         });
 
         return 0;

@@ -55,7 +55,8 @@ class SyncCourses extends Command
         DB::transaction(function () use ($courses) {
             Course::whereNotNull('ypareo_id')->delete();
 
-            $this->withProgressBar($courses, function ($crs) {
+            $notProcessed = 0;
+            $this->withProgressBar($courses, function ($crs) use (&$notProcessed) {
                 $dbCourse = Course::firstOrNew(['ypareo_id' => $crs['codeSeance']])
                                   ->forceFill([
                                       'label' => $crs['nomMatiere'],
@@ -77,6 +78,7 @@ class SyncCourses extends Command
                         )->pluck('id')
                     );
                 } catch (ModelNotFoundException $e) {
+                    ++$notProcessed;
                     logger()->notice('  Could not find subject, classrooms, students or trainers', [
                         'course' => $dbCourse,
                         'subject' => ['ypareo_id' => $crs['codeMatiere']],
@@ -86,12 +88,17 @@ class SyncCourses extends Command
                         'exception' => $e,
                     ]);
                 } catch (QueryException $e) {
+                    ++$notProcessed;
                     logger()->notice('  Could not save course', [
                         'course' => $dbCourse,
                         'exception' => $e,
                     ]);
                 }
             });
+
+            if ($notProcessed > 0) {
+                $this->warn('  > ' . $notProcessed . ' courses could not be processed');
+            }
         });
 
         return 0;

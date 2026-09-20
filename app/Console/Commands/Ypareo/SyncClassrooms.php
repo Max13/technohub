@@ -44,10 +44,12 @@ class SyncClassrooms extends Command
         });
 
         DB::transaction(function () use ($ypareoClassrooms) {
+            $notProcessed = 0;
+
             Training::whereNotNull('id')->delete();
             Classroom::whereNotNull('ypareo_id')->delete();
 
-            $this->withProgressBar($ypareoClassrooms, function ($c) {
+            $this->withProgressBar($ypareoClassrooms, function ($c) use (&$notProcessed) {
                 $name = implode('-', explode('-', $c['abregeGroupe'], -1)) ?: $c['abregeGroupe'];
                 $dbTraining = Training::withTrashed()
                                       ->firstOrNew(['name' => $name])
@@ -83,6 +85,7 @@ class SyncClassrooms extends Command
                     $dbClass->training()->associate($dbTraining);
                     $dbClass->save();
                 } catch (QueryException $e) {
+                    ++$notProcessed;
                     logger()->notice('  Could not save classroom and/or training', [
                         'classroom' => $dbClass,
                         'training' => $dbTraining,
@@ -90,6 +93,10 @@ class SyncClassrooms extends Command
                     ]);
                 }
             });
+
+            if ($notProcessed > 0) {
+                $this->warn('  > ' . $notProcessed . ' classrooms could not be processed');
+            }
         });
 
         return 0;
