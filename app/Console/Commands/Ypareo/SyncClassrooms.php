@@ -56,7 +56,7 @@ class SyncClassrooms extends Command
                                       ->forceFill([
                                           'ypareo_id' => $c['codeFormation'],
                                           'fullname' => str_replace([' INITIAL', ' ALTERNANCE'], '', $c['etenduGroupe']),
-                                          'nth_year' => value(function ($name) {
+                                          'nth_year' => value(function ($name) use ($c) {
                                               if (str_starts_with($name, 'M1-')) {
                                                   return 4;
                                               }
@@ -65,6 +65,9 @@ class SyncClassrooms extends Command
                                               }
                                               if (str_starts_with($name, 'BACH ')) {
                                                   return 3;
+                                              }
+                                              if (isset($c['numeroAnnee'])) {
+                                                  return $c['numeroAnnee'];
                                               }
                                               return substr($name, -1);
                                           }, $name),
