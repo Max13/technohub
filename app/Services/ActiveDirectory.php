@@ -21,7 +21,6 @@ class ActiveDirectory
     public function __construct(array $ldapConfig)
     {
         $this->connection = new Connection($ldapConfig);
-        Container::addConnection($this->connection);
     }
 
     /**

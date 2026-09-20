@@ -10,6 +10,7 @@ use App\Services\Wallet;
 use App\Services\Ypareo;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use LdapRecord\Container;
 use RuntimeException;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(ActiveDirectory::class, function ($app) {
-            return new ActiveDirectory(config('ldap'));
+            return new ActiveDirectory(config('ldap.connections.'.Container::getDefaultConnectionName()));
         });
 
         $this->app->singleton(Ebics::class, function ($app) {
