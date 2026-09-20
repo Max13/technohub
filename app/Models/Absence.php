@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -41,8 +42,14 @@ class Absence extends Model
                 $absence->courses()->sync(
                     Course::whereBetween('started_at', [$absence->started_at, $absence->ended_at])
                           ->orWhereBetween('ended_at', [$absence->started_at, $absence->ended_at])
-                          ->orWhereBetweenColumns($absence->started_at, ['started_at', 'ended_at'])
-                          ->orWhereBetweenColumns($absence->ended_at, ['started_at', 'ended_at'])
+                          ->orWhere(function (Builder $query) use ($absence) {
+                              $query->where('started_at', '<=', $absence->started_at)
+                                    ->where('ended_at', '>=', $absence->started_at);
+                          })
+                          ->orWhere(function (Builder $query) use ($absence) {
+                              $query->where('started_at', '<=', $absence->ended_at)
+                                    ->where('ended_at', '>=', $absence->ended_at);
+                          })
                           ->pluck('id')
                 );
             });

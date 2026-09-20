@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\CarbonInterval;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -37,8 +38,14 @@ class Course extends Model
                 $course->absences()->sync(
                     Absence::whereBetween('started_at', [$course->started_at, $course->ended_at])
                            ->orWhereBetween('ended_at', [$course->started_at, $course->ended_at])
-                           ->orWhereBetweenColumns($course->started_at, ['started_at', 'ended_at'])
-                           ->orWhereBetweenColumns($course->ended_at, ['started_at', 'ended_at'])
+                           ->orWhere(function (Builder $query) use ($course) {
+                               $query->where('started_at', '<=', $course->started_at)
+                                     ->where('ended_at', '>=', $course->started_at);
+                           })
+                           ->orWhere(function (Builder $query) use ($course) {
+                               $query->where('started_at', '<=', $course->ended_at)
+                                     ->where('ended_at', '>=', $course->ended_at);
+                           })
                            ->pluck('id')
                 );
             });
