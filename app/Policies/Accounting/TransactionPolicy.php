@@ -18,7 +18,9 @@ class TransactionPolicy
      */
     public function before(User $user)
     {
-        return $user->roles->contains('name', 'Admin');
+        if ($user->roles->contains('name', 'Admin')) {
+            return true;
+        }
     }
 
     /**
