@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Accounting\AccountingController;
-use App\Http\Controllers\Accounting\TransactionsQueueController;
+use App\Http\Controllers\Accounting\TransactionController;
+use App\Http\Controllers\Accounting\QueueController;
 use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\IticController;
@@ -92,10 +92,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('students.points', PointController::class)->shallow()->except(['show']);
 
     // Accounting
-    Route::get('/accounting/transactions/queue', [TransactionsQueueController::class, 'index'])->name('accounting.transactions.queue.index');
-    Route::post('/accounting/transactions/queue', [TransactionsQueueController::class, 'process'])->name('accounting.transactions.queue.process');
-    Route::get('/accounting', [AccountingController::class, 'dashboard'])->name('users.accounting.dashboard');
-    Route::resource('users.accounting', AccountingController::class);
+    Route::get('/accounting', [TransactionController::class, 'dashboard'])->name('accounting.dashboard');
+    Route::get('/accounting/queue', [QueueController::class, 'index'])->name('accounting.queue.index');
+    Route::post('/accounting/queue', [QueueController::class, 'process'])->name('accounting.queue.process');
+    Route::resource('users.accounting', TransactionController::class);
 
     // Users
     Route::get('/me/badge/{platform}', function (Authenticatable $user, $platform) {

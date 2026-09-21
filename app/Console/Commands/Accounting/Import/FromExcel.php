@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Console\Commands\Accounting;
+namespace App\Console\Commands\Accounting\Import;
 
 use App\Imports\TransactionsImport;
 use Illuminate\Console\Command;
 use Maatwebsite\Excel\Facades\Excel;
 
-class Import extends Command
+class FromExcel extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:payments {file : Excel filename}';
+    protected $signature = 'accounting:import:excel {file : Excel filename}';
 
     /**
      * The console command description.

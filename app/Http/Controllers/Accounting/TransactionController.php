@@ -10,7 +10,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-class AccountingController extends Controller
+class TransactionController extends Controller
 {
     /**
      * Create the controller instance.
@@ -140,8 +140,8 @@ class AccountingController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Accounting\Transaction  $transaction
+     * @param  \App\Models\User                   $user
+     * @param  \App\Models\Accounting\Transaction $transaction
      * @return \Illuminate\Http\Response
      */
     public function show(User $user, Transaction $transaction)
@@ -152,8 +152,8 @@ class AccountingController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Accounting\Transaction  $transaction
+     * @param  \App\Models\User                   $user
+     * @param  \App\Models\Accounting\Transaction $transaction
      * @return \Illuminate\Http\Response
      */
     public function edit(User $user, Transaction $transaction)
@@ -164,9 +164,9 @@ class AccountingController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Accounting\Transaction  $transaction
+     * @param  \Illuminate\Http\Request           $request
+     * @param  \App\Models\User                   $user
+     * @param  \App\Models\Accounting\Transaction $transaction
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user, Transaction $transaction)
@@ -177,8 +177,8 @@ class AccountingController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Accounting\Transaction  $transaction
+     * @param  \App\Models\User                   $user
+     * @param  \App\Models\Accounting\Transaction $transaction
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $user, Transaction $transaction)

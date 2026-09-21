@@ -36,8 +36,8 @@ class TransactionPolicy
     /**
      * Determine whether the user can process bank transactions queue.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Accounting\Transaction  $transaction
+     * @param  \App\Models\User                   $user
+     * @param  \App\Models\Accounting\Transaction $transaction
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function process(User $user, Transaction $transaction)

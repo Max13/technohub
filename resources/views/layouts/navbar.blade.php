@@ -51,14 +51,14 @@
                         <div class="nav-item dropend">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Accounting') }}</a>
                             <div class="dropdown-menu">
-                                @can('index', App\Models\Bank\Transaction::class)
-                                    <a class="nav-link @if(Route::currentRouteName() == 'accounting.transactions.queue.index') active @endif" @if(Route::currentRouteName() == 'accounting.transactions.queue.index') aria-current="page" @endif href="{{ route('accounting.transactions.queue.index') }}">{{ __('Bank queue') }}</a>
+                                @can('view-any', \App\Models\Accounting\Transaction::class)
+                                    <a class="nav-link @if(Route::currentRouteName() == 'accounting.dashboard') active @endif" @if(Route::currentRouteName() == 'accounting.dashboard') aria-current="page" @endif href="{{ route('accounting.dashboard') }}">{{ __('Dashboard') }}</a>
+                                @endcan
+                                @can('view-queue', \App\Models\Accounting\Transaction::class)
+                                    <a class="nav-link @if(Route::currentRouteName() == 'accounting.queue.index') active @endif" @if(Route::currentRouteName() == 'accounting.queue.index') aria-current="page" @endif href="{{ route('accounting.queue.index') }}">{{ __('Queue') }}</a>
                                 @endcan
                             </div>
                         </div>
-                        {{--@can('index', App\Models\Bank\Transaction::class)
-                            <a class="nav-link @if(Route::currentRouteName() == 'accounting.transactions.queue.index') active @endif" @if(Route::currentRouteName() == 'accounting.transactions.queue.index') aria-current="page" @endif href="{{ route('accounting.transactions.queue.index') }}">{{ __('Accounting') }}</a>
-                        @endcan--}}
                     </div>
                 </div>
             </div>

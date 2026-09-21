@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies\Accounting;
+namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -30,18 +30,6 @@ class TransactionPolicy
     public function viewAny(User $user)
     {
         return $user->roles->contains('name', 'Accounting');
-    }
-
-    /**
-     * Determine whether the user can view the queue.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewQueue(User $user)
-    {
-        return $user->roles->contains('name', 'Accounting')
-            && $user->roles->contains('name', 'Bank');
     }
 
     //

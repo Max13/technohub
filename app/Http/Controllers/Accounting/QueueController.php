@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Accounting;
 
 use App\Http\Controllers\Controller;
-use App\Models\Bank\Transaction;
+use App\Models\Accounting\Transaction;
+use App\Models\Classroom;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class TransactionsQueueController extends Controller
+class QueueController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,16 +17,28 @@ class TransactionsQueueController extends Controller
      */
     public function index()
     {
-        $this->authorize('index', Transaction::class);
+        $this->authorize('view-queue', Transaction::class);
+
+        $classrooms = Classroom::withTrashed()
+                               ->select([
+                                   'id',
+                                   'shortname',
+                               ])
+                               ->get()
+                               ->mapWithKeys(function (Classroom $c) {
+                                   return [$c->id => $c->shortname];
+                               });
 
         $students = User::withTrashed()
-                        ->with(['currentClassroom' => function ($query) {
-                            $query->withTrashed()
-                                  ->select([
-                                      'classrooms.id',
-                                      'shortname',
-                                  ]);
-                        }])
+                        ->with([
+                            'classrooms' => function ($query) {
+                                $query->withTrashed()
+                                      ->latest()
+                                      ->select([
+                                          'classrooms.id',
+                                      ]);
+                            },
+                        ])
                         ->whereRelation('roles', 'name', 'Student')
                         ->orWhere('is_student', true)
                         ->orderBy('lastname')
@@ -35,27 +48,32 @@ class TransactionsQueueController extends Controller
                             'lastname',
                             'deleted_at',
                         ])
-                        ->mapWithKeys(function (User $student) {
+                        ->mapWithKeys(function (User $student) use ($classrooms) {
                             return [
                                 $student->id => [
                                     'id' => $student->id,
+                                    'firstname' => $student->firstname,
+                                    'lastname' => $student->lastname,
                                     'fullname' => $student->fullname,
-                                    'is_active' => $student->deleted_at === null,
-                                    'classroom' => $student->currentClassroom?->shortname,
-                                ]
+                                    'is_active' => !$student->trashed(),
+                                    'classrooms' => $student->classrooms->map(function (Classroom $c) use ($classrooms) {
+                                        return $classrooms[$c->id];
+                                    }),
+
+                                ],
                             ];
                         });
+
         $transaction = Transaction::where('is_queued', true)
                                   ->oldest()
-                                  ->get();
+                                  ->get()
+                                  ->each(function (Transaction $transaction) use ($students) {
+                                      if ($transaction->student_id !== null) {
+                                          $transaction->setRelation('student', $students[$transaction->user_id]);
+                                      }
+                                  });
 
-        $transaction->each(function (Transaction $transaction) use ($students) {
-            if ($transaction->user_id !== null) {
-                $transaction->setRelation('user', $students[$transaction->user_id]);
-            }
-        });
-
-        return view('accounting.transactions.queue.index', [
+        return view('accounting.queue.index', [
             'students' => $students,
             'transactions' => $transaction,
         ]);
@@ -69,6 +87,8 @@ class TransactionsQueueController extends Controller
      */
     public function process(Request $request)
     {
+        dd($request->all());
+
         $this->authorize('process', Transaction::class);
 
         $data = $this->validate($request, [
