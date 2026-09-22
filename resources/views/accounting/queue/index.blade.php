@@ -109,7 +109,8 @@
                                             @if ($transaction->type === App\Models\Accounting\TransactionType::DISPUTE && !empty($transaction->related_parties))
                                                 <p class="mb-2">{!! implode('<br>', $transaction->normalized_related_parties) !!}</p>
                                             @endif
-                                            <i class="small">{{ $transaction->details }}</i>
+                                            <p class="mb-2">{{ $transaction->label }}</p>
+                                            <p class="small fst-italic mb-0">{{ $transaction->details }}</p>
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group" aria-label="{{ __('Actions') }}" data-actions>
