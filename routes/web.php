@@ -92,9 +92,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('students.points', PointController::class)->shallow()->except(['show']);
 
     // Accounting
-    Route::get('/accounting', [TransactionController::class, 'dashboard'])->name('accounting.dashboard');
+    Route::get('/accounting/dashboard', [TransactionController::class, 'dashboard'])->name('accounting.dashboard');
     Route::get('/accounting/queue', [QueueController::class, 'index'])->name('accounting.queue.index');
     Route::post('/accounting/queue', [QueueController::class, 'process'])->name('accounting.queue.process');
+    Route::resource('accounting', TransactionController::class);
     Route::resource('users.accounting', TransactionController::class);
 
     // Users

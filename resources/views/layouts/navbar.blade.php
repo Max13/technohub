@@ -14,45 +14,67 @@
                 <a class="nav-link @if(Route::currentRouteName() == 'dashboard') active @endif" @if(Route::currentRouteName() == 'dashboard') aria-current="page" @endif href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
                 @can('viewAny', App\Models\Marking\Criterion::class)
                     <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Marking') }}</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">{{ __('Marking') }}</a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ route('marking/criteria.index') }}">{{ __('Criteria') }}</a>
+                            <a class="dropdown-item"
+                               href="{{ route('marking/criteria.index') }}">{{ __('Criteria') }}</a>
                         </div>
                     </div>
                 @endcan
                 @can('viewAny', App\Models\User::class)
-                    <a class="nav-link @if(Route::currentRouteName() == 'users.index') active @endif" @if(Route::currentRouteName() == 'users.index') aria-current="page" @endif href="{{ route('users.index') }}">{{ __('Users') }}</a>
+                    <a class="nav-link @if(Route::currentRouteName() == 'users.index') active @endif"
+                       @if(Route::currentRouteName() == 'users.index') aria-current="page"
+                       @endif href="{{ route('users.index') }}">{{ __('Users') }}</a>
                 @endcan
                 @can('viewAny', App\Models\Training::class)
-                    <a class="nav-link @if(Route::currentRouteName() == 'trainings.index') active @endif" @if(Route::currentRouteName() == 'trainings.index') aria-current="page" @endif href="{{ route('trainings.index') }}">{{ __('My trainings') }}</a>
+                    <a class="nav-link @if(Route::currentRouteName() == 'trainings.index') active @endif"
+                       @if(Route::currentRouteName() == 'trainings.index') aria-current="page"
+                       @endif href="{{ route('trainings.index') }}">{{ __('My trainings') }}</a>
                 @endcan
                 @can('viewAny', App\Models\Exam::class)
                     <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Exams') }}</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">{{ __('Exams') }}</a>
                         <div class="dropdown-menu">
-                            <a class="nav-link @if(Route::currentRouteName() == 'exams.index') active @endif" @if(Route::currentRouteName() == 'exams.index') aria-current="page" @endif href="{{ route('exams.index') }}">{{ __('My exams') }}</a>
-                            <a class="nav-link @if(Route::currentRouteName() == 'exams.assignments.index') active @endif" @if(Route::currentRouteName() == 'exams.assignments.index') aria-current="page" @endif href="{{ route('exams.assignments.index') }}">{{ __('Assignments') }}</a>
+                            <a class="nav-link @if(Route::currentRouteName() == 'exams.index') active @endif"
+                               @if(Route::currentRouteName() == 'exams.index') aria-current="page"
+                               @endif href="{{ route('exams.index') }}">{{ __('My exams') }}</a>
+                            <a class="nav-link @if(Route::currentRouteName() == 'exams.assignments.index') active @endif"
+                               @if(Route::currentRouteName() == 'exams.assignments.index') aria-current="page"
+                               @endif href="{{ route('exams.assignments.index') }}">{{ __('Assignments') }}</a>
                         </div>
                     </div>
                 @elsecan('viewAny', App\Models\Exam\Assignment::class)
-                    <a class="nav-link @if(Route::currentRouteName() == 'exams.assignments.index') active @endif" @if(Route::currentRouteName() == 'exams.assignments.index') aria-current="page" @endif href="{{ route('exams.assignments.index') }}">{{ __('Assignments') }}</a>
+                    <a class="nav-link @if(Route::currentRouteName() == 'exams.assignments.index') active @endif"
+                       @if(Route::currentRouteName() == 'exams.assignments.index') aria-current="page"
+                       @endif href="{{ route('exams.assignments.index') }}">{{ __('Assignments') }}</a>
                 @endcan
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Miscellaneous') }}</a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">{{ __('Miscellaneous') }}</a>
                     <div class="dropdown-menu">
-                        <a class="nav-link @if(Route::currentRouteName() == 'ledstrip.index') active @endif" @if(Route::currentRouteName() == 'ledstrip.index') aria-current="page" @endif href="{{ route('ledstrip.index') }}">{{ __('LEDs') }}</a>
-                        <a class="nav-link @if(Route::currentRouteName() == 'misc.crypto') active @endif" @if(Route::currentRouteName() == 'misc.crypto') aria-current="page" @endif href="{{ route('misc.crypto') }}">{{ __('Crypto') }}</a>
+                        <a class="nav-link @if(Route::currentRouteName() == 'ledstrip.index') active @endif"
+                           @if(Route::currentRouteName() == 'ledstrip.index') aria-current="page"
+                           @endif href="{{ route('ledstrip.index') }}">{{ __('LEDs') }}</a>
+                        <a class="nav-link @if(Route::currentRouteName() == 'misc.crypto') active @endif"
+                           @if(Route::currentRouteName() == 'misc.crypto') aria-current="page"
+                           @endif href="{{ route('misc.crypto') }}">{{ __('Crypto') }}</a>
                     </div>
                 </div>
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">{{ __('Administrative') }}</a>
                     <div class="dropdown-menu">
-                        <a class="nav-link @if(Route::currentRouteName() == 'administrative.trainings') active @endif" @if(Route::currentRouteName() == 'administrative.trainings') aria-current="page" @endif href="{{ route('administrative.trainings') }}">{{ __('Trainings list') }}</a>
+                        <a class="nav-link @if(Route::currentRouteName() == 'administrative.trainings') active @endif"
+                           @if(Route::currentRouteName() == 'administrative.trainings') aria-current="page" @endif href="{{ route('administrative.trainings') }}">{{ __('Trainings list') }}</a>
                         <div class="nav-item dropend">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ __('Accounting') }}</a>
                             <div class="dropdown-menu">
                                 @can('view-any', \App\Models\Accounting\Transaction::class)
                                     <a class="nav-link @if(Route::currentRouteName() == 'accounting.dashboard') active @endif" @if(Route::currentRouteName() == 'accounting.dashboard') aria-current="page" @endif href="{{ route('accounting.dashboard') }}">{{ __('Dashboard') }}</a>
+                                @endcan
+                                @can('view-any', \App\Models\Accounting\Transaction::class)
+                                    <a class="nav-link @if(Route::currentRouteName() == 'accounting.index') active @endif" @if(Route::currentRouteName() == 'accounting.index') aria-current="page" @endif href="{{ route('accounting.index') }}">{{ __('Transactions') }}</a>
                                 @endcan
                                 @can('view-queue', \App\Models\Accounting\Transaction::class)
                                     <a class="nav-link @if(Route::currentRouteName() == 'accounting.queue.index') active @endif" @if(Route::currentRouteName() == 'accounting.queue.index') aria-current="page" @endif href="{{ route('accounting.queue.index') }}">{{ __('Queue') }}</a>
@@ -64,18 +86,18 @@
             </div>
 
             @auth
-            {{-- Right side --}}
-            <div class="d-flex">
-                <img class="avatar rounded-circle me-3" alt="Avatar" src="https://gravatar.com/avatar/{{ hash('sha256', strtolower(auth()->user()->email)) }}.jpg?s=200&d=identicon">
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ auth()->user()->firstname }} {{ auth()->user()->lastname[0] }}.
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{{ route('auth.logout') }}">{{ __('Logout') }}</a>
+                {{-- Right side --}}
+                <div class="d-flex">
+                    <img class="avatar rounded-circle me-3" alt="Avatar" src="https://gravatar.com/avatar/{{ hash('sha256', strtolower(auth()->user()->email)) }}.jpg?s=200&d=identicon">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ auth()->user()->firstname }} {{ auth()->user()->lastname[0] }}.
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ route('auth.logout') }}">{{ __('Logout') }}</a>
+                        </div>
                     </div>
                 </div>
-            </div>
             @endauth
         </div>
     </div>
