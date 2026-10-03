@@ -32,25 +32,25 @@ class SyncAll extends Command
             'options' => $this->options(),
         ]);
 
-        $this->call('ypareo:sync:users');
+        $this->call(SyncUsers::class);
         $this->newLine(2);
 
-        $this->call('ypareo:sync:classrooms');
+        $this->call(SyncClassrooms::class);
         $this->newLine(2);
 
-        $this->call('ypareo:sync:subjects');
+        $this->call(SyncSubjects::class);
         $this->newLine(2);
 
-        $this->call('ypareo:sync:participants');
+        $this->call(SyncParticipants::class);
         $this->newLine(2);
 
-        $this->call('ypareo:sync:absences');
+        $this->call(SyncAbsences::class);
         $this->newLine(2);
 
-        $this->call('ypareo:sync:courses');
+        $this->call(SyncCourses::class);
         $this->newLine(2);
 
-        $this->call('ypareo:send:printerpin');
+        $this->call(SendPrinterPin::class);
         $this->newLine(2);
 
         return 0;
