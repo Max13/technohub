@@ -7,14 +7,14 @@ use App\Services\ActiveDirectory;
 use App\Services\Ypareo;
 use Illuminate\Console\Command;
 
-class SyncPrinterPin extends Command
+class SendPrinterPin extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ypareo:sync:printerpin';
+    protected $signature = 'ypareo:send:printerpin';
 
     /**
      * The console command description.

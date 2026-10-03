@@ -50,7 +50,7 @@ class SyncAll extends Command
         $this->call('ypareo:sync:courses');
         $this->newLine(2);
 
-        $this->call('ypareo:sync:printerpin');
+        $this->call('ypareo:send:printerpin');
         $this->newLine(2);
 
         return 0;
