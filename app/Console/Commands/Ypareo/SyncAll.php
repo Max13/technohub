@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Ypareo;
 
+use App\Console\Commands\Ldap\SendUsers;
 use Illuminate\Console\Command;
 
 class SyncAll extends Command
@@ -48,6 +49,9 @@ class SyncAll extends Command
         $this->newLine(2);
 
         $this->call(SyncCourses::class);
+        $this->newLine(2);
+
+        $this->call(SendUsers::class);
         $this->newLine(2);
 
         $this->call(SendPrinterPin::class);
