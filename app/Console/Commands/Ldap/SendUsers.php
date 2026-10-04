@@ -62,7 +62,7 @@ class SendUsers extends Command
             $this->withProgressBar($query->count(), function () use ($batchUuid, &$notProcessed, $query) {
                 $query->chunkById(100, function (Collection $trainers) use ($batchUuid, &$notProcessed) {
                     try {
-                        Http::put('https://nathan.iticparis.com/webhook/a3dbd14a-fd6a-4e6f-a8ba-9389bac7b2dc', [
+                        Http::put(config('services.n8n.ldap.sendUsers'), [
                                 'uuid' => $batchUuid,
                                 'trainers' => $trainers->toArray(),
                             ])

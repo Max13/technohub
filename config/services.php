@@ -53,6 +53,12 @@ return [
         'version' => env('MQTT_VERSION', PhpMqtt\Client\MqttClient::MQTT_3_1_1),
     ],
 
+    'n8n' => [
+        'ldap' => [
+            'sendUsers' => env('N8N_LDAP_SENDUSERS'),
+        ],
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
